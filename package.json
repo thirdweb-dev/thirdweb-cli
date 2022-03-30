@@ -1,13 +1,14 @@
 {
   "name": "thirdweb-cli",
+  "main": "./dist/index.ts",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "git@github.com:thirdweb-dev/thirdweb-cli.git",
   "author": "sdk@thirdweb.com",
   "license": "MIT",
   "devDependencies": {
     "@types/commander": "^2.12.2",
     "@types/node": "^17.0.23",
+    "pkg": "^5.5.2",
     "ts-node": "^10.7.0",
     "tsc": "^2.0.4",
     "typescript": "^4.6.3"
@@ -16,9 +17,10 @@
     "commander": "^9.1.0"
   },
   "bin": {
-    "thirdweb": "node -r ts-node/register src/cli/index.ts"
+    "thirdweb": "./dist/cli/index.js"
   },
   "scripts": {
-    "cli": "node -r ts-node/register src/cli/index.ts"
+    "cli": "node -r ts-node/register src/cli/index.ts",
+    "build": "tsc -p ."
   }
 }
