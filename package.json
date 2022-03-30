@@ -1,6 +1,6 @@
 {
   "name": "thirdweb-cli",
-  "main": "./dist/index.ts",
+  "main": "dist/index.js",
   "version": "1.0.0",
   "repository": "git@github.com:thirdweb-dev/thirdweb-cli.git",
   "author": "sdk@thirdweb.com",
@@ -11,6 +11,7 @@
     "pkg": "^5.5.2",
     "ts-node": "^10.7.0",
     "tsc": "^2.0.4",
+    "tsup": "^5.12.1",
     "typescript": "^4.6.3"
   },
   "dependencies": {
@@ -21,6 +22,19 @@
   },
   "scripts": {
     "cli": "node -r ts-node/register src/cli/index.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "build:lib": "tsup --env.NODE_ENV production --minify --format esm,cjs"
+  },
+  "files": [
+    "src/",
+    "dist/"
+  ],
+  "tsup": {
+    "entry": [
+      "src/cli/index.ts"
+    ],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
   }
 }
