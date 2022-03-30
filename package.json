@@ -4,5 +4,9 @@
   "main": "index.js",
   "repository": "git@github.com:thirdweb-dev/thirdweb-cli.git",
   "author": "sdk@thirdweb.com",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "tsc": "^2.0.4",
+    "typescript": "^4.6.3"
+  }
 }
