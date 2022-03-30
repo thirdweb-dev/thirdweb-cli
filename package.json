@@ -6,7 +6,19 @@
   "author": "sdk@thirdweb.com",
   "license": "MIT",
   "devDependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/node": "^17.0.23",
+    "ts-node": "^10.7.0",
     "tsc": "^2.0.4",
     "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "commander": "^9.1.0"
+  },
+  "bin": {
+    "thirdweb": "node -r ts-node/register src/cli/index.ts"
+  },
+  "scripts": {
+    "cli": "node -r ts-node/register src/cli/index.ts"
   }
 }
