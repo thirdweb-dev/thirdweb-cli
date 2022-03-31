@@ -10,8 +10,8 @@ compile the projects, too.
 ## Installation
 
 ```bash
-$ yarn global add @thirdweb-dev/thirdweb-cli
-$ npm i -g @thirdweb-dev/thirdweb-cli # or node
+$ yarn global add @thirdweb-dev/cli
+$ npm i -g @thirdweb-dev/cli # or node
 ```
 
 ## Publishing the example contract
