@@ -29,15 +29,15 @@ export class Builder implements IBuilder {
       options.projectPath,
       "utf-8"
     );
-    this.logger.info(contractFileContents);
 
-    const source = "Greeter.sol";
+    const sourceFileName = options.projectPath.split("/").pop() as string;
+    this.logger.info(contractFileContents);
 
     const input = {
       language: "Solidity",
       sources: {
         // TODO: this is temporary
-        [source]: {
+        [sourceFileName]: {
           content: contractFileContents,
         },
       },
@@ -56,11 +56,13 @@ export class Builder implements IBuilder {
 
     const contracts: Contract[] = [];
     // TODO: this is temporary, we shoult not use hardcoded source
-    for (const contractName of Object.keys(output.contracts[source])) {
-      const abi = JSON.stringify(output.contracts[source][contractName].abi);
+    for (const contractName of Object.keys(output.contracts[sourceFileName])) {
+      const abi = JSON.stringify(
+        output.contracts[sourceFileName][contractName].abi
+      );
 
       const bytecode =
-        output.contracts[source][contractName].evm.bytecode.object;
+        output.contracts[sourceFileName][contractName].evm.bytecode.object;
 
       contracts.push({
         name: contractName,
