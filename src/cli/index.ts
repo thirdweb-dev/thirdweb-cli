@@ -46,11 +46,13 @@ const main = async () => {
         projectPath,
         name: projectName,
       });
-      try {
-        logger.info("Project compiled successfully,", project);
-      } catch (err: any) {
-        logger.error("Failed to publish project", err);
-      }
+      logger.info("Project compiled successfully,", project);
+
+      const url = `https://thirdweb.com/dashboard/publish?hash=${encodeURI(
+        project.hash
+      )}`;
+
+      logger.info(`Go to this link to publish to the registry: ${url}`);
     });
 
   await program.parseAsync();
