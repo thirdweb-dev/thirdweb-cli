@@ -1,3 +1,6 @@
+/**
+ * Represents an uploaded contract.
+ */
 export interface Contract {
   /**
    * The name of the contract.

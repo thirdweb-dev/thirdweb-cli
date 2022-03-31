@@ -7,6 +7,7 @@ import { Logger } from "tslog";
 import { Builder } from "../core/builder";
 import detect from "../core/detection/detect";
 import build from "../core/builder/build";
+import { THIRDWEB_URL } from "../constants/urls";
 
 const logger = new Logger({
   name: "thirdweb-cli",
@@ -51,19 +52,19 @@ const main = async () => {
       logger.info("Detected project type " + projectType);
 
       const compiledResult = await build(projectPath, projectType);
+      logger.info("Project compiled successfully");
 
-      //   const builder = new Builder(storage);
-      //   const project = await builder.compile({
-      //     projectPath,
-      //     name: projectName,
-      //   });
-      //   logger.info("Project compiled successfully,", project);
+      const hashes = await Promise.all(
+        compiledResult.contracts.map(
+          async (c) => await storage.upload(JSON.stringify(c))
+        )
+      );
 
-      //   const url = `https://thirdweb.com/dashboard/publish?hash=${encodeURI(
-      //     project.hash
-      //   )}`;
+      const url = `${THIRDWEB_URL}/dashboard/publish?contracts=${encodeURI(
+        hashes.join(",")
+      )}`;
 
-      //   logger.info(`Go to this link to publish to the registry: ${url}`);
+      logger.info(`Go to this link to publish to the registry: ${url}`);
     });
 
   await program.parseAsync();

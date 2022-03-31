@@ -1,4 +1,4 @@
-import { Project } from "./Project";
+import { ContractPayload } from "./ContractPayload";
 
 export interface Builder {
   /**
@@ -7,15 +7,6 @@ export interface Builder {
    * @param project - The path to the project to compile.
    */
   compile(options: { projectPath: string; name: string }): Promise<{
-    project: Project;
-    hash: string;
+    contracts: ContractPayload[];
   }>;
-
-  /**
-   * Uploads the project to storage.
-   *
-   * @param project - The project to upload
-   * @returns - The hash of the uploaded project.
-   */
-  upload(project: Project): Promise<string>;
 }
