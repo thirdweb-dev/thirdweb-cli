@@ -27,11 +27,8 @@ const main = async () => {
   program
     .command("publish")
     .description("Bundles & publishes a project to IPFS")
-    .argument("<project-name>", "name of the project")
     .option("-p, --path <project-path>", "path to project", ".")
-    .action(async (projectName, options) => {
-      logger.info(`Publishing project ${projectName}`);
-
+    .action(async (options) => {
       let projectPath = process.cwd();
       if (options.path) {
         logger.info("Overriding project path to " + options.path);

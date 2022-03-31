@@ -16,10 +16,22 @@ $ npm i -g @thirdweb-dev/cli # or node
 
 ## Publishing the example contract
 
+To publish, you need to be in a directory that contains a project which the CLI is compatible
+with. The projects we support so far:
+
+- hardhat
+
+Coming soon:
+
+- forge
+
+---
+
 Clone the repo and run this command after installing the CLI tool:
 
 ```bash
-$ thirdweb publish greeter --path examples/hardhat/contracts/Greeter.sol
+$ cd examples/hardhat
+$ thirdweb publish
 ```
 
 ## Local Development
