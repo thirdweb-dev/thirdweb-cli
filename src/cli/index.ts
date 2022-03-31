@@ -5,6 +5,8 @@ import { Command } from "commander";
 import path from "path";
 import { Logger } from "tslog";
 import { Builder } from "../core/builder";
+import detect from "../core/detection/detect";
+import build from "../core/builder/build";
 
 const logger = new Logger({
   name: "thirdweb-cli",
@@ -41,18 +43,27 @@ const main = async () => {
 
       logger.info("Publishing project at path " + projectPath);
 
-      const builder = new Builder(storage);
-      const project = await builder.compile({
-        projectPath,
-        name: projectName,
-      });
-      logger.info("Project compiled successfully,", project);
+      const projectType = await detect(projectPath);
+      if (projectType === "unknown") {
+        logger.error("Unable to detect project type");
+        return;
+      }
+      logger.info("Detected project type " + projectType);
 
-      const url = `https://thirdweb.com/dashboard/publish?hash=${encodeURI(
-        project.hash
-      )}`;
+      const compiledResult = await build(projectPath, projectType);
 
-      logger.info(`Go to this link to publish to the registry: ${url}`);
+      //   const builder = new Builder(storage);
+      //   const project = await builder.compile({
+      //     projectPath,
+      //     name: projectName,
+      //   });
+      //   logger.info("Project compiled successfully,", project);
+
+      //   const url = `https://thirdweb.com/dashboard/publish?hash=${encodeURI(
+      //     project.hash
+      //   )}`;
+
+      //   logger.info(`Go to this link to publish to the registry: ${url}`);
     });
 
   await program.parseAsync();
