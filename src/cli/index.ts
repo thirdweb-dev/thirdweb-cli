@@ -9,6 +9,7 @@ import build from "../core/builder/build";
 import { THIRDWEB_URL } from "../constants/urls";
 import { URL } from "url";
 import open from "open";
+import { Contract } from "../core/interfaces/Contract";
 
 const logger = new Logger({
   name: "thirdweb-cli",
@@ -60,9 +61,9 @@ const main = async () => {
           return await storage.upload(
             JSON.stringify({
               name: c.name,
-              bytecode: bytecodeHash,
-              abi: abiHash,
-            })
+              bytecodeHash,
+              abiHash,
+            } as Contract)
           );
         })
       );
