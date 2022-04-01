@@ -53,9 +53,18 @@ const main = async () => {
       logger.info("Project compiled successfully");
 
       const hashes = await Promise.all(
-        compiledResult.contracts.map(
-          async (c) => await storage.upload(JSON.stringify(c))
-        )
+        compiledResult.contracts.map(async (c) => {
+          const bytecodeHash = await storage.upload(c.bytecode);
+          const abiHash = await storage.upload(JSON.stringify(c.abi));
+
+          return await storage.upload(
+            JSON.stringify({
+              name: c.name,
+              bytecode: bytecodeHash,
+              abi: abiHash,
+            })
+          );
+        })
       );
 
       const url = new URL(THIRDWEB_URL + "/dashboard/publish");

@@ -10,10 +10,10 @@ export interface Contract {
   /**
    * The IPFS hash to the projects bytecode
    */
-  bytecodeUri: string;
+  bytecodeHash: string;
 
   /**
    * The IPFS hash to the projects ABI
    */
-  abiUri: string;
+  abiHash: string;
 }
