@@ -42,7 +42,7 @@ The simplest way to work on the CLI locally is to:
 2. Run the `build:watch` command to compile any changes in realtime
 
 ```bash
-$ npm global add ./
+$ npm install -g ./
 $ yarn run build:watch
 ```
 
