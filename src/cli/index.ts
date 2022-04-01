@@ -4,10 +4,11 @@ import { IpfsStorage } from "./../core/storage/ipfs-storage";
 import { Command } from "commander";
 import path from "path";
 import { Logger } from "tslog";
-import { Builder } from "../core/builder";
 import detect from "../core/detection/detect";
 import build from "../core/builder/build";
 import { THIRDWEB_URL } from "../constants/urls";
+import { URL } from "url";
+import open from "open";
 
 const logger = new Logger({
   name: "thirdweb-cli",
@@ -57,11 +58,15 @@ const main = async () => {
         )
       );
 
-      const url = `${THIRDWEB_URL}/dashboard/publish?contracts=${encodeURI(
-        hashes.join(",")
-      )}`;
+      const url = new URL(THIRDWEB_URL + "/dashboard/publish");
+
+      for (let hash of hashes) {
+        url.searchParams.append("uri", hash);
+      }
 
       logger.info(`Go to this link to publish to the registry: ${url}`);
+
+      open(url.toString());
     });
 
   await program.parseAsync();
