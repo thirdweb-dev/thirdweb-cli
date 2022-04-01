@@ -8,12 +8,12 @@ export interface Contract {
   name: string;
 
   /**
-   * The IPFS hash to the projects bytecode
+   * The uri that points to the projects bytecode (stored in decentralized storage)
    */
-  bytecodeHash: string;
+  bytecodeUri: string;
 
   /**
-   * The IPFS hash to the projects ABI
+   * The uri that points to the projects abi (stored in decentralized storage)
    */
-  abiHash: string;
+  abiUri: string;
 }

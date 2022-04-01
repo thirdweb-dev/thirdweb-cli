@@ -61,8 +61,8 @@ const main = async () => {
           return await storage.upload(
             JSON.stringify({
               name: c.name,
-              bytecodeHash,
-              abiHash,
+              bytecodeUri: bytecodeHash,
+              abiUri: abiHash,
             } as Contract)
           );
         })
