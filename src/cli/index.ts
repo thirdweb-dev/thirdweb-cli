@@ -58,13 +58,15 @@ const main = async () => {
           const bytecodeHash = await storage.upload(c.bytecode);
           const abiHash = await storage.upload(JSON.stringify(c.abi));
 
-          return await storage.upload(
+          const hash = await storage.upload(
             JSON.stringify({
               name: c.name,
               bytecodeUri: bytecodeHash,
               abiUri: abiHash,
             } as Contract)
           );
+          logger.info(`Uploaded ${c.name} to ${hash}`);
+          return hash;
         })
       );
 
