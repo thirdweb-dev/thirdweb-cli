@@ -14,6 +14,9 @@ export default class HardhatDetector implements Detector {
 
   public async matches(path: string): Promise<boolean> {
     this.logger.info("Checking if " + path + " is a Hardhat project");
-    return await existsSync(path + "/hardhat.config.js");
+    return (
+      existsSync(path + "/hardhat.config.js") ||
+      existsSync(path + "/hardhat.config.ts")
+    );
   }
 }
