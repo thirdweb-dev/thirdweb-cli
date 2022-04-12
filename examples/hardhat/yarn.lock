@@ -648,6 +648,11 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
+"@thirdweb-dev/contracts@^2.2.1-6":
+  version "2.2.1-6"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.2.1-6.tgz#864a9a9578526edc16afba7904f37c8f78f5757f"
+  integrity sha512-5x9Ah76T0cQV4qdS69YJlLmAuFbeB+tQe3qFiycwRMj6lOxXb9nMRcYPYS2yx51GMKLgaFfy4paqMS6Y9LeCvQ==
+
 "@typechain/ethers-v5@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@typechain/ethers-v5/-/ethers-v5-2.0.0.tgz#cd3ca1590240d587ca301f4c029b67bfccd08810"

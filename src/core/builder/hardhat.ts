@@ -1,13 +1,9 @@
 import { execSync } from "child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { basename, join } from "path";
-import { Logger } from "tslog";
+import { logger } from "../helpers/logger";
 import { Builder as IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
-
-const logger = new Logger({
-  name: "HardhatBuilder",
-});
 
 export class HardhatBuilder implements IBuilder {
   constructor() {}
@@ -20,7 +16,7 @@ export class HardhatBuilder implements IBuilder {
   }> {
     const stdout = execSync(`cd ${options.projectPath} && npx hardhat compile`);
 
-    logger.info("stdout from hardhat:", stdout.toString());
+    logger.debug("stdout from hardhat:", stdout.toString());
 
     const artifacts = `${options.projectPath}/artifacts/contracts`;
 
@@ -36,19 +32,37 @@ export class HardhatBuilder implements IBuilder {
       const abi = contractInfo.abi;
       const bytecode = contractInfo.bytecode;
 
-      // TODO detect ThirdwebContract functions and only push those
-      logger.info("Detected contract", contractName);
-
-      contracts.push({
-        abi,
-        bytecode,
-        name: contractName,
-      });
+      for (const input of abi) {
+        if (this.isThirdwebContract(input)) {
+          contracts.push({
+            abi,
+            bytecode,
+            name: contractName,
+          });
+          break;
+        }
+      }
     }
+
+    logger.info(
+      "Detected thirdweb contracts:",
+      contracts.map((c) => c.name).join()
+    );
 
     return {
       contracts,
     };
+  }
+
+  private isThirdwebContract(input: any): boolean {
+    try {
+      return (
+        input.name === "setThirdwebInfo" &&
+        input.inputs[0].internalType === "struct ThirdwebContract.ThirdwebInfo"
+      );
+    } catch (e) {
+      return false;
+    }
   }
 
   private findFiles(startPath: string, filter: RegExp, results: string[]) {
