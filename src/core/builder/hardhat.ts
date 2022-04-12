@@ -1,10 +1,9 @@
 import { execSync } from "child_process";
-import { readdirSync, readFileSync } from "fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { basename, join } from "path";
 import { Logger } from "tslog";
 import { Builder as IBuilder } from "../interfaces/Builder";
-import { Contract } from "../interfaces/Contract";
 import { ContractPayload } from "../interfaces/ContractPayload";
-import { Project } from "../interfaces/Project";
 
 const logger = new Logger({
   name: "HardhatBuilder",
@@ -19,42 +18,52 @@ export class HardhatBuilder implements IBuilder {
   }): Promise<{
     contracts: ContractPayload[];
   }> {
-    const stdout = await execSync(
-      `cd ${options.projectPath} && npx hardhat compile`
-    );
+    const stdout = execSync(`cd ${options.projectPath} && npx hardhat compile`);
 
     logger.info("stdout from hardhat:", stdout.toString());
 
     const artifacts = `${options.projectPath}/artifacts/contracts`;
-    const directories = await readdirSync(artifacts, { withFileTypes: true });
-    const contractDirectoryNames = directories
-      .filter((d: any) => d.isDirectory())
-      .map((d) => d.name);
 
     const contracts: ContractPayload[] = [];
-    for (const contractDirectoryName of contractDirectoryNames) {
-      const contractName = contractDirectoryName.split(".")[0];
+    const files: string[] = [];
+    this.findFiles(artifacts, /.*[^\.dbg]\.json$/, files);
 
-      logger.info("Handling contract " + contractName);
-
-      const contractJsonFile = await readFileSync(
-        `${artifacts}/${contractDirectoryName}/${contractName}.json`,
-        "utf-8"
-      );
+    for (const file of files) {
+      const contractName = basename(file, ".json");
+      const contractJsonFile = readFileSync(file, "utf-8");
 
       const contractInfo = JSON.parse(contractJsonFile);
       const abi = contractInfo.abi;
       const bytecode = contractInfo.bytecode;
 
+      // TODO detect ThirdwebContract functions and only push those
+      logger.info("Detected contract", contractName);
+
       contracts.push({
         abi,
         bytecode,
-        name: contractDirectoryName,
+        name: contractName,
       });
     }
 
     return {
       contracts,
     };
+  }
+
+  private findFiles(startPath: string, filter: RegExp, results: string[]) {
+    if (!existsSync(startPath)) {
+      console.log("no dir ", startPath);
+      return;
+    }
+
+    var files = readdirSync(startPath);
+    for (var i = 0; i < files.length; i++) {
+      var filename = join(startPath, files[i]);
+      var stat = statSync(filename);
+      if (stat.isDirectory()) {
+        this.findFiles(filename, filter, results);
+      } else if (filter.test(filename)) results.push(filename);
+    }
   }
 }
