@@ -10,10 +10,7 @@ import { THIRDWEB_URL } from "../constants/urls";
 import { URL } from "url";
 import open from "open";
 import { Contract } from "../core/interfaces/Contract";
-
-const logger = new Logger({
-  name: "thirdweb-cli",
-});
+import { logger } from "../core/helpers/logger";
 
 const main = async () => {
   const program = new Command();
@@ -33,7 +30,7 @@ const main = async () => {
     .action(async (options) => {
       let projectPath = process.cwd();
       if (options.path) {
-        logger.info("Overriding project path to " + options.path);
+        logger.debug("Overriding project path to " + options.path);
 
         const resolvedPath = (options.path as string).startsWith("/")
           ? options.path
@@ -41,16 +38,24 @@ const main = async () => {
         projectPath = resolvedPath;
       }
 
-      logger.info("Publishing project at path " + projectPath);
+      logger.debug("Publishing project at path " + projectPath);
 
       const projectType = await detect(projectPath);
       if (projectType === "unknown") {
         logger.error("Unable to detect project type");
         return;
       }
-      logger.info("Detected project type " + projectType);
+      logger.info("Detected project type:", projectType);
 
       const compiledResult = await build(projectPath, projectType);
+
+      if (compiledResult.contracts.length == 0) {
+        logger.error(
+          "No thirdweb contract detected. Extend ThirdwebContract to publish your own contracts."
+        );
+        process.exit(1);
+      }
+
       logger.info("Project compiled successfully");
 
       const hashes = await Promise.all(
@@ -65,7 +70,7 @@ const main = async () => {
               abiUri: abiHash,
             } as Contract)
           );
-          logger.info(`Uploaded ${c.name} to ${hash}`);
+          logger.debug(`Uploaded ${c.name} publish metadata to ${hash}`);
           return hash;
         })
       );
