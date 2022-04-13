@@ -1,1 +1,1 @@
-require("@thirdweb-dev/cli")();
+require("@thirdweb-dev/cli");
