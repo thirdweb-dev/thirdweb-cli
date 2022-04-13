@@ -14,7 +14,9 @@ export class HardhatBuilder implements IBuilder {
   }): Promise<{
     contracts: ContractPayload[];
   }> {
-    const stdout = execSync(`cd ${options.projectPath} && npx hardhat compile`);
+    const stdout = execSync(
+      `cd ${options.projectPath} && npx hardhat clean && npx hardhat compile`
+    );
 
     logger.debug("stdout from hardhat:", stdout.toString());
 
