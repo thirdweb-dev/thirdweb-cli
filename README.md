@@ -1,20 +1,70 @@
 # `thirdweb-cli`
 
-The thirdweb CLI is your one-stop-shop for publishing custom contracts for the world
-to use. The CLI uploads all necessary data to decentralized storage and makes it available
-to deploy via the thirdweb sdk or thirdweb dashboard.
+The thirdweb CLI is your one-stop-shop for publishing custom contracts for your team or the world to use. The CLI uploads all necessary data to decentralized storage and makes it available to deploy via the thirdweb sdk or thirdweb dashboard.
 
-The project thats uploaded uses a standard public format that allows _your team_ to
-compile the projects, too.
+This brings all the capabilities of thirdweb to your own custom contracts.
 
-## Installation
+## 1. Installation
 
-```bash
-$ yarn global add @thirdweb-dev/cli
-$ npm i -g @thirdweb-dev/cli # or node
+```shell
+yarn global add @thirdweb-dev/cli
 ```
 
-## Publishing the example contract
+or with npm
+
+```shell
+npm i -g @thirdweb-dev/cli
+```
+
+## 2. Extending ThirdwebContract
+
+In order to publish a contract and get all the benefits of the thirdweb platform, your contract needs to extend `ThirdwebContract`.
+
+From your project, add the thirdweb contracts dependency:
+
+```shell
+yarn add @thirdweb-dev/contracts@dev
+```
+
+or with npm
+
+```shell
+npm i @thirdweb-dev/contracts@dev
+```
+
+Once installed, in your Solidity contract you want to publish, import and extend `ThirdwebContract`. Here's an example:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+
+import "@thirdweb-dev/contracts/contracts/ThirdwebContract.sol";
+
+contract HellowWorldContract is ThirdwebContract {
+    // your contract code
+}
+```
+
+## 3. Publishing your contract
+
+Once your contract code is setup like above, you can publish it with the CLI:
+
+```shell
+thirdweb publish
+```
+
+This command will:
+
+- auto-detect any contract that extends `ThirdwebContract` in your project
+- compile your project
+- Upload ABIs to IPFS
+- Open the publish flow in your thirdweb dashboard in a browser
+
+From the thirdweb dashboard, you can review, publish, browse and deploy your contracts with just a few clicks.
+
+---
+
+## Supported projects
 
 To publish, you need to be in a directory that contains a project which the CLI is compatible
 with. The projects we support so far:
@@ -24,8 +74,11 @@ with. The projects we support so far:
 Coming soon:
 
 - forge
+- truffle
 
 ---
+
+## Running the examples
 
 Clone the repo and run this command after installing the CLI tool:
 
