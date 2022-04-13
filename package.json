@@ -1,5 +1,5 @@
 {
-  "name": "@thirdweb-dev/cli",
+  "name": "thirdweb",
   "main": "dist/index.js",
   "version": "0.0.14",
   "repository": "git@github.com:thirdweb-dev/thirdweb-cli.git",
