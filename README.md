@@ -4,19 +4,7 @@ The thirdweb CLI is your one-stop-shop for publishing custom contracts for your 
 
 This brings all the capabilities of thirdweb to your own custom contracts.
 
-## 1. Installation
-
-```shell
-yarn global add @thirdweb-dev/cli
-```
-
-or with npm
-
-```shell
-npm i -g @thirdweb-dev/cli
-```
-
-## 2. Extending ThirdwebContract
+## 1. Extending ThirdwebContract
 
 In order to publish a contract and get all the benefits of the thirdweb platform, your contract needs to extend `ThirdwebContract`.
 
@@ -45,12 +33,12 @@ contract HellowWorldContract is ThirdwebContract {
 }
 ```
 
-## 3. Publishing your contract
+## 2. Publishing your contract
 
 Once your contract code is setup like above, you can publish it with the CLI:
 
 ```shell
-thirdweb publish
+npx thirdweb publish
 ```
 
 This command will:
