@@ -1,0 +1,1 @@
+require("@thirdweb-dev/cli")();
