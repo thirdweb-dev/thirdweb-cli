@@ -48,7 +48,7 @@ export class HardhatBuilder implements IBuilder {
 
     logger.info(
       "Detected thirdweb contracts:",
-      contracts.map((c) => c.name).join()
+      contracts.map((c) => c.name).join(", ")
     );
 
     return {

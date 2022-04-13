@@ -61,7 +61,8 @@ const main = async () => {
       const hashes = await Promise.all(
         compiledResult.contracts.map(async (c) => {
           const bytecodeHash = await storage.upload(c.bytecode);
-          const abiHash = await storage.upload(JSON.stringify(c.abi));
+          const stringifiedAbi = JSON.stringify(c.abi);
+          const abiHash = await storage.upload(stringifiedAbi);
 
           const hash = await storage.upload(
             JSON.stringify({
