@@ -24,10 +24,21 @@ export class HardhatBuilder implements IBuilder {
       },
     };
     try {
-      const readHardHatConfig: HardhatUserConfig = require(join(
-        options.projectPath,
-        "hardhat.config.js"
-      ));
+      let readHardHatConfig: HardhatUserConfig;
+      try {
+        //try to read js config
+        readHardHatConfig = require(join(
+          options.projectPath,
+          "hardhat.config.js"
+        )).default;
+      } catch (err) {
+        //otherwise try to read ts config
+        readHardHatConfig = require(join(
+          options.projectPath,
+          "hardhat.config.ts"
+        )).default;
+      }
+
       hardhatConfig = deepmerge(hardhatConfig, readHardHatConfig);
     } catch (err) {
       logger.warn(
