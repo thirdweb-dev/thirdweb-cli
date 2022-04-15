@@ -4,6 +4,8 @@ import { basename, join } from "path";
 import { logger } from "../helpers/logger";
 import { Builder as IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
+import type { HardhatUserConfig } from "hardhat/config";
+import deepmerge from "deepmerge";
 
 export class HardhatBuilder implements IBuilder {
   constructor() {}
@@ -14,17 +16,43 @@ export class HardhatBuilder implements IBuilder {
   }): Promise<{
     contracts: ContractPayload[];
   }> {
+    // TODO this will work for .js but we also need to handle .ts cases
+    let hardhatConfig: HardhatUserConfig = {
+      paths: {
+        artifacts: "./artifacts",
+        sources: "./contracts",
+      },
+    };
+    try {
+      const readHardHatConfig: HardhatUserConfig = require(join(
+        options.projectPath,
+        "hardhat.config.js"
+      ));
+      hardhatConfig = deepmerge(hardhatConfig, readHardHatConfig);
+    } catch (err) {
+      logger.warn(
+        "failed to load project hardhat config, continuing with default options"
+      );
+    }
+
     const stdout = execSync(
       `cd ${options.projectPath} && npx hardhat clean && npx hardhat compile`
     );
 
     logger.debug("stdout from hardhat:", stdout.toString());
 
-    const artifacts = `${options.projectPath}/artifacts/contracts`;
+    const artifactsPath = join(
+      options.projectPath,
+      hardhatConfig.paths?.artifacts || "./artifacts"
+    );
+    const contractsPath = join(
+      artifactsPath,
+      hardhatConfig.paths?.sources || "./contracts"
+    );
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(artifacts, /.*[^\.dbg]\.json$/, files);
+    this.findFiles(contractsPath, /.*[^\.dbg]\.json$/, files);
 
     for (const file of files) {
       const contractName = basename(file, ".json");
