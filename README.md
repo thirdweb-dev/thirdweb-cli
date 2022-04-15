@@ -48,7 +48,7 @@ This command will:
 - Upload ABIs to IPFS
 - Open the publish flow in your thirdweb dashboard in a browser
 
-From the thirdweb dashboard, you can review, publish, browse and deploy your contracts with just a few clicks.
+From the thirdweb dashboard, you can review and publish your contracts. Published contracts can be deployed via the dashboard on with our SDKs.
 
 ---
 
