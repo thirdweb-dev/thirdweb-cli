@@ -18,6 +18,8 @@ const main = async () => {
   // TODO: allow overriding the default storage
   const storage = new IpfsStorage();
 
+  const cliVersion = require("../../package.json").version;
+
   console.info(`
   
   $$\\     $$\\       $$\\                 $$\\                         $$\\       
@@ -30,11 +32,13 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
    \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ 
                                                                               
   `);
+  console.info("version:", cliVersion);
+  console.info("\n\n");
 
   program
     .name("thirdweb-cli")
     .description("Official thirdweb command line interface")
-    .version("0.0.1");
+    .version(cliVersion);
 
   program
     .command("publish")
