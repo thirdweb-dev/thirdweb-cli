@@ -1,11 +1,8 @@
-import { execSync } from "child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { basename, join } from "path";
 import { logger } from "../helpers/logger";
 import { Builder as IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
-import type { HardhatUserConfig } from "hardhat/config";
-import deepmerge from "deepmerge";
 
 export class HardhatBuilder implements IBuilder {
   constructor() {}
@@ -13,52 +10,38 @@ export class HardhatBuilder implements IBuilder {
   public async compile(options: {
     projectPath: string;
     name: string;
+    clean: boolean;
   }): Promise<{
     contracts: ContractPayload[];
   }> {
-    // TODO this will work for .js but we also need to handle .ts cases
-    let hardhatConfig: HardhatUserConfig = {
-      paths: {
-        artifacts: "./artifacts",
-        sources: "./contracts",
-      },
-    };
-    try {
-      let readHardHatConfig: HardhatUserConfig;
-      try {
-        //try to read js config
-        readHardHatConfig = require(join(
-          options.projectPath,
-          "hardhat.config.js"
-        )).default;
-      } catch (err) {
-        //otherwise try to read ts config
-        readHardHatConfig = require(join(
-          options.projectPath,
-          "hardhat.config.ts"
-        )).default;
-      }
-
-      hardhatConfig = deepmerge(hardhatConfig, readHardHatConfig);
-    } catch (err) {
-      logger.warn(
-        "failed to load project hardhat config, continuing with default options"
+    const hardhatPath = require.resolve("hardhat");
+    if (!hardhatPath) {
+      logger.error(
+        "failed to load hardhat runtime, please install hardhat: npm i -g hardhat"
       );
+      process.exit(1);
+    }
+    const { default: hre, userConfig } = await import(hardhatPath);
+
+    if (options.clean) {
+      logger.info("cleaning before compiling");
+      await hre.run("clean");
     }
 
-    const stdout = execSync(
-      `cd ${options.projectPath} && npx hardhat clean && npx hardhat compile`
-    );
-
-    logger.debug("stdout from hardhat:", stdout.toString());
+    try {
+      await hre.run("compile");
+    } catch (err) {
+      logger.error("hardhat failed to compile", err);
+      process.exit(1);
+    }
 
     const artifactsPath = join(
       options.projectPath,
-      hardhatConfig.paths?.artifacts || "./artifacts"
+      userConfig.paths?.artifacts || "./artifacts"
     );
     const contractsPath = join(
       artifactsPath,
-      hardhatConfig.paths?.sources || "./contracts"
+      userConfig.paths?.sources || "./contracts"
     );
 
     const contracts: ContractPayload[] = [];

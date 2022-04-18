@@ -4,7 +4,8 @@ import { HardhatBuilder } from "./hardhat";
 
 export default async function build(
   path: string,
-  projectType: ProjectType
+  projectType: ProjectType,
+  clean: boolean
 ): Promise<{
   contracts: ContractPayload[];
 }> {
@@ -14,6 +15,7 @@ export default async function build(
       return await builder.compile({
         name: "",
         projectPath: path,
+        clean,
       });
     }
 
