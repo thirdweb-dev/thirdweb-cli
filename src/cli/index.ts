@@ -44,6 +44,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .command("publish")
     .description("Bundles & publishes a project to IPFS")
     .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --dry-run", "dry run (skip actually publishing)")
+    .option("-c, --clean", "clean artifacts before compiling")
     .action(async (options) => {
       let projectPath = process.cwd();
       if (options.path) {
@@ -64,7 +66,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       }
       logger.info("Detected project type:", projectType);
 
-      const compiledResult = await build(projectPath, projectType);
+      const compiledResult = await build(
+        projectPath,
+        projectType,
+        options.clean
+      );
 
       if (compiledResult.contracts.length == 0) {
         logger.error(
@@ -74,6 +80,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       }
 
       logger.info("Project compiled successfully");
+
+      if (options.dryRun) {
+        logger.info("Dry run, skipping publish");
+        return;
+      }
 
       const hashes = await Promise.all(
         compiledResult.contracts.map(async (c) => {
@@ -96,7 +107,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       const url = new URL(THIRDWEB_URL + "/dashboard/publish");
 
       for (let hash of hashes) {
-        url.searchParams.append("uri", hash);
+        url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
       }
 
       logger.info(`Go to this link to publish to the registry: ${url}`);
