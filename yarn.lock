@@ -2,13 +2,14 @@
 # yarn lockfile v1
 
 
-"@thirdweb-dev/cli@^0":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/cli/-/cli-0.0.14.tgz#8cee44beb7f003c98c14142263960684614fc7b8"
-  integrity sha512-TFgsmRWT+Tcef7qUWnnt8QOXMV1ewYO6Tl9WCF97GB1ImKKC0IHtVM4QjRBZZ8+EGfrCOwJniLOHNBchL48clw==
+"@thirdweb-dev/cli@^0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/cli/-/cli-0.0.18.tgz#fe6ee02e0ab5bb1d6caa7949e03d7c8a210654c7"
+  integrity sha512-r6/gXX2iSVf5PbNsAxABK2Iii4TmTztQ/LEHoASkdgCeN9a0RFWhNmGQZkVMLz7rAh8X+e5yGLEfJzO/oNcIVw==
   dependencies:
     "@web-std/file" "^3.0.2"
     commander "^9.1.0"
+    deepmerge "^4.2.2"
     form-data "^4.0.0"
     isomorphic-fetch "^3.0.0"
     open "^8.4.0"
@@ -86,6 +87,11 @@ commander@^9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-9.1.0.tgz#a6b263b2327f2e188c6402c42623327909f2dbec"
   integrity sha512-i0/MaqBtdbnJ4XQs4Pmyb+oFQl+q0lsAmokVUH92SlSw4fkeAcG3bVon+Qt7hmtF+u3Het6o4VgrcY3qAoEB6w==
+
+deepmerge@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-4.2.2.tgz#44d2ea3679b8f4d4ffba33f03d865fc1e7bf4955"
+  integrity sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==
 
 define-lazy-prop@^2.0.0:
   version "2.0.0"
