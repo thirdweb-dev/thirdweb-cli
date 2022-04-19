@@ -86,9 +86,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         return;
       }
 
-      const bytecodes = compiledResult.contracts.map((c) =>
-        JSON.stringify(c.bytecode)
-      );
+      const bytecodes = compiledResult.contracts.map((c) => c.bytecode);
       const abis = compiledResult.contracts.map((c) => JSON.stringify(c.abi));
 
       const { metadataUris: bytecodeURIs } = await storage.uploadBatch(
