@@ -61,7 +61,7 @@ export interface IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string
-  ): Promise<string>;
+  ): Promise<UploadMetadataBatchResult>;
 
   /**
    *

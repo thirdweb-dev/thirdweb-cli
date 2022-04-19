@@ -86,22 +86,31 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         return;
       }
 
-      const hashes = await Promise.all(
-        compiledResult.contracts.map(async (c) => {
-          const bytecodeHash = await storage.upload(c.bytecode);
-          const stringifiedAbi = JSON.stringify(c.abi);
-          const abiHash = await storage.upload(stringifiedAbi);
+      const bytecodes = compiledResult.contracts.map((c) =>
+        JSON.stringify(c.bytecode)
+      );
+      const abis = compiledResult.contracts.map((c) => JSON.stringify(c.abi));
 
-          const hash = await storage.upload(
-            JSON.stringify({
-              name: c.name,
-              bytecodeUri: bytecodeHash,
-              abiUri: abiHash,
-            } as Contract)
-          );
-          logger.debug(`Uploaded ${c.name} publish metadata to ${hash}`);
-          return hash;
-        })
+      const { metadataUris: bytecodeURIs } = await storage.uploadBatch(
+        bytecodes
+      );
+      const { metadataUris: abiURIs } = await storage.uploadBatch(abis);
+
+      const contractMetadatas: string[] = [];
+      for (let i = 0; i < compiledResult.contracts.length; i++) {
+        const bytecode = bytecodeURIs[i];
+        const abi = abiURIs[i];
+        const name = compiledResult.contracts[i].name;
+        contractMetadatas.push(
+          JSON.stringify({
+            name: name,
+            bytecodeUri: bytecode,
+            abiUri: abi,
+          } as Contract)
+        );
+      }
+      const { metadataUris: hashes } = await storage.uploadBatch(
+        contractMetadatas
       );
 
       const url = new URL(THIRDWEB_URL + "/dashboard/publish");
@@ -110,7 +119,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
       }
 
-      logger.info(`Go to this link to publish to the registry: ${url}`);
+      logger.info(`Go to this link to publish your contacts:\n\n${url}`);
 
       open(url.toString());
     });

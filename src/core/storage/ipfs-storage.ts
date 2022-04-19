@@ -75,15 +75,21 @@ export class IpfsStorage implements IStorage {
     fileStartNumber = 0,
     contractAddress?: string,
     signerAddress?: string
-  ): Promise<string> {
-    const { cid } = await this.uploadBatchWithCid(
+  ) {
+    const { cid, fileNames } = await this.uploadBatchWithCid(
       files,
       fileStartNumber,
       contractAddress,
       signerAddress
     );
 
-    return `ipfs://${cid}/`;
+    const baseUri = `ipfs://${cid}/`;
+    const uris = fileNames.map((filename) => `${baseUri}${filename}`);
+
+    return {
+      baseUri,
+      metadataUris: uris,
+    };
   }
 
   /**
