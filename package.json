@@ -1,7 +1,7 @@
 {
   "name": "thirdweb",
   "main": "index.js",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "repository": "git@github.com:thirdweb-dev/thirdweb-cli.git",
   "author": "sdk@thirdweb.com",
   "license": "MIT",
