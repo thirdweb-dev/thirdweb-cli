@@ -14,8 +14,10 @@ export class HardhatBuilder implements IBuilder {
   }): Promise<{
     contracts: ContractPayload[];
   }> {
-    const hardhatPath = require.resolve("hardhat");
-    if (!hardhatPath) {
+    let hardhatPath: string | undefined;
+    try {
+      hardhatPath = require.resolve("hardhat");
+    } catch (e) {
       logger.error(
         "failed to load hardhat runtime, please install hardhat: npm i -g hardhat"
       );
