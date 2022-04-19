@@ -41,6 +41,13 @@ Once your contract code is setup like above, you can publish it with the CLI:
 npx thirdweb publish
 ```
 
+or install the CLI globally on your machine:
+
+```shell
+npm i -g @thirdweb-dev/cli
+thirdweb publish
+```
+
 This command will:
 
 - auto-detect any contract that extends `ThirdwebContract` in your project
