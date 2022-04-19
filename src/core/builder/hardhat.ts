@@ -23,6 +23,7 @@ export class HardhatBuilder implements IBuilder {
       );
       process.exit(1);
     }
+    logger.debug("Hardhat path found", hardhatPath);
     const { default: hre, userConfig } = await import(hardhatPath);
 
     if (options.clean) {

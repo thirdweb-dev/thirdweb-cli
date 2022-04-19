@@ -8,7 +8,6 @@
   "devDependencies": {
     "@types/commander": "^2.12.2",
     "@types/node": "^17.0.23",
-    "hardhat": "^2.9.3",
     "ts-node": "^10.7.0",
     "tsc": "^2.0.4",
     "tsup": "^5.12.1",
@@ -19,6 +18,7 @@
     "commander": "^9.1.0",
     "deepmerge": "^4.2.2",
     "form-data": "^4.0.0",
+    "hardhat": "^2.9.3",
     "isomorphic-fetch": "^3.0.0",
     "open": "^8.4.0",
     "solc": "^0.8.13",
@@ -29,10 +29,9 @@
   },
   "scripts": {
     "cli": "node -r ts-node/register src/cli/index.ts",
-    "build": "tsc -p .",
-    "build:lib": "tsup --env.NODE_ENV production --minify --format esm,cjs --external hardhat",
-    "build:watch": "yarn run build:lib --watch",
-    "prepublishOnly": "yarn build:lib"
+    "build": "tsup --env.NODE_ENV production --minify --format esm,cjs --external hardhat",
+    "build:watch": "yarn run build --watch",
+    "prepublishOnly": "yarn build"
   },
   "files": [
     "src/",

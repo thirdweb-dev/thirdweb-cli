@@ -3,7 +3,6 @@
 import { IpfsStorage } from "./../core/storage/ipfs-storage";
 import { Command } from "commander";
 import path from "path";
-import { Logger } from "tslog";
 import detect from "../core/detection/detect";
 import build from "../core/builder/build";
 import { THIRDWEB_URL } from "../constants/urls";
@@ -46,7 +45,12 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --dry-run", "dry run (skip actually publishing)")
     .option("-c, --clean", "clean artifacts before compiling")
+    .option("-v, --verbose", "show debug logs")
     .action(async (options) => {
+      logger.setSettings({
+        minLevel: options.verbose ? "debug" : "info",
+      });
+
       let projectPath = process.cwd();
       if (options.path) {
         logger.debug("Overriding project path to " + options.path);
@@ -86,6 +90,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         return;
       }
 
+      logger.info("Uploading contract data...");
       const bytecodes = compiledResult.contracts.map((c) => c.bytecode);
       const abis = compiledResult.contracts.map((c) => JSON.stringify(c.abi));
 
@@ -110,6 +115,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       const { metadataUris: hashes } = await storage.uploadBatch(
         contractMetadatas
       );
+
+      logger.info("Upload successful");
 
       const url = new URL(THIRDWEB_URL + "/dashboard/publish");
 
