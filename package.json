@@ -30,7 +30,7 @@
   "scripts": {
     "cli": "node -r ts-node/register src/cli/index.ts",
     "build": "tsc -p .",
-    "build:lib": "tsup --env.NODE_ENV production --minify --format esm,cjs",
+    "build:lib": "tsup --env.NODE_ENV production --minify --format esm,cjs --external hardhat",
     "build:watch": "yarn run build:lib --watch",
     "prepublishOnly": "yarn build:lib"
   },
