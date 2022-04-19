@@ -35,15 +35,16 @@ contract HellowWorldContract is ThirdwebContract {
 
 ## 2. Publishing your contract
 
-First, install the CLI on your machine:
+Once your contract code is setup like above, you can now publish it by running:
+
+```shell
+npx @thirdweb-dev/cli publish
+```
+
+Alternatively, you install the CLI as a global command on your machine:
 
 ```shell
 npm i -g @thirdweb-dev/cli
-```
-
-Once your contract code is setup like above, and the CLI is installed, you can now publish it by running:
-
-```shell
 thirdweb publish
 ```
 
