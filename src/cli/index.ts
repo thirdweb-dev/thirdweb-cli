@@ -38,8 +38,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   updateNotifier({
     pkg,
     shouldNotifyInNpmScript: true,
-    // once per hour while we still update this frequently
-    updateCheckInterval: 1000 * 60 * 60,
+    //check every time while we're still building the CLI
+    updateCheckInterval: 0,
   }).notify();
   console.info("\n");
 
