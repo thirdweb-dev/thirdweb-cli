@@ -10,6 +10,7 @@ import { URL } from "url";
 import open from "open";
 import { Contract } from "../core/interfaces/Contract";
 import { logger } from "../core/helpers/logger";
+import updateNotifier from "update-notifier";
 
 const main = async () => {
   const program = new Command();
@@ -17,7 +18,12 @@ const main = async () => {
   // TODO: allow overriding the default storage
   const storage = new IpfsStorage();
 
-  const cliVersion = require("../../package.json").version;
+  const pkg = require("../../package.json");
+  updateNotifier({ pkg, shouldNotifyInNpmScript: true }).notify({
+    defer: true,
+  });
+
+  const cliVersion = pkg.version;
 
   console.info(`
   
