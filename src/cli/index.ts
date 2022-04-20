@@ -19,9 +19,6 @@ const main = async () => {
   const storage = new IpfsStorage();
 
   const pkg = require("../../package.json");
-  updateNotifier({ pkg, shouldNotifyInNpmScript: true }).notify({
-    defer: true,
-  });
 
   const cliVersion = pkg.version;
 
@@ -37,6 +34,13 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
    \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/  v${cliVersion} 
                                                                               
   `);
+  console.info("\n");
+  updateNotifier({
+    pkg,
+    shouldNotifyInNpmScript: true,
+    // once per hour while we still update this frequently
+    updateCheckInterval: 1000 * 60 * 60,
+  }).notify();
   console.info("\n");
 
   program
