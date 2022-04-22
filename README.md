@@ -26,7 +26,7 @@ Once installed, in your Solidity contract you want to publish, import and extend
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@thirdweb-dev/contracts/contracts/ThirdwebContract.sol";
+import "@thirdweb-dev/contracts/ThirdwebContract.sol";
 
 contract HellowWorldContract is ThirdwebContract {
     // your contract code
