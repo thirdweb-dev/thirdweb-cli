@@ -6,7 +6,7 @@
   "author": "sdk@thirdweb.com",
   "license": "MIT",
   "dependencies": {
-    "@thirdweb-dev/cli": "^0.0.18"
+    "@thirdweb-dev/cli": "^0.1.0"
   },
   "bin": {
     "thirdweb": "./index.js"
