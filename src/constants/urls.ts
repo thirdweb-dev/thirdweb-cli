@@ -16,4 +16,4 @@ export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 /**
  * @internal
  */
-export const THIRDWEB_URL = `https://thirdweb-www-git-jd-byoc-publish-thirdweb.vercel.app`;
+export const THIRDWEB_URL = `https://nightly.thirdweb.com`;
