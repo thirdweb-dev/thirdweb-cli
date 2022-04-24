@@ -127,7 +127,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
       logger.info("Upload successful");
 
-      const url = new URL(THIRDWEB_URL + "/dashboard/publish");
+      const url = new URL(THIRDWEB_URL + "/contracts/publish");
 
       for (let hash of hashes) {
         url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
