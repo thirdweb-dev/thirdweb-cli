@@ -1,10 +1,14 @@
 {
   "name": "@thirdweb-dev/cli",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "version": "0.1.0",
   "repository": "git@github.com:thirdweb-dev/thirdweb-cli.git",
   "author": "sdk@thirdweb.com",
   "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0 <17"
+  },
   "devDependencies": {
     "@types/commander": "^2.12.2",
     "@types/node": "^17.0.23",
@@ -17,12 +21,10 @@
   "dependencies": {
     "@web-std/file": "^3.0.2",
     "commander": "^9.1.0",
-    "deepmerge": "^4.2.2",
     "form-data": "^4.0.0",
     "hardhat": "^2.9.3",
     "isomorphic-fetch": "^3.0.0",
     "open": "^8.4.0",
-    "solc": "^0.8.13",
     "tslog": "^3.3.3",
     "update-notifier": "^5.1.0"
   },
@@ -30,8 +32,9 @@
     "thirdweb": "./dist/index.js"
   },
   "scripts": {
+    "clean": "rm -rf dist/",
     "cli": "node -r ts-node/register src/cli/index.ts",
-    "build": "tsup --env.NODE_ENV production --minify --format esm,cjs --external hardhat",
+    "build": "yarn clean && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
     "build:watch": "yarn run build --watch",
     "prepublishOnly": "yarn build"
   },
