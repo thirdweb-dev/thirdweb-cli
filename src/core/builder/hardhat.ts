@@ -24,7 +24,7 @@ export class HardhatBuilder implements IBuilder {
       process.exit(1);
     }
     logger.debug("Hardhat path found", hardhatPath);
-    const { default: hre, userConfig } = await import(hardhatPath);
+    const hre = require(hardhatPath);
 
     if (options.clean) {
       logger.info("cleaning before compiling");
@@ -38,13 +38,15 @@ export class HardhatBuilder implements IBuilder {
       process.exit(1);
     }
 
+    logger.debug("userconfig paths", hre.userConfig.paths);
+
     const artifactsPath = join(
       options.projectPath,
-      userConfig.paths?.artifacts || "./artifacts"
+      hre.userConfig.paths?.artifacts || "./artifacts"
     );
     const contractsPath = join(
       artifactsPath,
-      userConfig.paths?.sources || "./contracts"
+      hre.userConfig.paths?.sources || "./contracts"
     );
 
     const contracts: ContractPayload[] = [];
