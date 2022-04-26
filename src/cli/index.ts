@@ -23,7 +23,8 @@ const main = async () => {
   const cliVersion = pkg.version;
 
   //yes this has to look like this, eliminates whitespace
-  console.info(`  $$\\     $$\\       $$\\                 $$\\                         $$\\       
+  console.info(`
+  $$\\     $$\\       $$\\                 $$\\                         $$\\       
   $$ |    $$ |      \\__|                $$ |                        $$ |      
 $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$$$$\\  
 \\_$$  _|  $$  __$$\\ $$ |$$  __$$\\ $$  __$$ |$$ | $$ | $$ |$$  __$$\\ $$  __$$\\ 
@@ -42,18 +43,18 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .name("thirdweb-cli")
     .description("Official thirdweb command line interface")
-    .version(cliVersion);
+    .version(cliVersion, "-v, --version", "output the current version");
 
   program
     .command("publish")
-    .description("Bundles & publishes a project to IPFS")
+    .description("Compile & publish a project")
     .option("-p, --path <project-path>", "path to project", ".")
-    .option("-d, --dry-run", "dry run (skip actually publishing)")
+    .option("--dry-run", "dry run (skip actually publishing)")
     .option("-c, --clean", "clean artifacts before compiling")
-    .option("-v, --verbose", "show debug logs")
+    .option("-d, --debug", "show debug logs")
     .action(async (options) => {
       logger.setSettings({
-        minLevel: options.verbose ? "debug" : "info",
+        minLevel: options.debug ? "debug" : "info",
       });
 
       let projectPath = process.cwd();
