@@ -1,8 +1,10 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { basename, join } from "path";
 import { logger } from "../helpers/logger";
 import { Builder as IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
+import { execSync } from "child_process";
 
 export class HardhatBuilder implements IBuilder {
   constructor() {}
@@ -24,29 +26,40 @@ export class HardhatBuilder implements IBuilder {
       process.exit(1);
     }
     logger.debug("Hardhat path found", hardhatPath);
-    const hre = require(hardhatPath);
-
-    if (options.clean) {
-      logger.info("cleaning before compiling");
-      await hre.run("clean");
-    }
-
+    let hre: HardhatRuntimeEnvironment | undefined;
     try {
-      await hre.run("compile");
-    } catch (err) {
-      logger.error("hardhat failed to compile", err);
-      process.exit(1);
-    }
+      hre = require(hardhatPath);
+      logger.debug("userconfig paths", hre?.userConfig.paths);
 
-    logger.debug("userconfig paths", hre.userConfig.paths);
+      if (options.clean) {
+        logger.info("Cleaning before compiling");
+        await hre?.run("clean");
+      }
+
+      try {
+        logger.info("Compiling project...");
+        await hre?.run("compile");
+      } catch (err) {
+        logger.error("hardhat failed to compile", err);
+        process.exit(1);
+      }
+    } catch (e) {
+      logger.warn(
+        "failed to load hardhat runtime: hardhat.config files with ESM style imports are not suppoerted. Consider switching to CJS style requires."
+      );
+      logger.info("Falling back to default hardhat config.");
+      // Fallback to npx when we can't load hardhat
+      logger.info("Compiling project...");
+      execSync("npx hardhat compile");
+    }
 
     const artifactsPath = join(
       options.projectPath,
-      hre.userConfig.paths?.artifacts || "./artifacts"
+      hre?.userConfig.paths?.artifacts || "./artifacts"
     );
     const contractsPath = join(
       artifactsPath,
-      hre.userConfig.paths?.sources || "./contracts"
+      hre?.userConfig.paths?.sources || "./contracts"
     );
 
     const contracts: ContractPayload[] = [];
