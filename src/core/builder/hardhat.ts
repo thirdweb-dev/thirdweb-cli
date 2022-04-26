@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { basename, join } from "path";
+import { HardhatConfig } from "hardhat/types";
+import { basename, join, resolve } from "path";
 import { logger } from "../helpers/logger";
 import { Builder as IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
@@ -16,51 +16,35 @@ export class HardhatBuilder implements IBuilder {
   }): Promise<{
     contracts: ContractPayload[];
   }> {
-    let hardhatPath: string | undefined;
-    try {
-      hardhatPath = require.resolve("hardhat");
-    } catch (e) {
-      logger.error(
-        "failed to load hardhat runtime, please install hardhat: npm i -g hardhat"
-      );
-      process.exit(1);
-    }
-    logger.debug("Hardhat path found", hardhatPath);
-    let hre: HardhatRuntimeEnvironment | undefined;
-    try {
-      hre = require(hardhatPath);
-      logger.debug("userconfig paths", hre?.userConfig.paths);
-
-      if (options.clean) {
-        logger.info("Cleaning before compiling");
-        await hre?.run("clean");
-      }
-
-      try {
-        logger.info("Compiling project...");
-        await hre?.run("compile");
-      } catch (err) {
-        logger.error("hardhat failed to compile", err);
-        process.exit(1);
-      }
-    } catch (e) {
-      logger.warn(
-        "failed to load hardhat runtime: hardhat.config files with ESM style imports are not suppoerted. Consider switching to CJS style requires."
-      );
-      logger.info("Falling back to default hardhat config.");
-      // Fallback to npx when we can't load hardhat
-      logger.info("Compiling project...");
-      execSync("npx hardhat compile");
+    if (options.clean) {
+      logger.info("Running hardhat clean");
+      execSync("npx hardhat clean");
     }
 
-    const artifactsPath = join(
-      options.projectPath,
-      hre?.userConfig.paths?.artifacts || "./artifacts"
+    logger.info("Compiling...");
+    execSync("npx hardhat compile");
+    //we get our very own extractor script from the dir that we're in during execution
+    // this is `./dist/cli` (for all purposes of the CLI)
+    // then we look up the hardhat config extractor file path from there
+    const configExtractorScriptPath = resolve(
+      __dirname,
+      "../helpers/hardhat-config-extractor.js"
     );
-    const contractsPath = join(
-      artifactsPath,
-      hre?.userConfig.paths?.sources || "./contracts"
+
+    //the hardhat extractor **logs out** the runtime config of hardhat, we take that stdout and parse it
+    const stringifiedConfig = execSync(
+      `npx hardhat run ${configExtractorScriptPath} --no-compile`
+    ).toString();
+    //voila the hardhat config
+    const actualHardhatConfig = JSON.parse(stringifiedConfig) as HardhatConfig;
+
+    logger.debug(
+      "successfully extracted hardhat config",
+      actualHardhatConfig.paths
     );
+
+    const artifactsPath = actualHardhatConfig.paths.artifacts;
+    const contractsPath = join(artifactsPath, "./contracts");
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];

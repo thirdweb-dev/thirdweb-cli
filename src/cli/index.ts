@@ -22,26 +22,22 @@ const main = async () => {
 
   const cliVersion = pkg.version;
 
-  console.info(`
-  
-  $$\\     $$\\       $$\\                 $$\\                         $$\\       
+  //yes this has to look like this, eliminates whitespace
+  console.info(`  $$\\     $$\\       $$\\                 $$\\                         $$\\       
   $$ |    $$ |      \\__|                $$ |                        $$ |      
 $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$$$$\\  
 \\_$$  _|  $$  __$$\\ $$ |$$  __$$\\ $$  __$$ |$$ | $$ | $$ |$$  __$$\\ $$  __$$\\ 
   $$ |    $$ |  $$ |$$ |$$ |  \\__|$$ /  $$ |$$ | $$ | $$ |$$$$$$$$ |$$ |  $$ |
   $$ |$$\\ $$ |  $$ |$$ |$$ |      $$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |
   \\$$$$  |$$ |  $$ |$$ |$$ |      \\$$$$$$$ |\\$$$$$\\$$$$  |\\$$$$$$$\\ $$$$$$$  |
-   \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/  v${cliVersion} 
-                                                                              
-  `);
-  console.info("\n");
+   \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ `);
+  console.info(`\n 💎 thirdweb-cli v${cliVersion} 💎\n`);
   updateNotifier({
     pkg,
     shouldNotifyInNpmScript: true,
     //check every time while we're still building the CLI
     updateCheckInterval: 0,
   }).notify();
-  console.info("\n");
 
   program
     .name("thirdweb-cli")
