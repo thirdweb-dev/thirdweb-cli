@@ -44,7 +44,11 @@ export class HardhatBuilder implements IBuilder {
     );
 
     const artifactsPath = actualHardhatConfig.paths.artifacts;
-    const contractsPath = join(artifactsPath, "./contracts");
+    const sourcesDir = actualHardhatConfig.paths.sources.replace(
+      options.projectPath,
+      ""
+    );
+    const contractsPath = join(artifactsPath, sourcesDir);
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
