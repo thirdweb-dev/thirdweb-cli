@@ -48,9 +48,10 @@ export class HardhatBuilder implements IBuilder {
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(contractsPath, /.*[^\.dbg]\.json$/, files);
+    this.findFiles(contractsPath, /^.*(?<!dbg)\.json$/, files);
 
     for (const file of files) {
+      logger.debug("Processing:", file.replace(contractsPath, ""));
       const contractName = basename(file, ".json");
       const contractJsonFile = readFileSync(file, "utf-8");
 
