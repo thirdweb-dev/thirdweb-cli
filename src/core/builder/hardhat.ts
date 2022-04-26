@@ -65,6 +65,12 @@ export class HardhatBuilder implements IBuilder {
 
       for (const input of abi) {
         if (this.isThirdwebContract(input)) {
+          if (contracts.find((c) => c.name === contractName)) {
+            logger.error(
+              `Found multiple contracts with name "${contractName}". Contract names should be unique.`
+            );
+            process.exit(1);
+          }
           contracts.push({
             abi,
             bytecode,
