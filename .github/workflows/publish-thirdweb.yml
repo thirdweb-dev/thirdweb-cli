@@ -23,9 +23,7 @@ jobs:
         with:
           node-version: 16
       - run: yarn install
-      - run: yarn build
       - run: yarn generate-thirdweb-package
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: ./thirdweb-package.json
