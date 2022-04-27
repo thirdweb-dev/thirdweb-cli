@@ -36,7 +36,8 @@
     "cli": "node -r ts-node/register src/cli/index.ts",
     "build": "yarn clean && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
     "build:watch": "yarn run build --watch",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js" 
   },
   "files": [
     "src/",

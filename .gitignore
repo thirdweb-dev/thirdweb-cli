@@ -1,3 +1,7 @@
 node_modules/
 
 dist/
+
+
+# release files
+thirdweb-package.json
