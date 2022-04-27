@@ -72,9 +72,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       const projectType = await detect(projectPath);
       if (projectType === "unknown") {
         logger.error("Unable to detect project type");
-        return;
+        process.exit(1);
       }
-      logger.info("Detected project type:", projectType);
 
       const compiledResult = await build(
         projectPath,
@@ -88,6 +87,10 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         );
         process.exit(1);
       }
+      logger.info(
+        "Detected thirdweb contracts:",
+        compiledResult.contracts.map((c) => c.name).join(", ")
+      );
 
       logger.info("Project compiled successfully");
 

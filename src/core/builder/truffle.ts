@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync, rmdirSync } from "fs";
 import { basename, join } from "path";
 import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
@@ -7,38 +7,41 @@ import { ContractPayload } from "../interfaces/ContractPayload";
 
 import { BaseBuilder } from "./builder-base";
 
-export class FoundryBuilder extends BaseBuilder {
+export class TruffleBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
+    // get the current config first
+    const truffleConfig = require(join(
+      options.projectPath,
+      "truffle-config.js"
+    ));
+
+    const buildPath = join(
+      options.projectPath,
+      truffleConfig.contracts_build_directory || "./build/contracts"
+    );
+
     if (options.clean) {
-      logger.info("Running forge clean");
-      execSync("forge clean");
+      logger.info("Cleaning build directory");
+      existsSync(buildPath) && rmdirSync(buildPath, { recursive: true });
     }
 
     logger.info("Compiling...");
-    execSync("forge build");
-
-    // get the current config first
-    const foundryConfig = execSync("forge config --json").toString();
-
-    const actualFoundryConfig = JSON.parse(foundryConfig);
-
-    const outPath = join(options.projectPath, actualFoundryConfig.out);
-    // const contractsPath =
+    execSync("npx truffle compile");
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(outPath, /^.*(?<!dbg)\.json$/, files);
+    this.findFiles(buildPath, /^.*(?<!dbg)\.json$/, files);
 
     for (const file of files) {
-      logger.debug("Processing:", file.replace(outPath, ""));
+      logger.debug("Processing:", file.replace(buildPath, ""));
       const contractName = basename(file, ".json");
       const contractJsonFile = readFileSync(file, "utf-8");
 
       const contractInfo = JSON.parse(contractJsonFile);
       const abi = contractInfo.abi;
-      const bytecode = contractInfo.bytecode.object;
+      const bytecode = contractInfo.bytecode;
 
       for (const input of abi) {
         if (this.isThirdwebContract(input)) {

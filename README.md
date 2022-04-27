@@ -11,13 +11,13 @@ In order to publish a contract and get all the benefits of the thirdweb platform
 From your project, add the thirdweb contracts dependency:
 
 ```shell
-yarn add @thirdweb-dev/contracts@byoc
+yarn add @thirdweb-dev/contracts
 ```
 
 or with npm
 
 ```shell
-npm i @thirdweb-dev/contracts@byoc
+npm i @thirdweb-dev/contracts
 ```
 
 Once installed, in your Solidity contract you want to publish, import and extend `ThirdwebContract`. Here's an example:
@@ -65,11 +65,12 @@ To publish, you need to be in a directory that contains a project which the CLI 
 with. The projects we support so far:
 
 - hardhat
+- forge
+- truffle
 
 Coming soon:
 
-- forge
-- truffle
+- brownie
 
 ---
 
@@ -93,5 +94,3 @@ The simplest way to work on the CLI locally is to:
 $ npm install -g ./
 $ yarn run build:watch
 ```
-
-> TODO: figure out how to do the global local installation with yarn
