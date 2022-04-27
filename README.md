@@ -1,4 +1,4 @@
-# `thirdweb-cli`
+# `thirdweb cli`
 
 The thirdweb CLI is your one-stop-shop for publishing custom contracts for your team or the world to use. The CLI uploads all necessary data to decentralized storage and makes it available to deploy via the thirdweb sdk or thirdweb dashboard.
 
