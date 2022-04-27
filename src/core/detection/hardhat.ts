@@ -6,8 +6,6 @@ import { Detector } from "./detector";
 export default class HardhatDetector implements Detector {
   public projectType: ProjectType = "hardhat";
 
-  constructor() {}
-
   public async matches(path: string): Promise<boolean> {
     logger.debug("Checking if " + path + " is a Hardhat project");
     return (

@@ -93,7 +93,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
       if (options.dryRun) {
         logger.info("Dry run, skipping publish");
-        return;
+        process.exit(0);
       }
 
       logger.info("Uploading contract data...");

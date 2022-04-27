@@ -2,18 +2,13 @@ import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { HardhatConfig } from "hardhat/types";
 import { basename, join, resolve } from "path";
 import { logger } from "../helpers/logger";
-import { Builder as IBuilder } from "../interfaces/Builder";
+import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { execSync } from "child_process";
+import { BaseBuilder } from "./builder-base";
 
-export class HardhatBuilder implements IBuilder {
-  constructor() {}
-
-  public async compile(options: {
-    projectPath: string;
-    name: string;
-    clean: boolean;
-  }): Promise<{
+export class HardhatBuilder extends BaseBuilder {
+  public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
     if (options.clean) {
@@ -89,32 +84,5 @@ export class HardhatBuilder implements IBuilder {
     return {
       contracts,
     };
-  }
-
-  private isThirdwebContract(input: any): boolean {
-    try {
-      return (
-        input.name === "setThirdwebInfo" &&
-        input.inputs[0].internalType === "struct ThirdwebContract.ThirdwebInfo"
-      );
-    } catch (e) {
-      return false;
-    }
-  }
-
-  private findFiles(startPath: string, filter: RegExp, results: string[]) {
-    if (!existsSync(startPath)) {
-      console.log("no dir ", startPath);
-      return;
-    }
-
-    var files = readdirSync(startPath);
-    for (var i = 0; i < files.length; i++) {
-      var filename = join(startPath, files[i]);
-      var stat = statSync(filename);
-      if (stat.isDirectory()) {
-        this.findFiles(filename, filter, results);
-      } else if (filter.test(filename)) results.push(filename);
-    }
   }
 }
