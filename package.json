@@ -2,7 +2,7 @@
   "name": "@thirdweb-dev/cli",
   "main": "dist/cli/index.js",
   "types": "dist/cli/index.d.ts",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "repository": "git@github.com:thirdweb-dev/thirdweb-cli.git",
   "author": "sdk@thirdweb.com",
   "license": "MIT",
@@ -37,7 +37,7 @@
     "build": "yarn clean && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
     "build:watch": "yarn run build --watch",
     "prepublishOnly": "yarn build",
-    "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js" 
+    "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js"
   },
   "files": [
     "src/",
