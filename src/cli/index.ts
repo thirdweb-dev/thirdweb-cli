@@ -130,7 +130,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
       }
 
-      logger.info(`Go to this link to publish your contacts:\n\n${url}`);
+      logger.info(`Go to this link to publish your contracts:\n\n${url}\n\n`);
 
       open(url.toString());
     });
