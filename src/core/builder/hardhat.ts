@@ -76,11 +76,6 @@ export class HardhatBuilder extends BaseBuilder {
       }
     }
 
-    logger.info(
-      "Detected thirdweb contracts:",
-      contracts.map((c) => c.name).join(", ")
-    );
-
     return {
       contracts,
     };

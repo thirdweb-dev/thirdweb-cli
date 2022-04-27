@@ -16,6 +16,9 @@ import {
   resolveGatewayUrl,
 } from "../helpers/storage";
 
+const orig = process.emitWarning;
+//suppress warnings whule we require a bunch of stuff
+process.emitWarning = () => {};
 require("isomorphic-fetch");
 
 if (!globalThis.FormData) {
@@ -27,6 +30,9 @@ if (!globalThis.File) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.File = require("@web-std/file").File;
 }
+
+//re-enable warnings
+process.emitWarning = orig;
 
 /**
  * @internal
