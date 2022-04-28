@@ -1,4 +1,18 @@
-# `thirdweb cli`
+<p align="center">
+<br />
+<a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/typescript-sdk/blob/main/logo.svg?raw=true" width="200" alt=""></a>
+<br />
+</p>
+<h1 align="center">Thirdweb CLI</h1>
+<p align="center">
+<a href="https://www.npmjs.com/package/@thirdweb-dev/cli"><img src="https://img.shields.io/npm/v/@thirdweb-dev/cli?color=red&logo=npm" alt="npm version"></a>
+<a href="https://discord.gg/thirdweb"><img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"></a>
+
+</p>
+<p align="center"><strong>Publish and deploy smart contracts without dealing with private keys</strong></p>
+<br />
+
+## Getting started
 
 The thirdweb CLI is your one-stop-shop for publishing custom contracts for your team or the world to use. The CLI uploads all necessary data to decentralized storage and makes it available to deploy via the thirdweb sdk or thirdweb dashboard.
 
@@ -8,7 +22,7 @@ This brings all the capabilities of thirdweb to your own custom contracts.
 
 In order to publish a contract and get all the benefits of the thirdweb platform, your contract needs to extend `ThirdwebContract`.
 
-From your project, add the thirdweb contracts dependency:
+From your project, add the [thirdweb contracts](https://https://github.com/thirdweb-dev/contracts) dependency:
 
 ```shell
 yarn add @thirdweb-dev/contracts
