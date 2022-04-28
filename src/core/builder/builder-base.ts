@@ -40,6 +40,11 @@ export abstract class BaseBuilder implements IBuilder {
         logger.debug('skipping "dependencies" directory');
         continue;
       }
+      // we never want to look in node_modules
+      else if (stat.isDirectory() && basename(filename) === "node_modules") {
+        logger.debug('skipping "node_modules" directory');
+        continue;
+      }
       if (stat.isDirectory()) {
         this.findFiles(filename, filter, results);
       } else if (filter.test(filename)) {

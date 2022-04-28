@@ -70,8 +70,9 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
       const projectType = await detect(projectPath);
       if (projectType === "unknown") {
-        logger.error("Unable to detect project type");
-        process.exit(1);
+        logger.warn(
+          "Unable to detect project type, falling back to solc compilation",
+        );
       }
 
       const compiledResult = await build(
