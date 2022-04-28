@@ -31,9 +31,6 @@ export abstract class BaseBuilder implements IBuilder {
       const filename = join(startPath, files[i]);
       //skip the actual thirdweb contract itself
       if (basename(filename, ".json") === "ThirdwebContract") {
-        logger.debug(
-          'skipping "ThirdwebContract" (no need to publish the root TW contract itself)',
-        );
         continue;
       }
       const stat = statSync(filename);

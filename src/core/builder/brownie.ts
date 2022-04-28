@@ -3,23 +3,21 @@ import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
-import { cosmiconfigSync } from "cosmiconfig";
 import { existsSync, readFileSync, rmdirSync } from "fs";
 import { basename, join } from "path";
+import { parse } from "yaml";
 
 export class BrownieBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    const explorer = cosmiconfigSync("brownie");
-
-    const loadedConfig = explorer.load(
-      join(options.projectPath, "brownie-config.yaml"),
+    const config = parse(
+      readFileSync(join(options.projectPath, "brownie-config.yaml"), "utf-8"),
     );
 
     const buildPath = join(
       options.projectPath,
-      loadedConfig?.config?.project_structure?.build || "./build",
+      config?.project_structure?.build || "./build",
     );
 
     if (options.clean) {

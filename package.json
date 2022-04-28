@@ -24,13 +24,13 @@
   "dependencies": {
     "@web-std/file": "^3.0.2",
     "commander": "^9.1.0",
-    "cosmiconfig": "^7.0.1",
     "form-data": "^4.0.0",
     "inquirer": "^8.2.3",
     "isomorphic-fetch": "^3.0.0",
     "open": "^8.4.0",
     "tslog": "^3.3.3",
-    "update-notifier": "^5.1.0"
+    "update-notifier": "^5.1.0",
+    "yaml": "^2.0.1"
   },
   "bin": {
     "thirdweb": "./dist/cli/index.js"
