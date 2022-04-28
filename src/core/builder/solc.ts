@@ -35,6 +35,10 @@ export class SolcBuilder extends BaseBuilder {
             "*": ["*"],
           },
         },
+        optimizer: {
+          enabled: true,
+          runs: 800,
+        },
       },
     };
 
