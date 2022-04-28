@@ -3,6 +3,7 @@ import { ProjectType } from "./../types/ProjectType";
 import { BrownieBuilder } from "./brownie";
 import { FoundryBuilder } from "./foundry";
 import { HardhatBuilder } from "./hardhat";
+import { SolcBuilder } from "./solc";
 import { TruffleBuilder } from "./truffle";
 
 export default async function build(
@@ -50,7 +51,12 @@ export default async function build(
     }
 
     default: {
-      throw new Error("Unknown project type");
+      const builder = new SolcBuilder();
+      return await builder.compile({
+        name: "",
+        projectPath: path,
+        clean,
+      });
     }
   }
 }

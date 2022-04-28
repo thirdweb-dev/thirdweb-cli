@@ -28,6 +28,7 @@
     "inquirer": "^8.2.3",
     "isomorphic-fetch": "^3.0.0",
     "open": "^8.4.0",
+    "solc": "^0.8.13",
     "tslog": "^3.3.3",
     "update-notifier": "^5.1.0",
     "yaml": "^2.0.1"
