@@ -1,16 +1,18 @@
+import { logger } from "../helpers/logger";
 import { ProjectType } from "../types/ProjectType";
+import BrownieDetector from "./brownie";
 import { Detector } from "./detector";
 import FoundryDetector from "./foundry";
 import HardhatDetector from "./hardhat";
-import inquirer from "inquirer";
-import { logger } from "../helpers/logger";
 import TruffleDetector from "./truffle";
+import inquirer from "inquirer";
 
 export default async function detect(path: string): Promise<ProjectType> {
   const detectors: Detector[] = [
     new HardhatDetector(),
     new FoundryDetector(),
     new TruffleDetector(),
+    new BrownieDetector(),
   ];
 
   const possibleProjectTypes = detectors
@@ -29,7 +31,7 @@ export default async function detect(path: string): Promise<ProjectType> {
 
   logger.info(
     "Detected multiple possible build tools:",
-    possibleProjectTypes.map((s) => `"${s}"`).join(", ")
+    possibleProjectTypes.map((s) => `"${s}"`).join(", "),
   );
 
   const question = "How would you like to compile your contracts";

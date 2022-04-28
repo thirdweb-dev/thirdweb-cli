@@ -1,16 +1,15 @@
 #!/usr/bin/env node
-
+import { THIRDWEB_URL } from "../constants/urls";
+import build from "../core/builder/build";
+import detect from "../core/detection/detect";
+import { logger } from "../core/helpers/logger";
+import { Contract } from "../core/interfaces/Contract";
 import { IpfsStorage } from "./../core/storage/ipfs-storage";
 import { Command } from "commander";
-import path from "path";
-import detect from "../core/detection/detect";
-import build from "../core/builder/build";
-import { THIRDWEB_URL } from "../constants/urls";
-import { URL } from "url";
 import open from "open";
-import { Contract } from "../core/interfaces/Contract";
-import { logger } from "../core/helpers/logger";
+import path from "path";
 import updateNotifier from "update-notifier";
+import { URL } from "url";
 
 const main = async () => {
   const program = new Command();
@@ -78,18 +77,18 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       const compiledResult = await build(
         projectPath,
         projectType,
-        options.clean
+        options.clean,
       );
 
       if (compiledResult.contracts.length == 0) {
         logger.error(
-          "No thirdweb contract detected. Extend ThirdwebContract to publish your own contracts."
+          "No thirdweb contract detected. Extend ThirdwebContract to publish your own contracts.",
         );
         process.exit(1);
       }
       logger.info(
         "Detected thirdweb contracts:",
-        compiledResult.contracts.map((c) => c.name).join(", ")
+        compiledResult.contracts.map((c) => `"${c.name}"`).join(", "),
       );
 
       logger.info("Project compiled successfully");
@@ -104,7 +103,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       const abis = compiledResult.contracts.map((c) => JSON.stringify(c.abi));
 
       const { metadataUris: bytecodeURIs } = await storage.uploadBatch(
-        bytecodes
+        bytecodes,
       );
       const { metadataUris: abiURIs } = await storage.uploadBatch(abis);
 
@@ -118,11 +117,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
             name: name,
             bytecodeUri: bytecode,
             abiUri: abi,
-          } as Contract)
+          } as Contract),
         );
       }
       const { metadataUris: hashes } = await storage.uploadBatch(
-        contractMetadatas
+        contractMetadatas,
       );
 
       logger.info("Upload successful");

@@ -3,22 +3,23 @@ import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
+import { cosmiconfigSync } from "cosmiconfig";
 import { existsSync, readFileSync, rmdirSync } from "fs";
 import { basename, join } from "path";
 
-export class TruffleBuilder extends BaseBuilder {
+export class BrownieBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    // get the current config first
-    const truffleConfig = require(join(
-      options.projectPath,
-      "truffle-config.js",
-    ));
+    const explorer = cosmiconfigSync("brownie");
+
+    const loadedConfig = explorer.load(
+      join(options.projectPath, "brownie-config.yaml"),
+    );
 
     const buildPath = join(
       options.projectPath,
-      truffleConfig.contracts_build_directory || "./build/contracts",
+      loadedConfig?.config?.project_structure?.build || "./build",
     );
 
     if (options.clean) {
@@ -27,14 +28,16 @@ export class TruffleBuilder extends BaseBuilder {
     }
 
     logger.info("Compiling...");
-    execSync("npx truffle compile");
+    execSync("brownie compile");
+
+    const contractsPath = join(buildPath, "contracts/");
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(buildPath, /^.*(?<!dbg)\.json$/, files);
+    this.findFiles(contractsPath, /^.*(?<!dbg)\.json$/, files);
 
     for (const file of files) {
-      logger.debug("Processing:", file.replace(buildPath, ""));
+      logger.debug("Processing:", file.replace(contractsPath, ""));
       const contractName = basename(file, ".json");
       const contractJsonFile = readFileSync(file, "utf-8");
 

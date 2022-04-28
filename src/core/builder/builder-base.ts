@@ -1,11 +1,12 @@
-import { existsSync, readdirSync, statSync } from "fs";
-import { basename, join } from "path";
+import { logger } from "../helpers/logger";
 import { CompileOptions, IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
+import { existsSync, readdirSync, statSync } from "fs";
+import { basename, join } from "path";
 
 export abstract class BaseBuilder implements IBuilder {
   abstract compile(
-    options: CompileOptions
+    options: CompileOptions,
   ): Promise<{ contracts: ContractPayload[] }>;
 
   protected isThirdwebContract(input: any): boolean {
@@ -25,14 +26,23 @@ export abstract class BaseBuilder implements IBuilder {
       return;
     }
 
-    var files = readdirSync(startPath);
-    for (var i = 0; i < files.length; i++) {
-      var filename = join(startPath, files[i]);
+    const files = readdirSync(startPath);
+    for (let i = 0; i < files.length; i++) {
+      const filename = join(startPath, files[i]);
       //skip the actual thirdweb contract itself
       if (basename(filename, ".json") === "ThirdwebContract") {
+        logger.debug(
+          'skipping "ThirdwebContract" (no need to publish the root TW contract itself)',
+        );
         continue;
       }
-      var stat = statSync(filename);
+      const stat = statSync(filename);
+
+      // brownie has a "depdendencies" directory *inside* the build directory, if we detect that we should skip it
+      if (stat.isDirectory() && basename(filename) === "dependencies") {
+        logger.debug('skipping "dependencies" directory');
+        continue;
+      }
       if (stat.isDirectory()) {
         this.findFiles(filename, filter, results);
       } else if (filter.test(filename)) {

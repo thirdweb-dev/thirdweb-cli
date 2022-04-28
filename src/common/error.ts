@@ -17,7 +17,7 @@ export class InvalidAddressError extends Error {
   /** @internal */
   constructor(address?: string) {
     super(
-      address ? `'${address}' is an invalid address` : "Invalid address passed"
+      address ? `'${address}' is an invalid address` : "Invalid address passed",
     );
   }
 }
@@ -71,7 +71,7 @@ export class DuplicateFileNameError extends Error {
   /** @internal */
   constructor(fileName: string) {
     super(
-      `DUPLICATE_FILE_NAME_ERROR: File name ${fileName} was passed for more than one file.`
+      `DUPLICATE_FILE_NAME_ERROR: File name ${fileName} was passed for more than one file.`,
     );
   }
 }
@@ -83,7 +83,7 @@ export class NotEnoughTokensError extends Error {
   /** @internal */
   constructor(contractAddress: string, quantity: number, available: number) {
     super(
-      `BALANCE ERROR: you do not have enough balance on contract ${contractAddress} to use ${quantity} tokens. You have ${available} tokens available.`
+      `BALANCE ERROR: you do not have enough balance on contract ${contractAddress} to use ${quantity} tokens. You have ${available} tokens available.`,
     );
   }
 }
@@ -139,7 +139,7 @@ export class DuplicateLeafsError extends Error {
 export class AuctionAlreadyStartedError extends Error {
   constructor(id?: string) {
     super(
-      `Auction already started with existing bid${id ? `, id: ${id}` : ""}`
+      `Auction already started with existing bid${id ? `, id: ${id}` : ""}`,
     );
   }
 }
@@ -164,7 +164,7 @@ export class ListingNotFoundError extends Error {
         marketplaceContractAddress
           ? ` marketplace address: ${marketplaceContractAddress}`
           : ""
-      }${listingId ? ` listing id: ${listingId}` : ""}`
+      }${listingId ? ` listing id: ${listingId}` : ""}`,
     );
   }
 }
@@ -178,7 +178,7 @@ export class WrongListingTypeError extends Error {
     marketplaceContractAddress: string,
     listingId?: string,
     actualType?: string,
-    expectedType?: string
+    expectedType?: string,
   ) {
     super(
       `Incorrect listing type. Are you sure you're using the right method?.${
@@ -187,7 +187,7 @@ export class WrongListingTypeError extends Error {
           : ""
       }${listingId ? ` listing id: ${listingId}` : ""}${
         expectedType ? ` expected type: ${expectedType}` : ""
-      }${actualType ? ` actual type: ${actualType}` : ""}`
+      }${actualType ? ` actual type: ${actualType}` : ""}`,
     );
   }
 }
@@ -201,7 +201,7 @@ export class RestrictedTransferError extends Error {
     super(
       `Failed to transfer asset, transfer is restricted.${
         assetAddress ? ` Address : ${assetAddress}` : ""
-      }`
+      }`,
     );
   }
 }
@@ -214,12 +214,12 @@ export class AdminRoleMissingError extends Error {
   constructor(
     address?: string,
     contractAddress?: string,
-    message = "Failed to execute transaction"
+    message = "Failed to execute transaction",
   ) {
     super(
       `${message}, admin role is missing${
         address ? ` on address: ${address}` : ""
-      }${contractAddress ? ` on contract: ${contractAddress}` : ""}`
+      }${contractAddress ? ` on contract: ${contractAddress}` : ""}`,
     );
   }
 }

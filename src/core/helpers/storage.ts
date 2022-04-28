@@ -14,7 +14,7 @@ import { Json } from "../types";
  */
 export function replaceFilePropertiesWithHashes(
   object: Record<string, any>,
-  cids: string[]
+  cids: string[],
 ) {
   const keys = Object.keys(object);
   for (const key in keys) {
@@ -43,7 +43,7 @@ export function replaceFilePropertiesWithHashes(
 export function replaceHashWithGatewayUrl(
   object: Record<string, any>,
   scheme: string,
-  gatewayUrl: string
+  gatewayUrl: string,
 ): Record<string, any> {
   const keys = Object.keys(object);
   for (const key in keys) {
@@ -75,7 +75,7 @@ export function replaceHashWithGatewayUrl(
 export function resolveGatewayUrl<T extends Json>(
   ipfsHash: T,
   scheme: string,
-  gatewayUrl: string
+  gatewayUrl: string,
 ): T {
   if (typeof ipfsHash === "string") {
     return ipfsHash && ipfsHash.toLowerCase().includes(scheme)

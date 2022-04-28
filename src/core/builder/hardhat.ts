@@ -1,11 +1,11 @@
-import { existsSync, readdirSync, readFileSync, statSync } from "fs";
-import { HardhatConfig } from "hardhat/types";
-import { basename, join, resolve } from "path";
 import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
-import { execSync } from "child_process";
 import { BaseBuilder } from "./builder-base";
+import { execSync } from "child_process";
+import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { HardhatConfig } from "hardhat/types";
+import { basename, join, resolve } from "path";
 
 export class HardhatBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
@@ -23,25 +23,25 @@ export class HardhatBuilder extends BaseBuilder {
     // then we look up the hardhat config extractor file path from there
     const configExtractorScriptPath = resolve(
       __dirname,
-      "../helpers/hardhat-config-extractor.js"
+      "../helpers/hardhat-config-extractor.js",
     );
 
     //the hardhat extractor **logs out** the runtime config of hardhat, we take that stdout and parse it
     const stringifiedConfig = execSync(
-      `npx hardhat run ${configExtractorScriptPath} --no-compile`
+      `npx hardhat run ${configExtractorScriptPath} --no-compile`,
     ).toString();
     //voila the hardhat config
     const actualHardhatConfig = JSON.parse(stringifiedConfig) as HardhatConfig;
 
     logger.debug(
       "successfully extracted hardhat config",
-      actualHardhatConfig.paths
+      actualHardhatConfig.paths,
     );
 
     const artifactsPath = actualHardhatConfig.paths.artifacts;
     const sourcesDir = actualHardhatConfig.paths.sources.replace(
       options.projectPath,
-      ""
+      "",
     );
     const contractsPath = join(artifactsPath, sourcesDir);
 
@@ -62,7 +62,7 @@ export class HardhatBuilder extends BaseBuilder {
         if (this.isThirdwebContract(input)) {
           if (contracts.find((c) => c.name === contractName)) {
             logger.error(
-              `Found multiple contracts with name "${contractName}". Contract names should be unique.`
+              `Found multiple contracts with name "${contractName}". Contract names should be unique.`,
             );
             process.exit(1);
           }
