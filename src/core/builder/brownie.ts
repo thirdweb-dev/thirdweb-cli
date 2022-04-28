@@ -3,47 +3,32 @@ import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
-import { existsSync, readFileSync, readdirSync, statSync } from "fs";
-import { HardhatConfig } from "hardhat/types";
-import { basename, join, resolve } from "path";
+import { existsSync, readFileSync, rmdirSync } from "fs";
+import { basename, join } from "path";
+import { parse } from "yaml";
 
-export class HardhatBuilder extends BaseBuilder {
+export class BrownieBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
+    const config = parse(
+      readFileSync(join(options.projectPath, "brownie-config.yaml"), "utf-8"),
+    );
+
+    const buildPath = join(
+      options.projectPath,
+      config?.project_structure?.build || "./build",
+    );
+
     if (options.clean) {
-      logger.info("Running hardhat clean");
-      execSync("npx hardhat clean");
+      logger.info("Cleaning build directory");
+      existsSync(buildPath) && rmdirSync(buildPath, { recursive: true });
     }
 
     logger.info("Compiling...");
-    execSync("npx hardhat compile");
-    //we get our very own extractor script from the dir that we're in during execution
-    // this is `./dist/cli` (for all purposes of the CLI)
-    // then we look up the hardhat config extractor file path from there
-    const configExtractorScriptPath = resolve(
-      __dirname,
-      "../helpers/hardhat-config-extractor.js",
-    );
+    execSync("brownie compile");
 
-    //the hardhat extractor **logs out** the runtime config of hardhat, we take that stdout and parse it
-    const stringifiedConfig = execSync(
-      `npx hardhat run ${configExtractorScriptPath} --no-compile`,
-    ).toString();
-    //voila the hardhat config
-    const actualHardhatConfig = JSON.parse(stringifiedConfig) as HardhatConfig;
-
-    logger.debug(
-      "successfully extracted hardhat config",
-      actualHardhatConfig.paths,
-    );
-
-    const artifactsPath = actualHardhatConfig.paths.artifacts;
-    const sourcesDir = actualHardhatConfig.paths.sources.replace(
-      options.projectPath,
-      "",
-    );
-    const contractsPath = join(artifactsPath, sourcesDir);
+    const contractsPath = join(buildPath, "contracts/");
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
@@ -76,8 +61,6 @@ export class HardhatBuilder extends BaseBuilder {
       }
     }
 
-    return {
-      contracts,
-    };
+    return { contracts };
   }
 }

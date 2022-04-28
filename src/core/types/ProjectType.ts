@@ -1,1 +1,6 @@
-export type ProjectType = "hardhat" | "foundry" | "truffle" | "unknown";
+export type ProjectType =
+  | "brownie"
+  | "foundry"
+  | "hardhat"
+  | "truffle"
+  | "unknown";

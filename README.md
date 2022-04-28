@@ -81,10 +81,11 @@ with. The projects we support so far:
 - hardhat
 - forge
 - truffle
+- brownie
 
 Coming soon:
 
-- brownie
+- solc
 
 ---
 

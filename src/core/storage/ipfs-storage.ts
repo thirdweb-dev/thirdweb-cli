@@ -8,13 +8,13 @@ import {
   PINATA_IPFS_URL,
   TW_IPFS_SERVER_URL,
 } from "../../constants/urls";
-import { IStorage } from "../interfaces/IStorage";
-import { FileOrBuffer, JsonObject } from "../types";
 import {
   replaceFilePropertiesWithHashes,
   replaceHashWithGatewayUrl,
   resolveGatewayUrl,
 } from "../helpers/storage";
+import { IStorage } from "../interfaces/IStorage";
+import { FileOrBuffer, JsonObject } from "../types";
 
 const orig = process.emitWarning;
 //suppress warnings whule we require a bunch of stuff
@@ -62,13 +62,13 @@ export class IpfsStorage implements IStorage {
   public async upload(
     data: string | FileOrBuffer,
     contractAddress?: string,
-    signerAddress?: string
+    signerAddress?: string,
   ): Promise<string> {
     const cid = await this.uploadBatch(
       [data],
       0,
       contractAddress,
-      signerAddress
+      signerAddress,
     );
     return `${cid}0`;
   }
@@ -80,13 +80,13 @@ export class IpfsStorage implements IStorage {
     files: (string | FileOrBuffer)[],
     fileStartNumber = 0,
     contractAddress?: string,
-    signerAddress?: string
+    signerAddress?: string,
   ) {
     const { cid, fileNames } = await this.uploadBatchWithCid(
       files,
       fileStartNumber,
       contractAddress,
-      signerAddress
+      signerAddress,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -131,14 +131,14 @@ export class IpfsStorage implements IStorage {
   public async uploadMetadata(
     metadata: JsonObject,
     contractAddress?: string,
-    signerAddress?: string
+    signerAddress?: string,
   ): Promise<string> {
     // since there's only single object, always use the first index
     const { metadataUris } = await this.uploadMetadataBatch(
       [metadata],
       0,
       contractAddress,
-      signerAddress
+      signerAddress,
     );
     return metadataUris[0];
   }
@@ -150,17 +150,17 @@ export class IpfsStorage implements IStorage {
     metadatas: JsonObject[],
     fileStartNumber?: number,
     contractAddress?: string,
-    signerAddress?: string
+    signerAddress?: string,
   ) {
     const metadataToUpload = (await this.batchUploadProperties(metadatas)).map(
-      (m: any) => JSON.stringify(m)
+      (m: any) => JSON.stringify(m),
     );
 
     const { cid, fileNames } = await this.uploadBatchWithCid(
       metadataToUpload,
       fileStartNumber,
       contractAddress,
-      signerAddress
+      signerAddress,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -201,7 +201,7 @@ export class IpfsStorage implements IStorage {
    */
   private async batchUploadProperties(metadatas: JsonObject[]) {
     const filesToUpload = metadatas.flatMap((m) =>
-      this.buildFilePropertiesMap(m, [])
+      this.buildFilePropertiesMap(m, []),
     );
     if (filesToUpload.length === 0) {
       return metadatas;
@@ -216,7 +216,7 @@ export class IpfsStorage implements IStorage {
 
     const finalMetadata = await replaceFilePropertiesWithHashes(
       metadatas,
-      cids
+      cids,
     );
     return finalMetadata;
   }
@@ -231,7 +231,7 @@ export class IpfsStorage implements IStorage {
    */
   private buildFilePropertiesMap(
     object: JsonObject,
-    files: (File | Buffer)[] = []
+    files: (File | Buffer)[] = [],
   ): (File | Buffer)[] {
     if (Array.isArray(object)) {
       object.forEach((element) => {
@@ -254,7 +254,7 @@ export class IpfsStorage implements IStorage {
     files: (string | FileOrBuffer)[],
     fileStartNumber = 0,
     contractAddress?: string,
-    signerAddress?: string
+    signerAddress?: string,
   ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
     const metadata = {

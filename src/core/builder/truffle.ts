@@ -1,11 +1,10 @@
-import { execSync } from "child_process";
-import { existsSync, readFileSync, rmdirSync } from "fs";
-import { basename, join } from "path";
 import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
-
 import { BaseBuilder } from "./builder-base";
+import { execSync } from "child_process";
+import { existsSync, readFileSync, rmdirSync } from "fs";
+import { basename, join } from "path";
 
 export class TruffleBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
@@ -14,12 +13,12 @@ export class TruffleBuilder extends BaseBuilder {
     // get the current config first
     const truffleConfig = require(join(
       options.projectPath,
-      "truffle-config.js"
+      "truffle-config.js",
     ));
 
     const buildPath = join(
       options.projectPath,
-      truffleConfig.contracts_build_directory || "./build/contracts"
+      truffleConfig.contracts_build_directory || "./build/contracts",
     );
 
     if (options.clean) {
@@ -47,7 +46,7 @@ export class TruffleBuilder extends BaseBuilder {
         if (this.isThirdwebContract(input)) {
           if (contracts.find((c) => c.name === contractName)) {
             logger.error(
-              `Found multiple contracts with name "${contractName}". Contract names should be unique.`
+              `Found multiple contracts with name "${contractName}". Contract names should be unique.`,
             );
             process.exit(1);
           }

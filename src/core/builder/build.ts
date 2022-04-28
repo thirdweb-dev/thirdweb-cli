@@ -1,5 +1,6 @@
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { ProjectType } from "./../types/ProjectType";
+import { BrownieBuilder } from "./brownie";
 import { FoundryBuilder } from "./foundry";
 import { HardhatBuilder } from "./hardhat";
 import { TruffleBuilder } from "./truffle";
@@ -7,7 +8,7 @@ import { TruffleBuilder } from "./truffle";
 export default async function build(
   path: string,
   projectType: ProjectType,
-  clean: boolean
+  clean: boolean,
 ): Promise<{
   contracts: ContractPayload[];
 }> {
@@ -32,6 +33,15 @@ export default async function build(
 
     case "truffle": {
       const builder = new TruffleBuilder();
+      return await builder.compile({
+        name: "",
+        projectPath: path,
+        clean,
+      });
+    }
+
+    case "brownie": {
+      const builder = new BrownieBuilder();
       return await builder.compile({
         name: "",
         projectPath: path,
