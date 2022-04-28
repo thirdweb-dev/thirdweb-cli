@@ -82,10 +82,9 @@ with. The projects we support so far:
 - forge
 - truffle
 - brownie
-
-Coming soon:
-
 - solc
+
+<!-- Coming soon: -->
 
 ---
 
