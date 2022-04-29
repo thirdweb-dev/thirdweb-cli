@@ -1,21 +1,12 @@
 #!/usr/bin/env node
-import { THIRDWEB_URL } from "../constants/urls";
-import build from "../core/builder/build";
-import detect from "../core/detection/detect";
+import { getUrl, processProject } from "../common/processor";
 import { logger } from "../core/helpers/logger";
-import { Contract } from "../core/interfaces/Contract";
-import { IpfsStorage } from "./../core/storage/ipfs-storage";
 import { Command } from "commander";
 import open from "open";
-import path from "path";
 import updateNotifier from "update-notifier";
-import { URL } from "url";
 
 const main = async () => {
   const program = new Command();
-
-  // TODO: allow overriding the default storage
-  const storage = new IpfsStorage();
 
   const pkg = require("../../package.json");
 
@@ -46,95 +37,33 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
   program
     .command("publish")
-    .description("Compile & publish a project")
+    .description(
+      "Compile & publish contracts, makes them available for easy deployment from the dashboard.",
+    )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-c, --clean", "clean artifacts before compiling")
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
-      logger.setSettings({
-        minLevel: options.debug ? "debug" : "info",
-      });
+      const hashes = await processProject(options);
+      const url = getUrl(hashes, "publish");
+      logger.info(`Open this link to publish your contracts:\n\n${url}\n\n`);
+      open(url.toString());
+    });
 
-      let projectPath = process.cwd();
-      if (options.path) {
-        logger.debug("Overriding project path to " + options.path);
-
-        const resolvedPath = (options.path as string).startsWith("/")
-          ? options.path
-          : path.resolve(`${projectPath}/${options.path}`);
-        projectPath = resolvedPath;
-      }
-
-      logger.debug("Publishing project at path " + projectPath);
-
-      const projectType = await detect(projectPath);
-      if (projectType === "unknown") {
-        logger.warn(
-          "Unable to detect project type, falling back to solc compilation",
-        );
-      }
-
-      const compiledResult = await build(
-        projectPath,
-        projectType,
-        options.clean,
-      );
-
-      if (compiledResult.contracts.length == 0) {
-        logger.error(
-          "No thirdweb contract detected. Extend ThirdwebContract to publish your own contracts.",
-        );
-        process.exit(1);
-      }
-      logger.info(
-        "Detected thirdweb contracts:",
-        compiledResult.contracts.map((c) => `"${c.name}"`).join(", "),
-      );
-
-      logger.info("Project compiled successfully");
-
-      if (options.dryRun) {
-        logger.info("Dry run, skipping publish");
-        process.exit(0);
-      }
-
-      logger.info("Uploading contract data...");
-      const bytecodes = compiledResult.contracts.map((c) => c.bytecode);
-      const abis = compiledResult.contracts.map((c) => JSON.stringify(c.abi));
-
-      const { metadataUris: bytecodeURIs } = await storage.uploadBatch(
-        bytecodes,
-      );
-      const { metadataUris: abiURIs } = await storage.uploadBatch(abis);
-
-      const contractMetadatas: string[] = [];
-      for (let i = 0; i < compiledResult.contracts.length; i++) {
-        const bytecode = bytecodeURIs[i];
-        const abi = abiURIs[i];
-        const name = compiledResult.contracts[i].name;
-        contractMetadatas.push(
-          JSON.stringify({
-            name: name,
-            bytecodeUri: bytecode,
-            abiUri: abi,
-          } as Contract),
-        );
-      }
-      const { metadataUris: hashes } = await storage.uploadBatch(
-        contractMetadatas,
-      );
-
-      logger.info("Upload successful");
-
-      const url = new URL(THIRDWEB_URL + "/contracts/publish");
-
-      for (let hash of hashes) {
-        url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
-      }
-
-      logger.info(`Go to this link to publish your contracts:\n\n${url}\n\n`);
-
+  program
+    .command("deploy")
+    .description(
+      "Compile & deploy contracts through your thirdweb dashboard, without dealing with private keys.",
+    )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("--dry-run", "dry run (skip actually publishing)")
+    .option("-c, --clean", "clean artifacts before compiling")
+    .option("-d, --debug", "show debug logs")
+    .action(async (options) => {
+      const hashes = await processProject(options);
+      const url = getUrl(hashes, "deploy");
+      logger.info(`Open this link to deploy your contracts:\n\n${url}\n\n`);
       open(url.toString());
     });
 
