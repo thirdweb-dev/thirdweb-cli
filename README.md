@@ -47,19 +47,19 @@ contract HellowWorldContract is ThirdwebContract {
 }
 ```
 
-## 2. Publishing your contract
+## 2. Deploying your contract
 
 Once your contract code is setup like above, you can now publish it by running:
 
 ```shell
-npx thirdweb publish
+npx thirdweb deploy
 ```
 
 Alternatively, you install the CLI as a global command on your machine:
 
 ```shell
 npm i -g @thirdweb-dev/cli
-thirdweb publish
+thirdweb deploy
 ```
 
 This command will:
@@ -67,9 +67,16 @@ This command will:
 - auto-detect any contract that extends `ThirdwebContract` in your project
 - compile your project
 - Upload ABIs to IPFS
-- Open the publish flow in your thirdweb dashboard in a browser
+- Open the deploy flow in your thirdweb dashboard in a browser
 
-From the thirdweb dashboard, you can review and publish your contracts. Published contracts can be deployed via the dashboard on with our SDKs.
+From the thirdweb dashboard, you can review and deploy your contracts.
+
+---
+
+## Commands
+
+- `thirdweb deploy` - Compile & deploy contracts through your dashboard
+- `thirdweb publish` - Compile & publish contracts, makes them available for easy deployment later directly from your dashboard.
 
 ---
 
