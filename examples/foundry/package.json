@@ -4,7 +4,7 @@
   "devDependencies": {},
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",
-    "@thirdweb-dev/contracts": "^2.3.0"
+    "@thirdweb-dev/contracts": "^2.3.5"
   },
   "scripts": {}
 }
