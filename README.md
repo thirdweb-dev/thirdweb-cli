@@ -25,12 +25,6 @@ In order to publish a contract and get all the benefits of the thirdweb platform
 From your project, add the [thirdweb contracts](https://https://github.com/thirdweb-dev/contracts) dependency:
 
 ```shell
-yarn add @thirdweb-dev/contracts
-```
-
-or with npm
-
-```shell
 npm i @thirdweb-dev/contracts
 ```
 
