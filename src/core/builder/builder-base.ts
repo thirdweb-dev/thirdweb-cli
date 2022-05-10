@@ -12,8 +12,8 @@ export abstract class BaseBuilder implements IBuilder {
   protected isThirdwebContract(input: any): boolean {
     try {
       return (
-        input.name === "setThirdwebInfo" &&
-        input.inputs[0].internalType === "struct ThirdwebContract.ThirdwebInfo"
+        input.name === "setPublisheMetadataUi" &&
+        input.inputs[0].internalType === "string"
       );
     } catch (e) {
       return false;
