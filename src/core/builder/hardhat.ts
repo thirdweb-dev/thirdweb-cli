@@ -31,7 +31,10 @@ export class HardhatBuilder extends BaseBuilder {
       `npx hardhat run ${configExtractorScriptPath} --no-compile`,
     ).toString();
     //voila the hardhat config
-    const actualHardhatConfig = JSON.parse(stringifiedConfig) as HardhatConfig;
+
+    const actualHardhatConfig = JSON.parse(
+      stringifiedConfig.split("__tw__")[1],
+    ) as HardhatConfig;
 
     logger.debug(
       "successfully extracted hardhat config",
