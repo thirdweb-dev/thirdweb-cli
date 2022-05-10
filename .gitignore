@@ -5,3 +5,6 @@ dist/
 
 # release files
 thirdweb-package.json
+
+# bug reproductions
+reproduction-cases/
