@@ -22,7 +22,7 @@ This brings all the capabilities of thirdweb to your own custom contracts.
 
 In order to publish a contract and get all the benefits of the thirdweb platform, your contract needs to extend `ThirdwebContract`.
 
-From your project, add the [thirdweb contracts](https://https://github.com/thirdweb-dev/contracts) dependency:
+From your project, add the [thirdweb contracts](https://github.com/thirdweb-dev/contracts) dependency:
 
 ```shell
 npm i @thirdweb-dev/contracts
