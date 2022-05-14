@@ -12,7 +12,7 @@ export abstract class BaseBuilder implements IBuilder {
   protected isThirdwebContract(input: any): boolean {
     try {
       return (
-        input.name === "setPublisheMetadataUi" &&
+        input.name === "setPublishMetadataUri" &&
         input.inputs[0].internalType === "string"
       );
     } catch (e) {
