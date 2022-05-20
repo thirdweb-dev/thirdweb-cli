@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "thirdweb-dev/contracts@2.3.7/contracts/ThirdwebContract.sol";
+import "thirdweb-dev/contracts@2.3.8/contracts/ThirdwebContract.sol";
 
 contract ConstructorParams is ThirdwebContract {
     bytes32 public immutable contractUri;
