@@ -2,7 +2,7 @@
 pragma solidity ^0.8.4;
 
 
-import "thirdweb-dev/contracts@2.3.0/contracts/ThirdwebContract.sol";
+import "thirdweb-dev/contracts@2.3.7/contracts/ThirdwebContract.sol";
 
 contract Greeter is ThirdwebContract {
     constructor()  {}
