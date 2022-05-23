@@ -6,6 +6,7 @@ import {
 import {
   DEFAULT_IPFS_GATEWAY,
   PINATA_IPFS_URL,
+  PINATA_IPFS_URL_SINGLE,
   TW_IPFS_SERVER_URL,
 } from "../../constants/urls";
 import {
@@ -323,5 +324,44 @@ export class IpfsStorage implements IStorage {
       cid: body.IpfsHash,
       fileNames,
     };
+  }
+
+  public async uploadSingleJSON(
+    data: Record<string, any>,
+    contractAddress?: string,
+    signerAddress?: string,
+  ): Promise<string> {
+    const token = await this.getUploadToken(contractAddress || "");
+    const metadata = {
+      name: `CONSOLE-TS-SDK-${contractAddress}`,
+      keyvalues: {
+        sdk: "typescript",
+        contractAddress,
+        signerAddress,
+      },
+    };
+    const formData = new FormData();
+    const filepath = `files`; // Root directory
+    formData.append("file", data as any, filepath as any);
+    formData.append("pinataMetadata", JSON.stringify(metadata));
+    formData.append(
+      "pinataOptions",
+      JSON.stringify({
+        wrapWithDirectory: false,
+      }),
+    );
+    const res = await fetch(PINATA_IPFS_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData as any,
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to upload to IPFS [status code = ${res.status}]`);
+    }
+
+    const body = await res.json();
+    return body.IpfsHash;
   }
 }
