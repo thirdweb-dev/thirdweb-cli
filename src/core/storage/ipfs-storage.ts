@@ -6,7 +6,6 @@ import {
 import {
   DEFAULT_IPFS_GATEWAY,
   PINATA_IPFS_URL,
-  PINATA_IPFS_URL_SINGLE,
   TW_IPFS_SERVER_URL,
 } from "../../constants/urls";
 import {
