@@ -16,7 +16,7 @@ export class FoundryBuilder extends BaseBuilder {
     }
 
     logger.info("Compiling...");
-    execSync("forge build");
+    execSync("forge build --extra-output-files metadata");
 
     // get the current config first
     const foundryConfig = execSync("forge config --json").toString();
@@ -24,36 +24,27 @@ export class FoundryBuilder extends BaseBuilder {
     const actualFoundryConfig = JSON.parse(foundryConfig);
 
     const outPath = join(options.projectPath, actualFoundryConfig.out);
-    // const contractsPath =
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(outPath, /^.*(?<!dbg)\.json$/, files);
+    this.findFiles(outPath, /^.*(?<!metadata)\.json$/, files);
+    const metadataFiles: string[] = [];
+    this.findFiles(outPath, /^.*metadata\.json$/, metadataFiles);
 
-    for (const file of files) {
-      logger.debug("Processing:", file.replace(outPath, ""));
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
       const contractName = basename(file, ".json");
       const contractJsonFile = readFileSync(file, "utf-8");
 
       const contractInfo = JSON.parse(contractJsonFile);
       const abi = contractInfo.abi;
       const bytecode = contractInfo.bytecode.object;
-
-      for (const input of abi) {
-        if (this.isThirdwebContract(input)) {
-          if (contracts.find((c) => c.name === contractName)) {
-            logger.error(
-              `Found multiple contracts with name "${contractName}". Contract names should be unique.`,
-            );
-            process.exit(1);
-          }
-          contracts.push({
-            abi,
-            bytecode,
-            name: contractName,
-          });
-          break;
-        }
+      if (this.shouldProcessContract(bytecode, contractName)) {
+        contracts.push({
+          name: contractName,
+          metadata: metadataFiles[i],
+          bytecode,
+        });
       }
     }
 

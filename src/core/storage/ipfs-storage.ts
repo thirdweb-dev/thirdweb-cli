@@ -326,8 +326,8 @@ export class IpfsStorage implements IStorage {
     };
   }
 
-  public async uploadSingleJSON(
-    data: Record<string, any>,
+  public async uploadSingle(
+    data: string | Record<string, any>,
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string> {

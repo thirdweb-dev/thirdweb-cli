@@ -1,25 +1,11 @@
 import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
-import { IpfsStorage } from "../storage/ipfs-storage";
 import { BaseBuilder } from "./builder-base";
-import { decodeAllSync } from "cbor";
-import { decodeFirstSync } from "cbor";
-import { decode, encode } from "cbor-x";
 import { execSync } from "child_process";
-import { ethers } from "ethers";
-import {
-  existsSync,
-  readFileSync,
-  readdirSync,
-  statSync,
-  writeFileSync,
-} from "fs";
+import { readFileSync } from "fs";
 import { HardhatConfig } from "hardhat/types";
-import { UnixFS } from "ipfs-unixfs";
-import { DAGNode } from "ipld-dag-pb";
-import { toB58String } from "multihashes";
-import { basename, dirname, join, resolve } from "path";
+import { join, resolve } from "path";
 
 export class HardhatBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
@@ -74,60 +60,34 @@ export class HardhatBuilder extends BaseBuilder {
     const buildJsonFile = readFileSync(buildFiles[0], "utf-8");
     const buildJson = JSON.parse(buildJsonFile);
 
-    for (const file of files) {
-      logger.debug("Processing:", file.replace(contractsPath, ""));
-      const contractName = basename(file, ".json"); // TODO should read from ABI
-      const contractJsonFile = readFileSync(file, "utf-8");
-      const contractInfo = JSON.parse(contractJsonFile);
+    const contractBuildOutputs = buildJson.output.contracts;
 
-      const abi = contractInfo.abi;
-      const bytecode = contractInfo.bytecode;
+    console.log(contractBuildOutputs);
+    for (const [contractPath, contractInfos] of Object.entries(
+      contractBuildOutputs,
+    )) {
+      // TODO this fragile logic to only process contracts that are in the sources dir
+      if (!contractPath.startsWith(sourcesDir.replace("/", ""))) {
+        continue;
+      }
+      for (const [contractName, contractInfo] of Object.entries(
+        contractInfos as any,
+      )) {
+        const info = contractInfo as any;
+        const bytecode = info.evm.bytecode.object;
+        const metadata = info.metadata;
 
-      // upload metadata file
-      const dir = dirname(file).replace(artifactsPath, "").slice(1);
-      console.log(dir);
-      const metadata = buildJson.output.contracts[dir][contractName].metadata;
-      console.log("uploaded", await this.uploadMetadata(metadata));
-      console.log("computed", await this.getIPFSHash(metadata));
-
-      // Extract ipfs hash from bytecode
-      console.log("from bytecode", this.extractIPFSHashFromBytecode(bytecode));
-
-      for (const input of abi) {
-        if (this.isThirdwebContract(input)) {
-          if (contracts.find((c) => c.name === contractName)) {
-            logger.error(
-              `Found multiple contracts with name "${contractName}". Contract names should be unique.`,
-            );
-            process.exit(1);
-          }
+        if (this.shouldProcessContract(bytecode, contractName)) {
           contracts.push({
-            abi,
+            metadata,
             bytecode,
             name: contractName,
           });
-          break;
         }
       }
     }
-
     return {
       contracts,
     };
-  }
-
-  /**
-   * Derives IPFS hash of string
-   * @param  {String} str
-   * @return {String}     IPFS hash (ex: "Qm")
-   */
-  async getIPFSHash(str: string) {
-    const file = new UnixFS({
-      type: "file",
-      data: Buffer.from(str),
-    });
-    const node = new DAGNode(file.marshal());
-    const metadataLink = await node.toDAGLink();
-    return toB58String(metadataLink.Hash.multihash);
   }
 }

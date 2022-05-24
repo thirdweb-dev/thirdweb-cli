@@ -13,7 +13,7 @@ export interface ContractPayload {
   bytecode: string;
 
   /**
-   * The abi object
+   * The compiler metadata object or file
    */
-  abi: Object;
+  metadata: any;
 }

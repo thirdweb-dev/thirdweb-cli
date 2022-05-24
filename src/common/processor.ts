@@ -55,29 +55,19 @@ export async function processProject(options: any) {
 
   logger.info("Uploading contract data...");
   const bytecodes = compiledResult.contracts.map((c) => c.bytecode);
-  const abis = compiledResult.contracts.map((c) => JSON.stringify(c.abi));
 
+  // Upload build output metadatas (need to be single uploads)
+  await Promise.all(
+    compiledResult.contracts.map((c) => {
+      logger.debug(`Uploading ${c.name}...`);
+      return storage.uploadSingle(c.metadata);
+    }),
+  );
+
+  // Upload batch all bytecodes
   const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
-  const { metadataUris: abiURIs } = await storage.uploadBatch(abis);
-
-  const contractMetadatas: string[] = [];
-  for (let i = 0; i < compiledResult.contracts.length; i++) {
-    const bytecode = bytecodeURIs[i];
-    const abi = abiURIs[i];
-    const name = compiledResult.contracts[i].name;
-    contractMetadatas.push(
-      JSON.stringify({
-        name: name,
-        bytecodeUri: bytecode,
-        abiUri: abi,
-      } as Contract),
-    );
-  }
-  // TODO progress bar
-  const { metadataUris: hashes } = await storage.uploadBatch(contractMetadatas);
-
   logger.info("Upload successful");
-  return hashes;
+  return bytecodeURIs;
 }
 
 export function getUrl(hashes: string[], path: string) {

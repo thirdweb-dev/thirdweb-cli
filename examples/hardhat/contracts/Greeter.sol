@@ -7,6 +7,7 @@ import "@thirdweb-dev/contracts/ThirdwebContract.sol";
 contract Greeter is ERC20, ThirdwebContract {
     
     constructor() ERC20("MyToken", "MTK") {
-        _mint(_contractDeployer(), 1000000);
+        _mint(msg.sender, 1000000);
+        owner = msg.sender;
     }
 }
