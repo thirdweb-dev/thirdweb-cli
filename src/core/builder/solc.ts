@@ -117,6 +117,7 @@ export class SolcBuilder extends BaseBuilder {
       const contractInfo = JSON.parse(contractJsonFile);
       const abi = contractInfo.abi;
       const bytecode = contractInfo.evm.bytecode.object;
+      const metadata = contractInfo.metadata;
 
       for (const input of abi) {
         if (this.isThirdwebContract(input)) {
@@ -127,7 +128,7 @@ export class SolcBuilder extends BaseBuilder {
             process.exit(1);
           }
           contracts.push({
-            abi,
+            metadata,
             bytecode,
             name: contractName,
           });

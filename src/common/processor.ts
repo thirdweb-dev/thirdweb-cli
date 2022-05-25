@@ -58,9 +58,10 @@ export async function processProject(options: any) {
 
   // Upload build output metadatas (need to be single uploads)
   await Promise.all(
-    compiledResult.contracts.map((c) => {
+    compiledResult.contracts.map(async (c) => {
       logger.debug(`Uploading ${c.name}...`);
-      return storage.uploadSingle(c.metadata);
+      const hash = await storage.uploadSingle(c.metadata);
+      return hash;
     }),
   );
 

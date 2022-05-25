@@ -1,6 +1,8 @@
+import { extractIPFSHashFromBytecode, getIPFSHash } from "../helpers/ipfs";
 import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
+import { IpfsStorage } from "../storage/ipfs-storage";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
@@ -16,7 +18,7 @@ export class FoundryBuilder extends BaseBuilder {
     }
 
     logger.info("Compiling...");
-    execSync("forge build --extra-output-files metadata");
+    execSync("forge build --extra-output metadata");
 
     // get the current config first
     const foundryConfig = execSync("forge config --json").toString();
@@ -28,8 +30,6 @@ export class FoundryBuilder extends BaseBuilder {
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
     this.findFiles(outPath, /^.*(?<!metadata)\.json$/, files);
-    const metadataFiles: string[] = [];
-    this.findFiles(outPath, /^.*metadata\.json$/, metadataFiles);
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -37,12 +37,14 @@ export class FoundryBuilder extends BaseBuilder {
       const contractJsonFile = readFileSync(file, "utf-8");
 
       const contractInfo = JSON.parse(contractJsonFile);
-      const abi = contractInfo.abi;
       const bytecode = contractInfo.bytecode.object;
+
+      const metadata = JSON.stringify(contractInfo.metadata);
+
       if (this.shouldProcessContract(bytecode, contractName)) {
         contracts.push({
           name: contractName,
-          metadata: metadataFiles[i],
+          metadata,
           bytecode,
         });
       }

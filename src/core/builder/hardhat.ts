@@ -62,7 +62,6 @@ export class HardhatBuilder extends BaseBuilder {
 
     const contractBuildOutputs = buildJson.output.contracts;
 
-    console.log(contractBuildOutputs);
     for (const [contractPath, contractInfos] of Object.entries(
       contractBuildOutputs,
     )) {
