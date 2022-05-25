@@ -1,20 +1,25 @@
 import { extractIPFSHashFromBytecode, getIPFSHash } from "../helpers/ipfs";
-import { logger } from "../helpers/logger";
+import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { IpfsStorage } from "../storage/ipfs-storage";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
-import { ora } from "ora";
 import { basename, join } from "path";
 
 export class FoundryBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    execSync("forge clean");
-    execSync("forge build --extra-output metadata");
+    const loader = spinner("Compiling...");
+    try {
+      execSync("forge clean");
+      execSync("forge build --extra-output metadata");
+    } catch (e) {
+      loader.fail("Compilation failed");
+      throw e;
+    }
 
     // get the current config first
     const foundryConfig = execSync("forge config --json").toString();
@@ -45,7 +50,7 @@ export class FoundryBuilder extends BaseBuilder {
         });
       }
     }
-    spinner.succeed();
+    loader.succeed("Compilation successful");
     return { contracts };
   }
 }

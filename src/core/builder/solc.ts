@@ -2,14 +2,7 @@ import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  rmSync,
-  rmdirSync,
-  writeFileSync,
-} from "fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { basename, join } from "path";
 import solc from "solc";
 

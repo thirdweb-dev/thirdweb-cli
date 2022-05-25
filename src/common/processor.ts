@@ -3,7 +3,6 @@ import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { info, logger, spinner } from "../core/helpers/logger";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
-import ora from "ora";
 import path from "path";
 
 export async function processProject(options: any) {
@@ -46,8 +45,6 @@ export async function processProject(options: any) {
       .map((c) => `"${c.name}"`)
       .join(", ")}`,
   );
-
-  info("Project compiled successfully");
 
   if (options.dryRun) {
     info("Dry run, skipping deployment");

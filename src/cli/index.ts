@@ -4,7 +4,6 @@ import { info, logger } from "../core/helpers/logger";
 import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
-import ora from "ora";
 import updateNotifier from "update-notifier";
 
 const main = async () => {

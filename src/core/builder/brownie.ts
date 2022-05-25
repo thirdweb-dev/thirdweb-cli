@@ -3,9 +3,7 @@ import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
-import { from } from "form-data";
-import { existsSync, readFileSync, rmdirSync } from "fs";
-import ora from "ora";
+import { existsSync, readFileSync, rmSync } from "fs";
 import { basename, join } from "path";
 import { parse } from "yaml";
 
@@ -22,13 +20,9 @@ export class BrownieBuilder extends BaseBuilder {
       config?.project_structure?.build || "./build",
     );
 
-    if (options.clean) {
-      ora().succeed("Cleaning build directory");
-      existsSync(buildPath) && rmdirSync(buildPath, { recursive: true });
-    }
-
     const loader = spinner("Compiling...");
     try {
+      existsSync(buildPath) && rmSync(buildPath, { recursive: true });
       execSync("brownie compile");
     } catch (e) {
       loader.fail("Compilation failed");

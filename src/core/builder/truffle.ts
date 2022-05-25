@@ -3,8 +3,8 @@ import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
-import { existsSync, readFileSync, rmdirSync } from "fs";
-import { basename, join } from "path";
+import { existsSync, readFileSync, rmSync } from "fs";
+import { join } from "path";
 
 export class TruffleBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
@@ -21,13 +21,9 @@ export class TruffleBuilder extends BaseBuilder {
       truffleConfig.contracts_build_directory || "./build/contracts",
     );
 
-    if (options.clean) {
-      logger.info("Cleaning build directory");
-      existsSync(buildPath) && rmdirSync(buildPath, { recursive: true });
-    }
-
     const loader = spinner("Compiling...");
     try {
+      existsSync(buildPath) && rmSync(buildPath, { recursive: true });
       execSync("npx truffle compile");
     } catch (e) {
       loader.fail("Compilation failed");
@@ -54,7 +50,7 @@ export class TruffleBuilder extends BaseBuilder {
         });
       }
     }
-    loader.fail("Compilation successful");
+    loader.succeed("Compilation successful");
     return { contracts };
   }
 }
