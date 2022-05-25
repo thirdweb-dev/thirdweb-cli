@@ -10,7 +10,7 @@ import inquirer from "inquirer";
 export default async function detect(path: string): Promise<ProjectType> {
   const detectors: Detector[] = [
     new HardhatDetector(),
-    new FoundryDetector(),
+    // new FoundryDetector(), TODO foundry does not output the correct metadata
     new TruffleDetector(),
     // new BrownieDetector(), TODO brownie does not support outputing metadata yet
   ];

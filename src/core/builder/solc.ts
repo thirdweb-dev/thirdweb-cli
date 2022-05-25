@@ -115,7 +115,6 @@ export class SolcBuilder extends BaseBuilder {
       const contractJsonFile = readFileSync(file, "utf-8");
 
       const contractInfo = JSON.parse(contractJsonFile);
-      const abi = contractInfo.abi;
       const bytecode = contractInfo.evm.bytecode.object;
       const metadata = contractInfo.metadata;
 
