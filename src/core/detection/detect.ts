@@ -12,7 +12,7 @@ export default async function detect(path: string): Promise<ProjectType> {
     new HardhatDetector(),
     new FoundryDetector(),
     new TruffleDetector(),
-    new BrownieDetector(),
+    // new BrownieDetector(), TODO brownie does not support outputing metadata yet
   ];
 
   const possibleProjectTypes = detectors

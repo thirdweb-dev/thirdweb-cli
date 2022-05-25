@@ -119,21 +119,12 @@ export class SolcBuilder extends BaseBuilder {
       const bytecode = contractInfo.evm.bytecode.object;
       const metadata = contractInfo.metadata;
 
-      for (const input of abi) {
-        if (this.isThirdwebContract(input)) {
-          if (contracts.find((c) => c.name === contractName)) {
-            logger.error(
-              `Found multiple contracts with name "${contractName}". Contract names should be unique.`,
-            );
-            process.exit(1);
-          }
-          contracts.push({
-            metadata,
-            bytecode,
-            name: contractName,
-          });
-          break;
-        }
+      if (this.shouldProcessContract(bytecode, contractName)) {
+        contracts.push({
+          metadata,
+          bytecode,
+          name: contractName,
+        });
       }
     }
 
