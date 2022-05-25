@@ -13,50 +13,32 @@ export default async function build(
 ): Promise<{
   contracts: ContractPayload[];
 }> {
+  let builder;
   switch (projectType) {
     case "hardhat": {
-      const builder = new HardhatBuilder();
-      return await builder.compile({
-        name: "",
-        projectPath: path,
-        clean,
-      });
+      builder = new HardhatBuilder();
+      break;
     }
-
     case "foundry": {
-      const builder = new FoundryBuilder();
-      return await builder.compile({
-        name: "",
-        projectPath: path,
-        clean,
-      });
+      builder = new FoundryBuilder();
+      break;
     }
-
     case "truffle": {
-      const builder = new TruffleBuilder();
-      return await builder.compile({
-        name: "",
-        projectPath: path,
-        clean,
-      });
+      builder = new TruffleBuilder();
+      break;
     }
-
     case "brownie": {
-      const builder = new BrownieBuilder();
-      return await builder.compile({
-        name: "",
-        projectPath: path,
-        clean,
-      });
+      builder = new BrownieBuilder();
+      break;
     }
-
     default: {
-      const builder = new SolcBuilder();
-      return await builder.compile({
-        name: "",
-        projectPath: path,
-        clean,
-      });
+      builder = new SolcBuilder();
+      break;
     }
   }
+  return await builder.compile({
+    name: "",
+    projectPath: path,
+    clean,
+  });
 }

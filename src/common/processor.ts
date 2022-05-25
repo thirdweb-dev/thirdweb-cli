@@ -1,9 +1,9 @@
 import { THIRDWEB_URL } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
-import { logger } from "../core/helpers/logger";
-import { Contract } from "../core/interfaces/Contract";
+import { info, logger, spinner } from "../core/helpers/logger";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
+import ora from "ora";
 import path from "path";
 
 export async function processProject(options: any) {
@@ -41,34 +41,39 @@ export async function processProject(options: any) {
     );
     process.exit(1);
   }
-  logger.info(
-    "Detected thirdweb contracts:",
-    compiledResult.contracts.map((c) => `"${c.name}"`).join(", "),
+  info(
+    `Detected thirdweb contracts: ${compiledResult.contracts
+      .map((c) => `"${c.name}"`)
+      .join(", ")}`,
   );
 
-  logger.info("Project compiled successfully");
+  info("Project compiled successfully");
 
   if (options.dryRun) {
-    logger.info("Dry run, skipping publish");
+    info("Dry run, skipping deployment");
     process.exit(0);
   }
 
-  logger.info("Uploading contract data...");
   const bytecodes = compiledResult.contracts.map((c) => c.bytecode);
+  const loader = spinner("Uploading contract data...");
+  try {
+    // Upload build output metadatas (need to be single uploads)
+    await Promise.all(
+      compiledResult.contracts.map(async (c) => {
+        logger.debug(`Uploading ${c.name}...`);
+        const hash = await storage.uploadSingle(c.metadata);
+        return hash;
+      }),
+    );
 
-  // Upload build output metadatas (need to be single uploads)
-  await Promise.all(
-    compiledResult.contracts.map(async (c) => {
-      logger.debug(`Uploading ${c.name}...`);
-      const hash = await storage.uploadSingle(c.metadata);
-      return hash;
-    }),
-  );
-
-  // Upload batch all bytecodes
-  const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
-  logger.info("Upload successful");
-  return bytecodeURIs;
+    // Upload batch all bytecodes
+    const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
+    loader.succeed("Upload successful");
+    return bytecodeURIs;
+  } catch (e) {
+    loader.fail("Error uploading metadata");
+    throw e;
+  }
 }
 
 export function getUrl(hashes: string[], path: string) {

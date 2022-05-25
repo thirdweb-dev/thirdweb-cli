@@ -1,4 +1,4 @@
-import { logger } from "../helpers/logger";
+import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
@@ -6,6 +6,7 @@ import {
   existsSync,
   mkdirSync,
   readFileSync,
+  rmSync,
   rmdirSync,
   writeFileSync,
 } from "fs";
@@ -16,6 +17,8 @@ export class SolcBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
+    const loader = spinner("Compiling...");
+
     // find solidity files...
     const inputPaths: string[] = [];
     this.findFiles(options.projectPath, /^.*\.sol$/, inputPaths);
@@ -61,6 +64,7 @@ export class SolcBuilder extends BaseBuilder {
     );
 
     if (output.errors) {
+      loader.fail("Compilation failed");
       logger.error(output.errors);
       process.exit(1);
     }
@@ -70,7 +74,7 @@ export class SolcBuilder extends BaseBuilder {
     if (options.clean) {
       logger.info("Cleaning artifacts directory");
       if (existsSync(artifactsDir)) {
-        rmdirSync(artifactsDir, { recursive: true });
+        rmSync(artifactsDir, { recursive: true });
       }
     }
 
@@ -126,7 +130,7 @@ export class SolcBuilder extends BaseBuilder {
         });
       }
     }
-
+    loader.succeed("Compilation successful");
     return { contracts };
   }
 }

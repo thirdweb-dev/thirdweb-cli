@@ -3,6 +3,7 @@ import { logger } from "../helpers/logger";
 import { CompileOptions, IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { existsSync, readdirSync, statSync } from "fs";
+import inquirer from "inquirer";
 import { basename, join } from "path";
 
 export abstract class BaseBuilder implements IBuilder {

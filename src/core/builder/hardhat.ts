@@ -1,4 +1,4 @@
-import { logger } from "../helpers/logger";
+import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
@@ -11,13 +11,14 @@ export class HardhatBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    if (options.clean) {
-      logger.info("Running hardhat clean");
+    const loader = spinner("Compiling...");
+    try {
       execSync("npx hardhat clean");
+      execSync("npx hardhat compile");
+    } catch (e) {
+      loader.fail("Compilation failed");
+      throw e;
     }
-
-    logger.info("Compiling...");
-    execSync("npx hardhat compile");
     //we get our very own extractor script from the dir that we're in during execution
     // this is `./dist/cli` (for all purposes of the CLI)
     // then we look up the hardhat config extractor file path from there
@@ -85,6 +86,7 @@ export class HardhatBuilder extends BaseBuilder {
         }
       }
     }
+    loader.succeed("Compilation successful");
     return {
       contracts,
     };

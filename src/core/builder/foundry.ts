@@ -6,18 +6,14 @@ import { IpfsStorage } from "../storage/ipfs-storage";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
+import { ora } from "ora";
 import { basename, join } from "path";
 
 export class FoundryBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    if (options.clean) {
-      logger.info("Running forge clean");
-      execSync("forge clean");
-    }
-
-    logger.info("Compiling...");
+    execSync("forge clean");
     execSync("forge build --extra-output metadata");
 
     // get the current config first
@@ -49,7 +45,7 @@ export class FoundryBuilder extends BaseBuilder {
         });
       }
     }
-
+    spinner.succeed();
     return { contracts };
   }
 }

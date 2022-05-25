@@ -1,4 +1,4 @@
-import { logger } from "../helpers/logger";
+import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
@@ -26,8 +26,13 @@ export class TruffleBuilder extends BaseBuilder {
       existsSync(buildPath) && rmdirSync(buildPath, { recursive: true });
     }
 
-    logger.info("Compiling...");
-    execSync("npx truffle compile");
+    const loader = spinner("Compiling...");
+    try {
+      execSync("npx truffle compile");
+    } catch (e) {
+      loader.fail("Compilation failed");
+      throw e;
+    }
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
@@ -49,7 +54,7 @@ export class TruffleBuilder extends BaseBuilder {
         });
       }
     }
-
+    loader.fail("Compilation successful");
     return { contracts };
   }
 }
