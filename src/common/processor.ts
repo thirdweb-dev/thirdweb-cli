@@ -1,7 +1,7 @@
 import { THIRDWEB_URL } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
-import { info, logger, spinner } from "../core/helpers/logger";
+import { info, logger, spinner, warn } from "../core/helpers/logger";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import path from "path";
 
@@ -27,9 +27,7 @@ export async function processProject(options: any) {
 
   const projectType = await detect(projectPath);
   if (projectType === "unknown") {
-    logger.warn(
-      "Unable to detect project type, falling back to solc compilation",
-    );
+    warn("Unable to detect project type, falling back to solc compilation");
   }
 
   const compiledResult = await build(projectPath, projectType, options.clean);
