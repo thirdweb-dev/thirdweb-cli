@@ -1,8 +1,6 @@
-import { extractIPFSHashFromBytecode, getIPFSHash } from "../helpers/ipfs";
-import { logger, spinner } from "../helpers/logger";
+import { spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
-import { IpfsStorage } from "../storage/ipfs-storage";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
 import { readFileSync } from "fs";

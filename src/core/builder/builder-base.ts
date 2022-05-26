@@ -12,7 +12,7 @@ export abstract class BaseBuilder implements IBuilder {
   ): Promise<{ contracts: ContractPayload[] }>;
 
   protected shouldProcessContract(bytecode: string, name: string): boolean {
-    if (bytecode === "0x") {
+    if (!bytecode || bytecode === "" || bytecode === "0x") {
       return false;
     }
     // TODO as CLI options
@@ -20,13 +20,18 @@ export abstract class BaseBuilder implements IBuilder {
       name.toLowerCase().includes("test") ||
       name.toLowerCase().includes("mock")
     ) {
+      logger.debug(`Skipping '${name}'.`);
       return false;
     }
     // ensure that we can extract IPFS hashes from the bytecode
-    const ipfsHash = extractIPFSHashFromBytecode(bytecode);
+    let ipfsHash;
+    try {
+      ipfsHash = extractIPFSHashFromBytecode(bytecode);
+    } catch (e) {}
+
     if (!ipfsHash) {
-      logger.info(
-        `Cannot resolve build metadata IPFS hash for contract '${name}' - please compile with the IPFS metadata option to deploy this contract.`,
+      logger.debug(
+        `Cannot resolve build metadata IPFS hash for contract '${name}'. Skipping ${bytecode}`,
       );
       return false;
     }

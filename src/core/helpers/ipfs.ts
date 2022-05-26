@@ -39,9 +39,7 @@ export function extractIPFSHashFromBytecode(
       const uri = toB58String(cborData["ipfs"]);
       return uri;
     }
-  } catch (e) {
-    console.log(e);
-  }
+  } catch (e) {}
   return undefined;
 }
 
