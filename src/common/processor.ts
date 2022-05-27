@@ -37,7 +37,7 @@ export async function processProject(options: any) {
 
   if (compiledResult.contracts.length == 0) {
     logger.error(
-      "No thirdweb contract detected. Extend ThirdwebContract to mark which contracts to deploy and make sure you're on the latest version of the thirdweb contracts package: `npm i @thirdweb-dev/contracts`",
+      "No thirdweb contract detected. Extend ThirdwebContract to mark which contracts to deploy.",
     );
     process.exit(1);
   }

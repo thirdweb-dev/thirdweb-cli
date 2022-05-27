@@ -11,6 +11,15 @@ export abstract class BaseBuilder implements IBuilder {
 
   protected isThirdwebContract(input: any): boolean {
     try {
+      if (
+        input.name === "setThirdwebInfo" &&
+        input.inputs[0].internalType === "struct ThirdwebContract.ThirdwebInfo"
+      ) {
+        logger.error(
+          "You are using an old version of ThirdwebContract, please update to the latest version: 'npm i @thirdweb-dev/contracts'",
+        );
+        return false;
+      }
       return (
         input.name === "tw_initializeOwner" &&
         input.inputs[0].internalType === "address"
