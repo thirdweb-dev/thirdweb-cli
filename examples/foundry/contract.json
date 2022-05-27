@@ -1,0 +1,98 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220e6b1956aead7d0e30ea5b730b3708ae2d35ec4fdcb551ee5e2cfb9331106852b64736f6c634300080d0033",
+    "sourceMap": "65:20:5:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052600080fdfea2646970667358221220e6b1956aead7d0e30ea5b730b3708ae2d35ec4fdcb551ee5e2cfb9331106852b64736f6c634300080d0033",
+    "sourceMap": "65:20:5:-:0;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "metadata": {
+    "compiler": {
+      "version": "0.8.13+commit.abaa5c0e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "compilationTarget": {
+        "/Users/joaquim/Work/thirdweb/solidity_projects/foundry_metadata_tests/src/Contract.sol": "Contract"
+      },
+      "remappings": [
+        ":ds-test/=/Users/joaquim/Work/thirdweb/solidity_projects/foundry_metadata_tests/lib/forge-std/lib/ds-test/src/",
+        ":forge-std/=/Users/joaquim/Work/thirdweb/solidity_projects/foundry_metadata_tests/lib/forge-std/src/",
+        ":src/=/Users/joaquim/Work/thirdweb/solidity_projects/foundry_metadata_tests/src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "outputSelection": {},
+      "evmVersion": "london"
+    },
+    "sources": {
+      "/Users/joaquim/Work/thirdweb/solidity_projects/foundry_metadata_tests/src/Contract.sol": {
+        "keccak256": "0x88c53f90b24a07c57711738987ddc81838a43c4ab7b6ce2986f1b470500ebe86",
+        "urls": [
+          "bzz-raw://58178e99c552a2042318a4be96c35abdda48f5a1537a5c5c27c234b5dda43f2f",
+          "dweb:/ipfs/QmTgVWYsTQyBx7PsNtmUaryTF27cjLQseyk4sxYGChd5ui"
+        ],
+        "license": "UNLICENSED"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "/Users/joaquim/Work/thirdweb/solidity_projects/foundry_metadata_tests/src/Contract.sol",
+    "id": 20581,
+    "exportedSymbols": {
+      "Contract": [20580]
+    },
+    "nodeType": "SourceUnit",
+    "src": "39:47:5",
+    "nodes": [
+      {
+        "id": 20579,
+        "nodeType": "PragmaDirective",
+        "src": "39:24:5",
+        "literals": ["solidity", "^", "0.8", ".13"]
+      },
+      {
+        "id": 20580,
+        "nodeType": "ContractDefinition",
+        "src": "65:20:5",
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "Contract",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [20580],
+        "name": "Contract",
+        "nameLocation": "74:8:5",
+        "scope": 20581,
+        "usedErrors": []
+      }
+    ],
+    "license": "UNLICENSED"
+  },
+  "id": 5
+}

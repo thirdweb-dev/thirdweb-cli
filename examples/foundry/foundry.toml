@@ -1,6 +1,1 @@
 [default]
-remappings = [
-    '@openzeppelin/=node_modules/@openzeppelin/',
-    '@thirdweb-dev/=node_modules/@thirdweb-dev/',
-]
-
