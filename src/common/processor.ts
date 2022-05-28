@@ -30,16 +30,16 @@ export async function processProject(options: any) {
     warn("Unable to detect project type, falling back to solc compilation");
   }
 
-  const compiledResult = await build(projectPath, projectType, options.clean);
+  const compiledResult = await build(projectPath, projectType);
 
   if (compiledResult.contracts.length == 0) {
     logger.error(
-      "No thirdweb contract detected. Extend ThirdwebContract to mark which contracts to deploy and make sure you're on the latest version of the thirdweb contracts package: `npm i @thirdweb-dev/contracts`",
+      "No thirdweb contract detected. Extend ThirdwebContract to mark which contracts to deploy.",
     );
     process.exit(1);
   }
   info(
-    `Detected thirdweb contracts: ${compiledResult.contracts
+    `Deploying contracts: ${compiledResult.contracts
       .map((c) => `"${c.name}"`)
       .join(", ")}`,
   );

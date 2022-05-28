@@ -3,7 +3,6 @@ import { ContractPayload } from "./ContractPayload";
 export type CompileOptions = {
   projectPath: string;
   name: string;
-  clean?: boolean;
 };
 
 export interface IBuilder {

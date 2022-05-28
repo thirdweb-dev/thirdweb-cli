@@ -63,12 +63,8 @@ export class SolcBuilder extends BaseBuilder {
     }
 
     const artifactsDir = join(options.projectPath, "artifacts");
-
-    if (options.clean) {
-      logger.info("Cleaning artifacts directory");
-      if (existsSync(artifactsDir)) {
-        rmSync(artifactsDir, { recursive: true });
-      }
+    if (existsSync(artifactsDir)) {
+      rmSync(artifactsDir, { recursive: true });
     }
 
     if (!existsSync(artifactsDir)) {
