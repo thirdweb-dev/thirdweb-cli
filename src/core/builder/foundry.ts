@@ -31,17 +31,17 @@ export class FoundryBuilder extends BaseBuilder {
     const files: string[] = [];
     this.findFiles(outPath, /^.*(?<!metadata)\.json$/, files);
 
-    const f = JSON.parse(readFileSync("contract.json", "utf-8"));
-    const metadata = JSON.stringify(JSON.stringify(f.metadata));
-    // console.log(metadata);
-    console.log("computed", await getIPFSHash(metadata));
-    console.log(
-      "xtracted",
-      extractIPFSHashFromBytecode(
-        "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220e6b1956aead7d0e30ea5b730b3708ae2d35ec4fdcb551ee5e2cfb9331106852b64736f6c634300080d0033",
-      ),
-    );
-    console.log("----------");
+    // const f = JSON.parse(readFileSync("contract.json", "utf-8"));
+    // const metadata = JSON.stringify(JSON.stringify(f.metadata));
+    // // console.log(metadata);
+    // console.log("computed", await getIPFSHash(metadata));
+    // console.log(
+    //   "xtracted",
+    //   extractIPFSHashFromBytecode(
+    //     "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220e6b1956aead7d0e30ea5b730b3708ae2d35ec4fdcb551ee5e2cfb9331106852b64736f6c634300080d0033",
+    //   ),
+    // );
+    // console.log("----------");
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
