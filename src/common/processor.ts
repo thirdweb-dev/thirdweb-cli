@@ -39,7 +39,7 @@ export async function processProject(options: any) {
     process.exit(1);
   }
   info(
-    `Detected thirdweb contracts: ${compiledResult.contracts
+    `Deploying contracts: ${compiledResult.contracts
       .map((c) => `"${c.name}"`)
       .join(", ")}`,
   );
