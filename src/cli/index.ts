@@ -43,7 +43,6 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--dry-run", "dry run (skip actually publishing)")
-    .option("-c, --clean", "clean artifacts before compiling")
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
       const hashes = await processProject(options);

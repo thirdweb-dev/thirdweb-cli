@@ -30,7 +30,7 @@ export async function processProject(options: any) {
     warn("Unable to detect project type, falling back to solc compilation");
   }
 
-  const compiledResult = await build(projectPath, projectType, options.clean);
+  const compiledResult = await build(projectPath, projectType);
 
   if (compiledResult.contracts.length == 0) {
     logger.error(
