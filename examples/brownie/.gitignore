@@ -7,3 +7,4 @@ typechain
 #brownie files
 cache
 build
+artifacts

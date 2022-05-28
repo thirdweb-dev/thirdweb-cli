@@ -1,8 +1,6 @@
-import { logger } from "../helpers/logger";
+import { info, logger } from "../helpers/logger";
 import { ProjectType } from "../types/ProjectType";
-import BrownieDetector from "./brownie";
 import { Detector } from "./detector";
-import FoundryDetector from "./foundry";
 import HardhatDetector from "./hardhat";
 import TruffleDetector from "./truffle";
 import inquirer from "inquirer";
@@ -10,9 +8,9 @@ import inquirer from "inquirer";
 export default async function detect(path: string): Promise<ProjectType> {
   const detectors: Detector[] = [
     new HardhatDetector(),
-    new FoundryDetector(),
+    // new FoundryDetector(), TODO foundry does not output the correct metadata
     new TruffleDetector(),
-    new BrownieDetector(),
+    // new BrownieDetector(), TODO brownie does not support outputing metadata yet
   ];
 
   const possibleProjectTypes = detectors
@@ -25,13 +23,14 @@ export default async function detect(path: string): Promise<ProjectType> {
   }
   //if there is only one possible option just return it
   if (possibleProjectTypes.length === 1) {
-    logger.info("Detected project type:", possibleProjectTypes[0]);
+    info(`Detected project type: ${possibleProjectTypes[0]}`);
     return possibleProjectTypes[0];
   }
 
-  logger.info(
-    "Detected multiple possible build tools:",
-    possibleProjectTypes.map((s) => `"${s}"`).join(", "),
+  info(
+    `Detected multiple possible build tools: ${possibleProjectTypes
+      .map((s) => `"${s}"`)
+      .join(", ")}`,
   );
 
   const question = "How would you like to compile your contracts";

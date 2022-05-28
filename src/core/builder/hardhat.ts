@@ -1,23 +1,24 @@
-import { logger } from "../helpers/logger";
+import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
-import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { readFileSync } from "fs";
 import { HardhatConfig } from "hardhat/types";
-import { basename, join, resolve } from "path";
+import { join, resolve } from "path";
 
 export class HardhatBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    if (options.clean) {
-      logger.info("Running hardhat clean");
+    const loader = spinner("Compiling...");
+    try {
       execSync("npx hardhat clean");
+      execSync("npx hardhat compile");
+    } catch (e) {
+      loader.fail("Compilation failed");
+      throw e;
     }
-
-    logger.info("Compiling...");
-    execSync("npx hardhat compile");
     //we get our very own extractor script from the dir that we're in during execution
     // this is `./dist/cli` (for all purposes of the CLI)
     // then we look up the hardhat config extractor file path from there
@@ -52,33 +53,40 @@ export class HardhatBuilder extends BaseBuilder {
     const files: string[] = [];
     this.findFiles(contractsPath, /^.*(?<!dbg)\.json$/, files);
 
-    for (const file of files) {
-      logger.debug("Processing:", file.replace(contractsPath, ""));
-      const contractName = basename(file, ".json");
-      const contractJsonFile = readFileSync(file, "utf-8");
+    const buildOutputPath = join(artifactsPath, "build-info");
+    const buildFiles: string[] = [];
+    this.findFiles(buildOutputPath, /^.*(?<!dbg)\.json$/, buildFiles);
 
-      const contractInfo = JSON.parse(contractJsonFile);
-      const abi = contractInfo.abi;
-      const bytecode = contractInfo.bytecode;
+    // TODO this only grabs the first build file, might be more to process?
+    const buildJsonFile = readFileSync(buildFiles[0], "utf-8");
+    const buildJson = JSON.parse(buildJsonFile);
 
-      for (const input of abi) {
-        if (this.isThirdwebContract(input)) {
-          if (contracts.find((c) => c.name === contractName)) {
-            logger.error(
-              `Found multiple contracts with name "${contractName}". Contract names should be unique.`,
-            );
-            process.exit(1);
-          }
+    const contractBuildOutputs = buildJson.output.contracts;
+
+    for (const [contractPath, contractInfos] of Object.entries(
+      contractBuildOutputs,
+    )) {
+      // TODO this fragile logic to only process contracts that are in the sources dir
+      if (!contractPath.startsWith(sourcesDir.replace("/", ""))) {
+        continue;
+      }
+      for (const [contractName, contractInfo] of Object.entries(
+        contractInfos as any,
+      )) {
+        const info = contractInfo as any;
+        const bytecode = info.evm.bytecode.object;
+        const metadata = info.metadata;
+
+        if (this.shouldProcessContract(bytecode, contractName)) {
           contracts.push({
-            abi,
+            metadata,
             bytecode,
             name: contractName,
           });
-          break;
         }
       }
     }
-
+    loader.succeed("Compilation successful");
     return {
       contracts,
     };

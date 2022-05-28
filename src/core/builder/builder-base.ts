@@ -1,3 +1,4 @@
+import { extractIPFSHashFromBytecode } from "../helpers/ipfs";
 import { logger } from "../helpers/logger";
 import { CompileOptions, IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
@@ -8,6 +9,33 @@ export abstract class BaseBuilder implements IBuilder {
   abstract compile(
     options: CompileOptions,
   ): Promise<{ contracts: ContractPayload[] }>;
+
+  protected shouldProcessContract(bytecode: string, name: string): boolean {
+    if (!bytecode || bytecode === "" || bytecode === "0x") {
+      return false;
+    }
+    // TODO as CLI options
+    if (
+      name.toLowerCase().includes("test") ||
+      name.toLowerCase().includes("mock")
+    ) {
+      logger.debug(`Skipping '${name}'.`);
+      return false;
+    }
+    // ensure that we can extract IPFS hashes from the bytecode
+    let ipfsHash;
+    try {
+      ipfsHash = extractIPFSHashFromBytecode(bytecode);
+    } catch (e) {}
+
+    if (!ipfsHash) {
+      logger.debug(
+        `Cannot resolve build metadata IPFS hash for contract '${name}'. Skipping ${bytecode}`,
+      );
+      return false;
+    }
+    return true;
+  }
 
   protected isThirdwebContract(input: any): boolean {
     try {

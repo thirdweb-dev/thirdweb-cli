@@ -1,8 +1,7 @@
 import { THIRDWEB_URL } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
-import { logger } from "../core/helpers/logger";
-import { Contract } from "../core/interfaces/Contract";
+import { info, logger, spinner, warn } from "../core/helpers/logger";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import path from "path";
 
@@ -28,12 +27,10 @@ export async function processProject(options: any) {
 
   const projectType = await detect(projectPath);
   if (projectType === "unknown") {
-    logger.warn(
-      "Unable to detect project type, falling back to solc compilation",
-    );
+    warn("Unable to detect project type, falling back to solc compilation");
   }
 
-  const compiledResult = await build(projectPath, projectType, options.clean);
+  const compiledResult = await build(projectPath, projectType);
 
   if (compiledResult.contracts.length == 0) {
     logger.error(
@@ -41,43 +38,37 @@ export async function processProject(options: any) {
     );
     process.exit(1);
   }
-  logger.info(
-    "Detected thirdweb contracts:",
-    compiledResult.contracts.map((c) => `"${c.name}"`).join(", "),
+  info(
+    `Deploying contracts: ${compiledResult.contracts
+      .map((c) => `"${c.name}"`)
+      .join(", ")}`,
   );
 
-  logger.info("Project compiled successfully");
-
   if (options.dryRun) {
-    logger.info("Dry run, skipping publish");
+    info("Dry run, skipping deployment");
     process.exit(0);
   }
 
-  logger.info("Uploading contract data...");
   const bytecodes = compiledResult.contracts.map((c) => c.bytecode);
-  const abis = compiledResult.contracts.map((c) => JSON.stringify(c.abi));
-
-  const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
-  const { metadataUris: abiURIs } = await storage.uploadBatch(abis);
-
-  const contractMetadatas: string[] = [];
-  for (let i = 0; i < compiledResult.contracts.length; i++) {
-    const bytecode = bytecodeURIs[i];
-    const abi = abiURIs[i];
-    const name = compiledResult.contracts[i].name;
-    contractMetadatas.push(
-      JSON.stringify({
-        name: name,
-        bytecodeUri: bytecode,
-        abiUri: abi,
-      } as Contract),
+  const loader = spinner("Uploading contract data...");
+  try {
+    // Upload build output metadatas (need to be single uploads)
+    await Promise.all(
+      compiledResult.contracts.map(async (c) => {
+        logger.debug(`Uploading ${c.name}...`);
+        const hash = await storage.uploadSingle(c.metadata);
+        return hash;
+      }),
     );
-  }
-  // TODO progress bar
-  const { metadataUris: hashes } = await storage.uploadBatch(contractMetadatas);
 
-  logger.info("Upload successful");
-  return hashes;
+    // Upload batch all bytecodes
+    const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
+    loader.succeed("Upload successful");
+    return bytecodeURIs;
+  } catch (e) {
+    loader.fail("Error uploading metadata");
+    throw e;
+  }
 }
 
 export function getUrl(hashes: string[], path: string) {

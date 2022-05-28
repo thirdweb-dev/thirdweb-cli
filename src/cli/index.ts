@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { getUrl, processProject } from "../common/processor";
-import { logger } from "../core/helpers/logger";
+import { info, logger } from "../core/helpers/logger";
+import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
 import updateNotifier from "update-notifier";
@@ -42,12 +43,13 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--dry-run", "dry run (skip actually publishing)")
-    .option("-c, --clean", "clean artifacts before compiling")
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
       const hashes = await processProject(options);
       const url = getUrl(hashes, "publish");
-      logger.info(`Open this link to publish your contracts:\n\n${url}\n\n`);
+      info(
+        `Open this link to deploy your contracts: ${chalk.blueBright(url)}\n\n`,
+      );
       open(url.toString());
     });
 
@@ -63,7 +65,9 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .action(async (options) => {
       const hashes = await processProject(options);
       const url = getUrl(hashes, "deploy");
-      logger.info(`Open this link to deploy your contracts:\n\n${url}\n\n`);
+      info(
+        `Open this link to deploy your contracts: ${chalk.blueBright(url)}\n\n`,
+      );
       open(url.toString());
     });
 

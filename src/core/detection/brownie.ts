@@ -7,7 +7,7 @@ export default class BrownieDetector implements Detector {
   public projectType: ProjectType = "brownie";
 
   public matches(path: string): boolean {
-    logger.debug("Checking if " + path + " is a Foundry project");
+    logger.debug("Checking if " + path + " is a Brownie project");
     return existsSync(path + "/brownie-config.yaml");
   }
 }

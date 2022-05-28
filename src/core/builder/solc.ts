@@ -1,14 +1,8 @@
-import { logger } from "../helpers/logger";
+import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  rmdirSync,
-  writeFileSync,
-} from "fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { basename, join } from "path";
 import solc from "solc";
 
@@ -16,6 +10,8 @@ export class SolcBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
+    const loader = spinner("Compiling...");
+
     // find solidity files...
     const inputPaths: string[] = [];
     this.findFiles(options.projectPath, /^.*\.sol$/, inputPaths);
@@ -61,17 +57,14 @@ export class SolcBuilder extends BaseBuilder {
     );
 
     if (output.errors) {
+      loader.fail("Compilation failed");
       logger.error(output.errors);
       process.exit(1);
     }
 
     const artifactsDir = join(options.projectPath, "artifacts");
-
-    if (options.clean) {
-      logger.info("Cleaning artifacts directory");
-      if (existsSync(artifactsDir)) {
-        rmdirSync(artifactsDir, { recursive: true });
-      }
+    if (existsSync(artifactsDir)) {
+      rmSync(artifactsDir, { recursive: true });
     }
 
     if (!existsSync(artifactsDir)) {
@@ -115,27 +108,18 @@ export class SolcBuilder extends BaseBuilder {
       const contractJsonFile = readFileSync(file, "utf-8");
 
       const contractInfo = JSON.parse(contractJsonFile);
-      const abi = contractInfo.abi;
       const bytecode = contractInfo.evm.bytecode.object;
+      const metadata = contractInfo.metadata;
 
-      for (const input of abi) {
-        if (this.isThirdwebContract(input)) {
-          if (contracts.find((c) => c.name === contractName)) {
-            logger.error(
-              `Found multiple contracts with name "${contractName}". Contract names should be unique.`,
-            );
-            process.exit(1);
-          }
-          contracts.push({
-            abi,
-            bytecode,
-            name: contractName,
-          });
-          break;
-        }
+      if (this.shouldProcessContract(bytecode, contractName)) {
+        contracts.push({
+          metadata,
+          bytecode,
+          name: contractName,
+        });
       }
     }
-
+    loader.succeed("Compilation successful");
     return { contracts };
   }
 }

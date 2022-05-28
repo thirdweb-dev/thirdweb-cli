@@ -1,10 +1,10 @@
-import { logger } from "../helpers/logger";
+import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
-import { existsSync, readFileSync, rmdirSync } from "fs";
-import { basename, join } from "path";
+import { existsSync, readFileSync, rmSync } from "fs";
+import { join } from "path";
 
 export class TruffleBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
@@ -21,13 +21,14 @@ export class TruffleBuilder extends BaseBuilder {
       truffleConfig.contracts_build_directory || "./build/contracts",
     );
 
-    if (options.clean) {
-      logger.info("Cleaning build directory");
-      existsSync(buildPath) && rmdirSync(buildPath, { recursive: true });
+    const loader = spinner("Compiling...");
+    try {
+      existsSync(buildPath) && rmSync(buildPath, { recursive: true });
+      execSync("npx truffle compile");
+    } catch (e) {
+      loader.fail("Compilation failed");
+      throw e;
     }
-
-    logger.info("Compiling...");
-    execSync("npx truffle compile");
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
@@ -35,31 +36,21 @@ export class TruffleBuilder extends BaseBuilder {
 
     for (const file of files) {
       logger.debug("Processing:", file.replace(buildPath, ""));
-      const contractName = basename(file, ".json");
       const contractJsonFile = readFileSync(file, "utf-8");
-
       const contractInfo = JSON.parse(contractJsonFile);
-      const abi = contractInfo.abi;
+      const contractName = contractInfo.contractName;
+      const metadata = contractInfo.metadata;
       const bytecode = contractInfo.bytecode;
 
-      for (const input of abi) {
-        if (this.isThirdwebContract(input)) {
-          if (contracts.find((c) => c.name === contractName)) {
-            logger.error(
-              `Found multiple contracts with name "${contractName}". Contract names should be unique.`,
-            );
-            process.exit(1);
-          }
-          contracts.push({
-            abi,
-            bytecode,
-            name: contractName,
-          });
-          break;
-        }
+      if (this.shouldProcessContract(bytecode, contractName)) {
+        contracts.push({
+          metadata,
+          bytecode,
+          name: contractName,
+        });
       }
     }
-
+    loader.succeed("Compilation successful");
     return { contracts };
   }
 }
