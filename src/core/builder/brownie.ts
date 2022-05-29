@@ -35,6 +35,7 @@ export class BrownieBuilder extends BaseBuilder {
     const files: string[] = [];
     this.findFiles(contractsPath, /^.*(?<!dbg)\.json$/, files);
 
+    // TODO find a way to extract compiler metadata from brownie artifacts
     for (const file of files) {
       logger.debug("Processing:", file.replace(contractsPath, ""));
       const contractName = basename(file, ".json");

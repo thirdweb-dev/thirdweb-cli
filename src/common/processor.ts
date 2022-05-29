@@ -23,7 +23,7 @@ export async function processProject(options: any) {
     projectPath = resolvedPath;
   }
 
-  logger.debug("Publishing project at path " + projectPath);
+  logger.debug("Processing project at path " + projectPath);
 
   const projectType = await detect(projectPath);
   if (projectType === "unknown") {
@@ -34,12 +34,12 @@ export async function processProject(options: any) {
 
   if (compiledResult.contracts.length == 0) {
     logger.error(
-      "No thirdweb contract detected. Extend ThirdwebContract to mark which contracts to deploy.",
+      "No deployable contract detected. Run with the '--debug' option to see what contracts were skipped and why.",
     );
     process.exit(1);
   }
   info(
-    `Deploying contracts: ${compiledResult.contracts
+    `Processing contracts: ${compiledResult.contracts
       .map((c) => `"${c.name}"`)
       .join(", ")}`,
   );
@@ -53,18 +53,30 @@ export async function processProject(options: any) {
   const loader = spinner("Uploading contract data...");
   try {
     // Upload build output metadatas (need to be single uploads)
-    await Promise.all(
+    const metadataURIs = await Promise.all(
       compiledResult.contracts.map(async (c) => {
         logger.debug(`Uploading ${c.name}...`);
         const hash = await storage.uploadSingle(c.metadata);
-        return hash;
+        return `ipfs://${hash}`;
       }),
     );
 
     // Upload batch all bytecodes
     const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
+
+    const combinedContents = compiledResult.contracts.map((c, i) => {
+      return {
+        name: c.name,
+        metadataUri: metadataURIs[i],
+        bytecodeUri: bytecodeURIs[i],
+      };
+    });
+    const { metadataUris: combinedURIs } = await storage.uploadMetadataBatch(
+      combinedContents,
+    );
     loader.succeed("Upload successful");
-    return bytecodeURIs;
+
+    return combinedURIs;
   } catch (e) {
     loader.fail("Error uploading metadata");
     throw e;
