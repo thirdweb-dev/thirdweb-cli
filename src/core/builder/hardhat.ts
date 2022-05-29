@@ -76,8 +76,9 @@ export class HardhatBuilder extends BaseBuilder {
         const info = contractInfo as any;
         const bytecode = info.evm.bytecode.object;
         const metadata = info.metadata;
+        const abi = metadata.output.abi;
 
-        if (this.shouldProcessContract(bytecode, contractName)) {
+        if (this.shouldProcessContract(abi, bytecode, contractName)) {
           contracts.push({
             metadata,
             bytecode,

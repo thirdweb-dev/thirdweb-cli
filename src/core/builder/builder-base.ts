@@ -10,8 +10,18 @@ export abstract class BaseBuilder implements IBuilder {
     options: CompileOptions,
   ): Promise<{ contracts: ContractPayload[] }>;
 
-  protected shouldProcessContract(bytecode: string, name: string): boolean {
-    if (!bytecode || bytecode === "" || bytecode === "0x") {
+  protected shouldProcessContract(
+    abi: any[],
+    bytecode: string,
+    name: string,
+  ): boolean {
+    if (
+      !bytecode ||
+      bytecode === "" ||
+      bytecode === "0x" ||
+      !abi ||
+      abi.length == 0
+    ) {
       return false;
     }
     // TODO as CLI options

@@ -4,7 +4,7 @@ import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
 import { execSync } from "child_process";
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { basename, join } from "path";
 
 export class FoundryBuilder extends BaseBuilder {
@@ -15,6 +15,12 @@ export class FoundryBuilder extends BaseBuilder {
     try {
       execSync("forge clean");
       execSync("forge build --extra-output metadata");
+      /**
+       * execSync("../../../foundry/target/release/forge clean");
+      execSync(
+        "../../../foundry/target/release/forge build --extra-output metadata",
+      );
+       */
     } catch (e) {
       loader.fail("Compilation failed");
       throw e;
@@ -48,9 +54,34 @@ export class FoundryBuilder extends BaseBuilder {
       const contractName = basename(file, ".json");
       const contractJsonFile = readFileSync(file, "utf-8");
       const contractInfo = JSON.parse(contractJsonFile);
+
+      if (!contractInfo.bytecode) {
+        continue;
+      }
+
       const bytecode = contractInfo.bytecode.object;
-      const metadata = JSON.stringify(contractInfo.metadata);
-      if (this.shouldProcessContract(bytecode, contractName)) {
+
+      // Grab the raw metadata
+      const rawMeta = contractInfo.metadata;
+      rawMeta.output.abi = contractInfo.abi;
+      // need to re-add libraries if not present since forge stripts it out
+      if (!rawMeta.settings.libraries) {
+        rawMeta.settings.libraries = {};
+      }
+      // delete `outputSelection` from the metadata which has nothing to do here, bug in forge
+      delete rawMeta.settings.outputSelection;
+      // sort the metadata ALPHABETICALLY, since forge shuffles the keys in their parsing
+      const meta: any = this.sort(rawMeta);
+      // finally, here's the actual solc output that we expect
+      const metadata = JSON.stringify(meta);
+
+      if (contractName == "MyContract") {
+        writeFileSync("foundry_output.json", JSON.stringify(meta));
+      }
+
+      if (
+        this.shouldProcessContract(contractInfo.abi, bytecode, contractName)
+      ) {
         console.log(`Processing: ${contractName}`);
         console.log("computed", await getIPFSHash(metadata));
         console.log("xtracted", extractIPFSHashFromBytecode(bytecode));
@@ -64,5 +95,18 @@ export class FoundryBuilder extends BaseBuilder {
     }
     loader.succeed("Compilation successful");
     return { contracts };
+  }
+
+  private sort(object: any) {
+    if (typeof object != "object" || object instanceof Array)
+      // Not to sort the array
+      return object;
+    var keys = Object.keys(object);
+    keys.sort();
+    var newObject: any = {};
+    for (var i = 0; i < keys.length; i++) {
+      newObject[keys[i]] = this.sort(object[keys[i]]);
+    }
+    return newObject;
   }
 }

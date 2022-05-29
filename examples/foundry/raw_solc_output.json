@@ -1,0 +1,33 @@
+{
+  "compiler": { "version": "0.8.13+commit.abaa5c0e" },
+  "language": "Solidity",
+  "output": {
+    "abi": [],
+    "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+    "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+  },
+  "settings": {
+    "compilationTarget": { "contracts/MyContract.sol": "MyContract" },
+    "evmVersion": "london",
+    "libraries": {},
+    "metadata": { "bytecodeHash": "ipfs" },
+    "optimizer": { "enabled": true, "runs": 200 },
+    "remappings": [
+      ":@openzeppelin/=node_modules/@openzeppelin/",
+      ":@thirdweb-dev/=node_modules/@thirdweb-dev/",
+      ":contracts/=contracts/",
+      ":lib/=node_modules/@thirdweb-dev/contracts/lib/"
+    ]
+  },
+  "sources": {
+    "contracts/MyContract.sol": {
+      "keccak256": "0x07c8bfefe0838ec2d25a78ed10d939a27184c0f4514101ed8df86218e685bf79",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://f4130fc4b9c5356aed7eb404059d440b7ad289835fec14b68fb4eef806fbd00e",
+        "dweb:/ipfs/QmcnD79vDKTSYPak3y4Ak7V4DZqWZ6u1BraYicSJmGYuaA"
+      ]
+    }
+  },
+  "version": 1
+}

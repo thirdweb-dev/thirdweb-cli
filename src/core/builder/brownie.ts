@@ -44,6 +44,7 @@ export class BrownieBuilder extends BaseBuilder {
       const abi = contractInfo.abi;
       const bytecode = contractInfo.bytecode;
 
+      // TODO update this to new model
       for (const input of abi) {
         if (this.isThirdwebContract(input)) {
           if (contracts.find((c) => c.name === contractName)) {

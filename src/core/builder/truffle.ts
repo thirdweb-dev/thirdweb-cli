@@ -40,9 +40,10 @@ export class TruffleBuilder extends BaseBuilder {
       const contractInfo = JSON.parse(contractJsonFile);
       const contractName = contractInfo.contractName;
       const metadata = contractInfo.metadata;
+      const abi = metadata.output.abi;
       const bytecode = contractInfo.bytecode;
 
-      if (this.shouldProcessContract(bytecode, contractName)) {
+      if (this.shouldProcessContract(abi, bytecode, contractName)) {
         contracts.push({
           metadata,
           bytecode,
