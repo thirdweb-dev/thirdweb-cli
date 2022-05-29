@@ -42,8 +42,9 @@ export class TruffleBuilder extends BaseBuilder {
       const metadata = contractInfo.metadata;
       const bytecode = contractInfo.bytecode;
       const deployedBytecode = contractInfo.deployedBytecode;
+      const abi = metadata.output.abi;
 
-      if (this.shouldProcessContract(deployedBytecode, contractName)) {
+      if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
         contracts.push({
           metadata,
           bytecode,

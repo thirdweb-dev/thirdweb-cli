@@ -1,6 +1,7 @@
 import { info, logger } from "../helpers/logger";
 import { ProjectType } from "../types/ProjectType";
 import { Detector } from "./detector";
+import FoundryDetector from "./foundry";
 import HardhatDetector from "./hardhat";
 import TruffleDetector from "./truffle";
 import inquirer from "inquirer";
@@ -8,7 +9,7 @@ import inquirer from "inquirer";
 export default async function detect(path: string): Promise<ProjectType> {
   const detectors: Detector[] = [
     new HardhatDetector(),
-    // new FoundryDetector(), TODO foundry does not output the correct metadata
+    new FoundryDetector(),
     new TruffleDetector(),
     // new BrownieDetector(), TODO brownie does not support outputing metadata yet
   ];
