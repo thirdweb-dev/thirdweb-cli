@@ -24,7 +24,7 @@ export class TruffleBuilder extends BaseBuilder {
     const loader = spinner("Compiling...");
     try {
       existsSync(buildPath) && rmSync(buildPath, { recursive: true });
-      execSync("npx truffle compile");
+      execSync("npx --yes truffle compile");
     } catch (e) {
       loader.fail("Compilation failed");
       throw e;
@@ -41,8 +41,9 @@ export class TruffleBuilder extends BaseBuilder {
       const contractName = contractInfo.contractName;
       const metadata = contractInfo.metadata;
       const bytecode = contractInfo.bytecode;
+      const deployedBytecode = contractInfo.deployedBytecode;
 
-      if (this.shouldProcessContract(bytecode, contractName)) {
+      if (this.shouldProcessContract(deployedBytecode, contractName)) {
         contracts.push({
           metadata,
           bytecode,

@@ -26,11 +26,13 @@ export abstract class BaseBuilder implements IBuilder {
     let ipfsHash;
     try {
       ipfsHash = extractIPFSHashFromBytecode(bytecode);
-    } catch (e) {}
+    } catch (e) {
+      logger.debug(`Error extracting IPFS hash from '${name}': ${e}`);
+    }
 
     if (!ipfsHash) {
       logger.debug(
-        `Cannot resolve build metadata IPFS hash for contract '${name}'. Skipping ${bytecode}`,
+        `Cannot resolve build metadata IPFS hash for contract '${name}'. Skipping.`,
       );
       return false;
     }

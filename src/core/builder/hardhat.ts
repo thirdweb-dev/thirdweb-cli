@@ -68,16 +68,29 @@ export class HardhatBuilder extends BaseBuilder {
     )) {
       // TODO this fragile logic to only process contracts that are in the sources dir
       if (!contractPath.startsWith(sourcesDir.replace("/", ""))) {
+        logger.debug("Skipping", contractPath, "(not part of sources)");
         continue;
       }
       for (const [contractName, contractInfo] of Object.entries(
         contractInfos as any,
       )) {
         const info = contractInfo as any;
+
+        if (
+          !info.evm ||
+          !info.evm.bytecode ||
+          !info.evm.bytecode.object ||
+          !info.metadata
+        ) {
+          logger.debug("Skipping", contractPath, "(no bytecode or metadata)");
+          continue;
+        }
+
         const bytecode = info.evm.bytecode.object;
+        const deployedBytecode = info.evm.deployedBytecode.object;
         const metadata = info.metadata;
 
-        if (this.shouldProcessContract(bytecode, contractName)) {
+        if (this.shouldProcessContract(deployedBytecode, contractName)) {
           contracts.push({
             metadata,
             bytecode,

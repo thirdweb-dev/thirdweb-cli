@@ -1,3 +1,4 @@
+import { logger } from "./logger";
 import { decodeFirstSync } from "cbor";
 import { UnixFS } from "ipfs-unixfs";
 import { DAGNode } from "ipld-dag-pb";
@@ -26,20 +27,18 @@ export async function getIPFSHash(str: string) {
 export function extractIPFSHashFromBytecode(
   bytecode: string,
 ): string | undefined {
-  try {
-    const numericBytecode = hexToBytes(bytecode);
-    const cborLength: number =
-      numericBytecode[numericBytecode.length - 2] * 0x100 +
-      numericBytecode[numericBytecode.length - 1];
-    const bytecodeBuffer = Buffer.from(
-      numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
-    );
-    const cborData = decodeFirstSync(bytecodeBuffer);
-    if (cborData["ipfs"]) {
-      const uri = toB58String(cborData["ipfs"]);
-      return uri;
-    }
-  } catch (e) {}
+  const numericBytecode = hexToBytes(bytecode);
+  const cborLength: number =
+    numericBytecode[numericBytecode.length - 2] * 0x100 +
+    numericBytecode[numericBytecode.length - 1];
+  const bytecodeBuffer = Buffer.from(
+    numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
+  );
+  const cborData = decodeFirstSync(bytecodeBuffer);
+  if (cborData["ipfs"]) {
+    const uri = toB58String(cborData["ipfs"]);
+    return uri;
+  }
   return undefined;
 }
 
