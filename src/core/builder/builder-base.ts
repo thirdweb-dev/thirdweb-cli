@@ -26,6 +26,7 @@ export abstract class BaseBuilder implements IBuilder {
     }
     // TODO as CLI options
     if (
+      name === "ThirdwebContract" ||
       name.toLowerCase().includes("test") ||
       name.toLowerCase().includes("mock")
     ) {

@@ -66,11 +66,6 @@ export class HardhatBuilder extends BaseBuilder {
     for (const [contractPath, contractInfos] of Object.entries(
       contractBuildOutputs,
     )) {
-      // TODO this fragile logic to only process contracts that are in the sources dir
-      if (!contractPath.startsWith(sourcesDir.replace("/", ""))) {
-        logger.debug("Skipping", contractPath, "(not part of sources)");
-        continue;
-      }
       for (const [contractName, contractInfo] of Object.entries(
         contractInfos as any,
       )) {
