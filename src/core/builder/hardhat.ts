@@ -80,7 +80,8 @@ export class HardhatBuilder extends BaseBuilder {
           !info.evm ||
           !info.evm.bytecode ||
           !info.evm.bytecode.object ||
-          !info.metadata
+          !info.metadata ||
+          !info.abi
         ) {
           logger.debug("Skipping", contractPath, "(no bytecode or metadata)");
           continue;
@@ -89,7 +90,7 @@ export class HardhatBuilder extends BaseBuilder {
         const bytecode = info.evm.bytecode.object;
         const deployedBytecode = info.evm.deployedBytecode.object;
         const metadata = info.metadata;
-        const abi = metadata.output.abi;
+        const abi = info.abi;
 
         if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
           contracts.push({
