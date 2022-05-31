@@ -110,7 +110,7 @@ export class SolcBuilder extends BaseBuilder {
       const contractInfo = JSON.parse(contractJsonFile);
       const bytecode = contractInfo.evm.bytecode.object;
       const deployedBytecode = contractInfo.evm.deployedBytecode.object;
-      const metadata = contractInfo.metadata;
+      const metadata = JSON.parse(contractInfo.metadata);
       const abi = metadata.output.abi;
 
       if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
