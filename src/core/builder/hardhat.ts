@@ -57,42 +57,43 @@ export class HardhatBuilder extends BaseBuilder {
     const buildFiles: string[] = [];
     this.findFiles(buildOutputPath, /^.*(?<!dbg)\.json$/, buildFiles);
 
-    // TODO this only grabs the first build file, might be more to process?
-    const buildJsonFile = readFileSync(buildFiles[0], "utf-8");
-    const buildJson = JSON.parse(buildJsonFile);
+    for (const buildFile of buildFiles) {
+      const buildJsonFile = readFileSync(buildFile, "utf-8");
+      const buildJson = JSON.parse(buildJsonFile);
 
-    const contractBuildOutputs = buildJson.output.contracts;
+      const contractBuildOutputs = buildJson.output.contracts;
 
-    for (const [contractPath, contractInfos] of Object.entries(
-      contractBuildOutputs,
-    )) {
-      for (const [contractName, contractInfo] of Object.entries(
-        contractInfos as any,
+      for (const [contractPath, contractInfos] of Object.entries(
+        contractBuildOutputs,
       )) {
-        const info = contractInfo as any;
+        for (const [contractName, contractInfo] of Object.entries(
+          contractInfos as any,
+        )) {
+          const info = contractInfo as any;
 
-        if (
-          !info.evm ||
-          !info.evm.bytecode ||
-          !info.evm.bytecode.object ||
-          !info.metadata ||
-          !info.abi
-        ) {
-          logger.debug("Skipping", contractPath, "(no bytecode or metadata)");
-          continue;
-        }
+          if (
+            !info.evm ||
+            !info.evm.bytecode ||
+            !info.evm.bytecode.object ||
+            !info.metadata ||
+            !info.abi
+          ) {
+            logger.debug("Skipping", contractPath, "(no bytecode or metadata)");
+            continue;
+          }
 
-        const bytecode = info.evm.bytecode.object;
-        const deployedBytecode = info.evm.deployedBytecode.object;
-        const metadata = info.metadata;
-        const abi = info.abi;
+          const bytecode = info.evm.bytecode.object;
+          const deployedBytecode = info.evm.deployedBytecode.object;
+          const metadata = info.metadata;
+          const abi = info.abi;
 
-        if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
-          contracts.push({
-            metadata,
-            bytecode,
-            name: contractName,
-          });
+          if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
+            contracts.push({
+              metadata,
+              bytecode,
+              name: contractName,
+            });
+          }
         }
       }
     }
