@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { getUrl, processProject } from "../common/processor";
+import { processProject } from "../common/processor";
+import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import chalk from "chalk";
 import { Command } from "commander";
@@ -8,10 +9,6 @@ import updateNotifier from "update-notifier";
 
 const main = async () => {
   const program = new Command();
-
-  const pkg = require("../../package.json");
-
-  const cliVersion = pkg.version;
 
   //yes this has to look like this, eliminates whitespace
   console.info(`
@@ -45,8 +42,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
-      const hashes = await processProject(options);
-      const url = getUrl(hashes, "publish");
+      const url = await processProject(options, "publish");
       info(
         `Open this link to deploy your contracts: ${chalk.blueBright(url)}\n\n`,
       );
@@ -63,8 +59,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-c, --clean", "clean artifacts before compiling")
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
-      const hashes = await processProject(options);
-      const url = getUrl(hashes, "deploy");
+      const url = await processProject(options, "deploy");
       info(
         `Open this link to deploy your contracts: ${chalk.blueBright(url)}\n\n`,
       );

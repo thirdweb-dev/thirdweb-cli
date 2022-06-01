@@ -1,11 +1,14 @@
-import { THIRDWEB_URL } from "../constants/urls";
+import { THIRDWEB_URL, cliVersion } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { info, logger, spinner, warn } from "../core/helpers/logger";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import path from "path";
 
-export async function processProject(options: any) {
+export async function processProject(
+  options: any,
+  command: "deploy" | "publish",
+) {
   // TODO: allow overriding the default storage
   const storage = new IpfsStorage();
 
@@ -76,17 +79,20 @@ export async function processProject(options: any) {
     );
     loader.succeed("Upload successful");
 
-    return combinedURIs;
+    return getUrl(combinedURIs, command, projectType);
   } catch (e) {
     loader.fail("Error uploading metadata");
     throw e;
   }
 }
 
-export function getUrl(hashes: string[], path: string) {
-  const url = new URL(THIRDWEB_URL + "/contracts/" + path);
+export function getUrl(hashes: string[], command: string, projectType: string) {
+  const url = new URL(THIRDWEB_URL + "/contracts/" + command);
   for (let hash of hashes) {
     url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
   }
+  url.searchParams.append("utm_source", "thirdweb-cli");
+  url.searchParams.append("utm_campaign", cliVersion);
+  url.searchParams.append("utm_medium", projectType);
   return url;
 }
