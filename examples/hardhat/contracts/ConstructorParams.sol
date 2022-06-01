@@ -20,4 +20,8 @@ contract ConstructorParams {
         foo = aStruct;
         someCode = anArray;
     }
+
+    function updateStruct(Foo memory aStruct) public {
+        foo = aStruct;
+    }
 }
