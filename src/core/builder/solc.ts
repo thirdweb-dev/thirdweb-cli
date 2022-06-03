@@ -10,8 +10,6 @@ export class SolcBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    const loader = spinner("Compiling...");
-
     // find solidity files...
     const inputPaths: string[] = [];
     this.findFiles(options.projectPath, /^.*\.sol$/, inputPaths);
@@ -57,9 +55,7 @@ export class SolcBuilder extends BaseBuilder {
     );
 
     if (output.errors) {
-      loader.fail("Compilation failed");
-      logger.error(output.errors);
-      process.exit(1);
+      throw new Error(output.errors);
     }
 
     const artifactsDir = join(options.projectPath, "artifacts");
@@ -122,7 +118,6 @@ export class SolcBuilder extends BaseBuilder {
         });
       }
     }
-    loader.succeed("Compilation successful");
     return { contracts };
   }
 }
