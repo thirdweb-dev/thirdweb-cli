@@ -33,7 +33,16 @@ export async function processProject(
     warn("Unable to detect project type, falling back to solc compilation");
   }
 
-  const compiledResult = await build(projectPath, projectType);
+  let compiledResult;
+  const compileLoader = spinner("Compiling project...");
+  try {
+    compiledResult = await build(projectPath, projectType);
+  } catch (e) {
+    compileLoader.fail("Compilation failed");
+    logger.error(e);
+    process.exit(1);
+  }
+  compileLoader.succeed("Compilation successful");
 
   if (compiledResult.contracts.length == 0) {
     logger.error(
@@ -41,6 +50,7 @@ export async function processProject(
     );
     process.exit(1);
   }
+
   info(
     `Processing contracts: ${compiledResult.contracts
       .map((c) => `"${c.name}"`)

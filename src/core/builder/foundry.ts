@@ -1,8 +1,8 @@
-import { logger, spinner } from "../helpers/logger";
+import { execute } from "../helpers/exec";
+import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
-import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import { basename, join } from "path";
 
@@ -10,17 +10,11 @@ export class FoundryBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    const loader = spinner("Compiling...");
-    try {
-      execSync("forge clean");
-      execSync("forge build --extra-output metadata");
-    } catch (e) {
-      loader.fail("Compilation failed");
-      throw e;
-    }
+    await execute("forge clean");
+    await execute("forge build --extra-output metadata");
 
     // get the current config first
-    const foundryConfig = execSync("forge config --json").toString();
+    const foundryConfig = (await execute("forge config --json")).stdout;
 
     const actualFoundryConfig = JSON.parse(foundryConfig);
 
@@ -77,7 +71,6 @@ export class FoundryBuilder extends BaseBuilder {
         });
       }
     }
-    loader.succeed("Compilation successful");
     return { contracts };
   }
 

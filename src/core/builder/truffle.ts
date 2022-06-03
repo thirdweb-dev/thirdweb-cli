@@ -1,8 +1,8 @@
+import { execute } from "../helpers/exec";
 import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
-import { execSync } from "child_process";
 import { existsSync, readFileSync, rmSync } from "fs";
 import { join } from "path";
 
@@ -21,14 +21,8 @@ export class TruffleBuilder extends BaseBuilder {
       truffleConfig.contracts_build_directory || "./build/contracts",
     );
 
-    const loader = spinner("Compiling...");
-    try {
-      existsSync(buildPath) && rmSync(buildPath, { recursive: true });
-      execSync("npx --yes truffle compile");
-    } catch (e) {
-      loader.fail("Compilation failed");
-      throw e;
-    }
+    existsSync(buildPath) && rmSync(buildPath, { recursive: true });
+    await execute("npx --yes truffle compile");
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
@@ -52,7 +46,6 @@ export class TruffleBuilder extends BaseBuilder {
         });
       }
     }
-    loader.succeed("Compilation successful");
     return { contracts };
   }
 }

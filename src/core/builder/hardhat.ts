@@ -1,8 +1,8 @@
+import { execute } from "../helpers/exec";
 import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
-import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import { HardhatConfig } from "hardhat/types";
 import { join, resolve } from "path";
@@ -11,14 +11,8 @@ export class HardhatBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    const loader = spinner("Compiling...");
-    try {
-      execSync("npx hardhat clean");
-      execSync("npx hardhat compile");
-    } catch (e) {
-      loader.fail("Compilation failed");
-      throw e;
-    }
+    await execute("npx hardhat clean");
+    await execute("npx hardhat compile");
     //we get our very own extractor script from the dir that we're in during execution
     // this is `./dist/cli` (for all purposes of the CLI)
     // then we look up the hardhat config extractor file path from there
@@ -28,9 +22,9 @@ export class HardhatBuilder extends BaseBuilder {
     );
 
     //the hardhat extractor **logs out** the runtime config of hardhat, we take that stdout and parse it
-    const stringifiedConfig = execSync(
-      `npx hardhat run ${configExtractorScriptPath} --no-compile`,
-    ).toString();
+    const stringifiedConfig = (
+      await execute(`npx hardhat run ${configExtractorScriptPath} --no-compile`)
+    ).stdout;
     //voila the hardhat config
 
     const actualHardhatConfig = JSON.parse(
@@ -97,7 +91,6 @@ export class HardhatBuilder extends BaseBuilder {
         }
       }
     }
-    loader.succeed("Compilation successful");
     return {
       contracts,
     };
