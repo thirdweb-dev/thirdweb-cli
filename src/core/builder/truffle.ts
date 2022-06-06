@@ -36,7 +36,18 @@ export class TruffleBuilder extends BaseBuilder {
       const metadata = contractInfo.metadata;
       const bytecode = contractInfo.bytecode;
       const deployedBytecode = contractInfo.deployedBytecode;
-      const abi = metadata.output.abi;
+      const parsedMetadata = JSON.parse(metadata);
+      const abi = parsedMetadata.output.abi;
+
+      const target = parsedMetadata.settings.compilationTarget;
+      if (
+        Object.keys(target).length === 0 ||
+        Object.keys(target)[0].includes("@")
+      ) {
+        // skip library contracts
+        logger.debug("Skipping", contractName, "(not a source target)");
+        continue;
+      }
 
       if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
         contracts.push({

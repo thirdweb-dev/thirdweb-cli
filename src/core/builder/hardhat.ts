@@ -60,6 +60,12 @@ export class HardhatBuilder extends BaseBuilder {
       for (const [contractPath, contractInfos] of Object.entries(
         contractBuildOutputs,
       )) {
+        if (contractPath.includes("@")) {
+          // skip library contracts
+          logger.debug("Skipping", contractPath, "(not a source target)");
+          continue;
+        }
+
         for (const [contractName, contractInfo] of Object.entries(
           contractInfos as any,
         )) {
