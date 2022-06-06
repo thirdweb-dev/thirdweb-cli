@@ -55,7 +55,8 @@ export class SolcBuilder extends BaseBuilder {
     );
 
     if (output.errors) {
-      throw new Error(output.errors);
+      logger.error(output.errors);
+      throw new Error("Error compiling Solidity files");
     }
 
     const artifactsDir = join(options.projectPath, "artifacts");
