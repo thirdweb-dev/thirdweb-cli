@@ -25,6 +25,7 @@
     "@web-std/file": "^3.0.2",
     "cbor": "^8.1.0",
     "commander": "^9.1.0",
+    "enquirer": "^2.3.6",
     "form-data": "^4.0.0",
     "inquirer": "^8.2.3",
     "ipfs-unixfs": "^6.0.7",
