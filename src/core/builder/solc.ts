@@ -55,7 +55,8 @@ export class SolcBuilder extends BaseBuilder {
     );
 
     if (output.errors) {
-      throw new Error(output.errors);
+      logger.error(output.errors);
+      throw new Error("Error compiling Solidity files");
     }
 
     const artifactsDir = join(options.projectPath, "artifacts");
@@ -109,6 +110,16 @@ export class SolcBuilder extends BaseBuilder {
       const metadata = contractInfo.metadata;
       const parsedMetadata = JSON.parse(metadata);
       const abi = parsedMetadata.output.abi;
+
+      const target = parsedMetadata.settings.compilationTarget;
+      if (
+        Object.keys(target).length === 0 ||
+        Object.keys(target)[0].includes("@")
+      ) {
+        // skip library contracts
+        logger.debug("Skipping", contractName, "(not a source target)");
+        continue;
+      }
 
       if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
         contracts.push({

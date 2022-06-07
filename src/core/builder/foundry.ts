@@ -40,6 +40,16 @@ export class FoundryBuilder extends BaseBuilder {
         continue;
       }
 
+      const target = contractInfo.metadata.settings.compilationTarget;
+      if (
+        Object.keys(target).length === 0 ||
+        Object.keys(target)[0].includes("@")
+      ) {
+        // skip library contracts
+        logger.debug("Skipping", contractName, "(not a source target)");
+        continue;
+      }
+
       const bytecode = contractInfo.bytecode.object;
       const deployedBytecode = contractInfo.deployedBytecode.object;
 
