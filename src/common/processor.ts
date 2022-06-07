@@ -120,9 +120,18 @@ export async function processProject(
 }
 
 export function getUrl(hashes: string[], command: string, projectType: string) {
-  const url = new URL(THIRDWEB_URL + "/contracts/" + command);
-  for (let hash of hashes) {
-    url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
+  let url;
+  if (hashes.length == 1 && command === "deploy") {
+    url = new URL(
+      THIRDWEB_URL +
+        "/contracts/" +
+        encodeURIComponent(hashes[0].replace("ipfs://", "")),
+    );
+  } else {
+    url = new URL(THIRDWEB_URL + "/contracts/" + command);
+    for (let hash of hashes) {
+      url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
+    }
   }
   url.searchParams.append("utm_source", "thirdweb-cli");
   url.searchParams.append("utm_campaign", cliVersion);
