@@ -49,11 +49,31 @@ export class TruffleBuilder extends BaseBuilder {
         continue;
       }
 
+      const meta = JSON.parse(metadata);
+      const sources = Object.keys(meta.sources)
+        .map((path) => {
+          path = path.replace("project:/", "");
+          const sourcePath = join(options.projectPath, path);
+          if (existsSync(sourcePath)) {
+            return sourcePath;
+          }
+          const nodeModulesPath = join(
+            options.projectPath,
+            "node_modules",
+            path,
+          );
+          if (existsSync(nodeModulesPath)) {
+            return nodeModulesPath;
+          }
+          return undefined;
+        })
+        .filter((path) => path !== undefined) as string[];
       if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
         contracts.push({
           metadata,
           bytecode,
           name: contractName,
+          sources,
         });
       }
     }
