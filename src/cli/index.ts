@@ -41,6 +41,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
+    .option("-i, --install-deps", "also install dependencies")
     .action(async (options) => {
       const url = await processProject(options, "publish");
       info(`Open this link to publish your contracts:`);
