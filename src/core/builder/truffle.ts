@@ -53,9 +53,7 @@ export class TruffleBuilder extends BaseBuilder {
       const sources = Object.keys(meta.sources)
         .map((path) => {
           path = path.replace("project:/", "");
-          console.log("**", path);
           const sourcePath = join(options.projectPath, path);
-          console.log("--", sourcePath);
           if (existsSync(sourcePath)) {
             return sourcePath;
           }
