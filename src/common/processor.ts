@@ -5,6 +5,7 @@ import { error, info, logger, spinner, warn } from "../core/helpers/logger";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import chalk from "chalk";
+import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import path from "path";
 
@@ -36,6 +37,33 @@ export async function processProject(
   const projectType = await detect(projectPath);
   if (projectType === "unknown") {
     warn("Unable to detect project type, falling back to solc compilation");
+  }
+
+  // TODO extract out
+  if (options.installDeps) {
+    logger.info("Installing dependencies...");
+    switch (projectType) {
+      case "hardhat": {
+        execSync(`cd ${projectPath} && npm i hardhat && npm install`);
+        break;
+      }
+      case "foundry": {
+        execSync(
+          `cd ${projectPath} && curl -L https://foundry.paradigm.xyz | bash && foundryup`,
+        );
+        break;
+      }
+      case "truffle": {
+        execSync(`cd ${projectPath} && npm i truffle && npm install`);
+        break;
+      }
+      default: {
+        logger.warn(
+          `Could not install dependencies, project type "${projectType}" not supported`,
+        );
+        break;
+      }
+    }
   }
 
   let compiledResult;
