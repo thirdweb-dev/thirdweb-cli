@@ -16,4 +16,9 @@ export interface ContractPayload {
    * The compiler metadata object or file
    */
   metadata: any;
+
+  /**
+   * The source file paths
+   */
+  sources: string[];
 }

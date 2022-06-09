@@ -3,7 +3,7 @@ import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { HardhatConfig } from "hardhat/types";
 import { join, resolve } from "path";
 
@@ -87,11 +87,31 @@ export class HardhatBuilder extends BaseBuilder {
           const metadata = info.metadata;
           const abi = info.abi;
 
+          const meta = JSON.parse(metadata);
+          const sources = Object.keys(meta.sources)
+            .map((path) => {
+              const sourcePath = join(options.projectPath, sourcesDir, path);
+              if (existsSync(sourcePath)) {
+                return sourcePath;
+              }
+              const nodeModulesPath = join(
+                options.projectPath,
+                "node_modules",
+                path,
+              );
+              if (existsSync(nodeModulesPath)) {
+                return nodeModulesPath;
+              }
+              return undefined;
+            })
+            .filter((path) => path !== undefined) as string[];
+
           if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
             contracts.push({
               metadata,
               bytecode,
               name: contractName,
+              sources,
             });
           }
         }

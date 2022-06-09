@@ -5,6 +5,7 @@ import { error, info, logger, spinner, warn } from "../core/helpers/logger";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import chalk from "chalk";
+import { readFileSync } from "fs";
 import path from "path";
 
 const { MultiSelect } = require("enquirer");
@@ -85,9 +86,26 @@ export async function processProject(
     process.exit(0);
   }
 
-  const bytecodes = selectedContracts.map((c) => c.bytecode);
   const loader = spinner("Uploading contract data...");
   try {
+    for (let i = 0; i < selectedContracts.length; i++) {
+      const contract = selectedContracts[i];
+      if (contract.sources) {
+        // upload sources in batches to avoid getting rate limited (needs to be single uploads)
+        const batchSize = 3;
+        for (let j = 0; j < contract.sources.length; j = j + batchSize) {
+          const batch = contract.sources.slice(j, j + batchSize);
+          await Promise.all(
+            batch.map(async (c) => {
+              logger.debug(`Uploading Source ${c}...`);
+              const file = readFileSync(c, "utf-8");
+              return await storage.uploadSingle(file);
+            }),
+          );
+        }
+      }
+    }
+
     // Upload build output metadatas (need to be single uploads)
     const metadataURIs = await Promise.all(
       selectedContracts.map(async (c) => {
@@ -98,6 +116,7 @@ export async function processProject(
     );
 
     // Upload batch all bytecodes
+    const bytecodes = selectedContracts.map((c) => c.bytecode);
     const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
 
     const combinedContents = selectedContracts.map((c, i) => {

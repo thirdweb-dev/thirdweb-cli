@@ -16,7 +16,7 @@ export class SolcBuilder extends BaseBuilder {
 
     const sources = inputPaths.reduce((acc, curr) => {
       const source = readFileSync(curr, "utf-8");
-      acc[basename(curr, ".sol")] = { content: source };
+      acc[basename(curr)] = { content: source };
       return acc;
     }, {} as Record<string, { content: string }>);
 
@@ -121,11 +121,30 @@ export class SolcBuilder extends BaseBuilder {
         continue;
       }
 
+      const sources = Object.keys(parsedMetadata.sources)
+        .map((path) => {
+          const matchingSourcePath = inputPaths.find((p) => p.includes(path));
+          if (matchingSourcePath && existsSync(matchingSourcePath)) {
+            return matchingSourcePath;
+          }
+          const nodeModulesPath = join(
+            options.projectPath,
+            "node_modules",
+            path,
+          );
+          if (existsSync(nodeModulesPath)) {
+            return nodeModulesPath;
+          }
+          return undefined;
+        })
+        .filter((path) => path !== undefined) as string[];
+
       if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
         contracts.push({
           metadata,
           bytecode,
           name: contractName,
+          sources,
         });
       }
     }

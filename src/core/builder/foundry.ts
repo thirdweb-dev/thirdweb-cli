@@ -67,6 +67,8 @@ export class FoundryBuilder extends BaseBuilder {
       // finally, here's the actual solc output that we expect
       const metadata = JSON.stringify(meta);
 
+      const sources = Object.keys(meta.sources);
+
       if (
         this.shouldProcessContract(
           contractInfo.abi,
@@ -78,6 +80,7 @@ export class FoundryBuilder extends BaseBuilder {
           name: contractName,
           metadata,
           bytecode,
+          sources,
         });
       }
     }
