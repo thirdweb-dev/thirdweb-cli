@@ -43,9 +43,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
       const url = await processProject(options, "publish");
-      info(
-        `Open this link to deploy your contracts: ${chalk.blueBright(url)}\n\n`,
-      );
+      info(`Open this link to publish your contracts:`);
+      logger.info(chalk.blueBright(url));
       open(url.toString());
     });
 
@@ -60,9 +59,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
       const url = await processProject(options, "deploy");
-      info(
-        `Open this link to deploy your contracts: ${chalk.blueBright(url)}\n\n`,
-      );
+      info(`Open this link to deploy your contracts:`);
+      logger.info(chalk.blueBright(url));
       open(url.toString());
     });
 
