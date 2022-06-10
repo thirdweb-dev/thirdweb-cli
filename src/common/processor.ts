@@ -167,14 +167,19 @@ export async function processProject(
     );
     loader.succeed("Upload successful");
 
-    return getUrl(combinedURIs, command, projectType);
+    return getUrl(combinedURIs, command, projectType, options);
   } catch (e) {
     loader.fail("Error uploading metadata");
     throw e;
   }
 }
 
-export function getUrl(hashes: string[], command: string, projectType: string) {
+export function getUrl(
+  hashes: string[],
+  command: string,
+  projectType: string,
+  options: any,
+) {
   let url;
   if (hashes.length == 1 && command === "deploy") {
     url = new URL(
@@ -191,6 +196,9 @@ export function getUrl(hashes: string[], command: string, projectType: string) {
   url.searchParams.append("utm_source", "thirdweb-cli");
   url.searchParams.append("utm_campaign", cliVersion);
   url.searchParams.append("utm_medium", projectType);
+  if (options.ci) {
+    url.searchParams.append("utm_content", "ci");
+  }
   return url;
 }
 
