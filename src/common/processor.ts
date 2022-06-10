@@ -119,9 +119,9 @@ export async function processProject(
         const batchSize = 3;
         for (let j = 0; j < contract.sources.length; j = j + batchSize) {
           const batch = contract.sources.slice(j, j + batchSize);
+          logger.debug(`Uploading Sources:\n${batch.join("\n")}\n`);
           await Promise.all(
             batch.map(async (c) => {
-              logger.debug(`Uploading Source ${c}...`);
               const file = readFileSync(c, "utf-8");
               return await storage.uploadSingle(file);
             }),
