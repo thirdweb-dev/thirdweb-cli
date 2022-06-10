@@ -5,6 +5,7 @@ import { error, info, logger, spinner, warn } from "../core/helpers/logger";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import chalk from "chalk";
+import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import path from "path";
 
@@ -33,9 +34,28 @@ export async function processProject(
 
   logger.debug("Processing project at path " + projectPath);
 
-  const projectType = await detect(projectPath);
+  const projectType = await detect(projectPath, options);
   if (projectType === "unknown") {
     warn("Unable to detect project type, falling back to solc compilation");
+  }
+
+  if (options.ci) {
+    logger.info("Installing dependencies...");
+    try {
+      switch (projectType) {
+        case "foundry": {
+          execSync(`cd ${projectPath} && npm install`);
+          execSync(`forge install`);
+          break;
+        }
+        default: {
+          execSync(`cd ${projectPath} && npm install`);
+          break;
+        }
+      }
+    } catch (e) {
+      logger.warn("Could not install dependencies", e);
+    }
   }
 
   let compiledResult;
@@ -65,13 +85,17 @@ export async function processProject(
       )}`,
     );
   } else {
-    const choices = compiledResult.contracts.map((c) => ({
-      name: c.name,
-      value: c,
-    }));
-    const prompt = createContractsPrompt(choices);
-    const selection: Record<string, ContractPayload> = await prompt.run();
-    selectedContracts = Object.keys(selection).map((key) => selection[key]);
+    if (options.ci) {
+      selectedContracts = compiledResult.contracts;
+    } else {
+      const choices = compiledResult.contracts.map((c) => ({
+        name: c.name,
+        value: c,
+      }));
+      const prompt = createContractsPrompt(choices);
+      const selection: Record<string, ContractPayload> = await prompt.run();
+      selectedContracts = Object.keys(selection).map((key) => selection[key]);
+    }
   }
 
   if (selectedContracts.length === 0) {
@@ -131,14 +155,19 @@ export async function processProject(
     );
     loader.succeed("Upload successful");
 
-    return getUrl(combinedURIs, command, projectType);
+    return getUrl(combinedURIs, command, projectType, options);
   } catch (e) {
     loader.fail("Error uploading metadata");
     throw e;
   }
 }
 
-export function getUrl(hashes: string[], command: string, projectType: string) {
+export function getUrl(
+  hashes: string[],
+  command: string,
+  projectType: string,
+  options: any,
+) {
   let url;
   if (hashes.length == 1 && command === "deploy") {
     url = new URL(
@@ -155,6 +184,9 @@ export function getUrl(hashes: string[], command: string, projectType: string) {
   url.searchParams.append("utm_source", "thirdweb-cli");
   url.searchParams.append("utm_campaign", cliVersion);
   url.searchParams.append("utm_medium", projectType);
+  if (options.ci) {
+    url.searchParams.append("utm_content", "ci");
+  }
   return url;
 }
 
