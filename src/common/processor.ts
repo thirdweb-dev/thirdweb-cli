@@ -39,7 +39,6 @@ export async function processProject(
     warn("Unable to detect project type, falling back to solc compilation");
   }
 
-  // TODO extract out
   if (options.ci) {
     logger.info("Installing dependencies...");
     try {
