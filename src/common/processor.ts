@@ -42,31 +42,19 @@ export async function processProject(
   // TODO extract out
   if (options.ci) {
     logger.info("Installing dependencies...");
-    switch (projectType) {
-      case "hardhat": {
-        execSync(
-          `cd ${projectPath} && npm i --save-dev hardhat && npm install`,
-        );
-        break;
+    try {
+      switch (projectType) {
+        case "foundry": {
+          execSync(`cd ${projectPath} && forge install`);
+          break;
+        }
+        default: {
+          execSync(`cd ${projectPath} && npm install`);
+          break;
+        }
       }
-      case "foundry": {
-        execSync(
-          `cd ${projectPath} && curl -L https://foundry.paradigm.xyz | bash && foundryup`,
-        );
-        break;
-      }
-      case "truffle": {
-        execSync(
-          `cd ${projectPath} && npm i --save-dev truffle && npm install`,
-        );
-        break;
-      }
-      default: {
-        logger.warn(
-          `Could not install dependencies, project type "${projectType}" not supported`,
-        );
-        break;
-      }
+    } catch (e) {
+      logger.warn("Could not install dependencies", e);
     }
   }
 
