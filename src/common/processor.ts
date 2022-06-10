@@ -45,11 +45,7 @@ export async function processProject(
     try {
       switch (projectType) {
         case "foundry": {
-          execSync(
-            `cd ${projectPath} && curl -L https://foundry.paradigm.xyz | bash`,
-          );
-          execSync(`foundryup`);
-          execSync(`npm install`);
+          execSync(`cd ${projectPath} && npm install`);
           execSync(`forge install`);
           break;
         }
