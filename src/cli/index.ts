@@ -41,7 +41,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
-    .option("-i, --install-deps", "also install dependencies")
+    .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
       const url = await processProject(options, "publish");
       info(`Open this link to publish your contracts:`);
@@ -58,7 +58,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-c, --clean", "clean artifacts before compiling")
     .option("-d, --debug", "show debug logs")
-    .option("-i, --install-deps", "also install dependencies")
+    .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
       const url = await processProject(options, "deploy");
       info(`Open this link to deploy your contracts:`);

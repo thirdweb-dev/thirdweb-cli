@@ -40,11 +40,13 @@ export async function processProject(
   }
 
   // TODO extract out
-  if (options.installDeps) {
+  if (options.ci) {
     logger.info("Installing dependencies...");
     switch (projectType) {
       case "hardhat": {
-        execSync(`cd ${projectPath} && npm i hardhat && npm install`);
+        execSync(
+          `cd ${projectPath} && npm i --save-dev hardhat && npm install`,
+        );
         break;
       }
       case "foundry": {
@@ -54,7 +56,9 @@ export async function processProject(
         break;
       }
       case "truffle": {
-        execSync(`cd ${projectPath} && npm i truffle && npm install`);
+        execSync(
+          `cd ${projectPath} && npm i --save-dev truffle && npm install`,
+        );
         break;
       }
       default: {
@@ -93,13 +97,17 @@ export async function processProject(
       )}`,
     );
   } else {
-    const choices = compiledResult.contracts.map((c) => ({
-      name: c.name,
-      value: c,
-    }));
-    const prompt = createContractsPrompt(choices);
-    const selection: Record<string, ContractPayload> = await prompt.run();
-    selectedContracts = Object.keys(selection).map((key) => selection[key]);
+    if (options.ci) {
+      selectedContracts = compiledResult.contracts;
+    } else {
+      const choices = compiledResult.contracts.map((c) => ({
+        name: c.name,
+        value: c,
+      }));
+      const prompt = createContractsPrompt(choices);
+      const selection: Record<string, ContractPayload> = await prompt.run();
+      selectedContracts = Object.keys(selection).map((key) => selection[key]);
+    }
   }
 
   if (selectedContracts.length === 0) {
