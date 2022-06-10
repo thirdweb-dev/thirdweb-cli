@@ -3,7 +3,7 @@ import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { basename, join } from "path";
 
 export class FoundryBuilder extends BaseBuilder {
@@ -67,7 +67,26 @@ export class FoundryBuilder extends BaseBuilder {
       // finally, here's the actual solc output that we expect
       const metadata = JSON.stringify(meta);
 
-      const sources = Object.keys(meta.sources);
+      const sources = Object.keys(meta.sources)
+        .map((path) => {
+          if (existsSync(path)) {
+            return path;
+          }
+          const sourcePath = join(options.projectPath, path);
+          if (existsSync(sourcePath)) {
+            return sourcePath;
+          }
+          const nodeModulesPath = join(
+            options.projectPath,
+            "node_modules",
+            path,
+          );
+          if (existsSync(nodeModulesPath)) {
+            return nodeModulesPath;
+          }
+          return undefined;
+        })
+        .filter((path) => path !== undefined) as string[];
 
       if (
         this.shouldProcessContract(
