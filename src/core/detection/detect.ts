@@ -6,7 +6,10 @@ import HardhatDetector from "./hardhat";
 import TruffleDetector from "./truffle";
 import inquirer from "inquirer";
 
-export default async function detect(path: string): Promise<ProjectType> {
+export default async function detect(
+  path: string,
+  options: any,
+): Promise<ProjectType> {
   const detectors: Detector[] = [
     new HardhatDetector(),
     new FoundryDetector(),
@@ -36,11 +39,15 @@ export default async function detect(path: string): Promise<ProjectType> {
 
   const question = "How would you like to compile your contracts";
 
-  const answer = await inquirer.prompt({
-    type: "list",
-    choices: possibleProjectTypes,
-    name: question,
-  });
+  if (options.ci) {
+    return possibleProjectTypes[0];
+  } else {
+    const answer = await inquirer.prompt({
+      type: "list",
+      choices: possibleProjectTypes,
+      name: question,
+    });
 
-  return answer[question];
+    return answer[question];
+  }
 }
