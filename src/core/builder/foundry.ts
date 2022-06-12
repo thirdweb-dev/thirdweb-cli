@@ -69,7 +69,7 @@ export class FoundryBuilder extends BaseBuilder {
 
       const sources = Object.keys(meta.sources)
         .map((path) => {
-          if (existsSync(path)) {
+          if (path.startsWith("/") && existsSync(path)) {
             return path;
           }
           const sourcePath = join(options.projectPath, path);

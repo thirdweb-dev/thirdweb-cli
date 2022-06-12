@@ -90,6 +90,10 @@ export class HardhatBuilder extends BaseBuilder {
           const meta = JSON.parse(metadata);
           const sources = Object.keys(meta.sources)
             .map((path) => {
+              const directPath = join(options.projectPath, path);
+              if (existsSync(directPath)) {
+                return directPath;
+              }
               const sourcePath = join(options.projectPath, sourcesDir, path);
               if (existsSync(sourcePath)) {
                 return sourcePath;
