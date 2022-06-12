@@ -13,7 +13,24 @@ const { MultiSelect } = require("enquirer");
 
 export async function processProject(
   options: any,
-  command: "deploy" | "publish",
+  command: "deploy" | "publish" | "install-ci",
+) {
+  if (command === "deploy" || command === "publish") {
+    return await deployOrPublishProject(options, command);
+  } else if (command === "install-ci") {
+    return await configCi();
+  }
+}
+
+async function configCi() {
+  //fetch latest gh action from github
+  //copy into .github/workflows/thirdweb.yml
+  //
+}
+
+async function deployOrPublishProject(
+  options: any,
+  command: "deploy" | "publish" | "install-ci",
 ) {
   // TODO: allow overriding the default storage
   const storage = new IpfsStorage();

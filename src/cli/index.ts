@@ -44,9 +44,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
       const url = await processProject(options, "publish");
-      info(`Open this link to publish your contracts:`);
-      logger.info(chalk.blueBright(url));
-      open(url.toString());
+      if (url) {
+        info(`Open this link to publish your contracts:`);
+        logger.info(chalk.blueBright(url));
+        open(url.toString());
+      }
     });
 
   program
@@ -61,11 +63,21 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
       const url = await processProject(options, "deploy");
-      info(`Open this link to deploy your contracts:`);
-      logger.info(chalk.blueBright(url));
-      open(url.toString());
+      if (url) {
+        info(`Open this link to deploy your contracts:`);
+        logger.info(chalk.blueBright(url));
+        open(url.toString());
+      }
     });
 
+  program
+    .command("install-ci")
+    .description(
+      "Set up continuious integration. This adds a github action to deploy the project on pull requets and pushes to branches. Publishes on main branch push",
+    )
+    .action(async (options) => {
+      await processProject(options, "install-ci");
+    });
   await program.parseAsync();
 };
 
