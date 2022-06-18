@@ -6,10 +6,12 @@ import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import chalk from "chalk";
 import { execSync } from "child_process";
-import { readFileSync } from "fs";
+import { readFileSync, writeFile } from "fs";
+import fetch from "node-fetch";
 import path from "path";
+import { promisify } from "util";
 
-const { MultiSelect } = require("enquirer");
+const writeFilePromise = promisify(writeFile);
 
 export async function processProject(
   options: any,
@@ -18,14 +20,29 @@ export async function processProject(
   if (command === "deploy" || command === "publish") {
     return await deployOrPublishProject(options, command);
   } else if (command === "install-ci") {
-    return await configCi();
+    logger.info("Install CI");
+    return await installCi();
   }
 }
 
-async function configCi() {
+async function installCi() {
   //fetch latest gh action from github
   //copy into .github/workflows/thirdweb.yml
-  //
+  // URL of the image
+  logger.info(
+    "Installing Github Actions workflow at .github/workflows/thirdweb.yml",
+  );
+  const url =
+    "https://gateway.thirdweb.dev/ipfs/QmSA9AbCxEK2NcqBaVTueYvtDXGFAnn1quniCR8q5y27kJ";
+
+  const res = await fetch(url);
+  logger.info("got url back", res);
+  const arrayBuf = await res.arrayBuffer();
+  logger.info("got arrayBuf", arrayBuf);
+  await writeFilePromise(
+    "./.github/workflows/thirdweb.yml",
+    Buffer.from(arrayBuf),
+  );
 }
 
 async function deployOrPublishProject(

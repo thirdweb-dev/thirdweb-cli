@@ -32,6 +32,7 @@
     "ipld-dag-pb": "^0.22.3",
     "isomorphic-fetch": "^3.0.0",
     "multihashes": "^4.0.3",
+    "node-fetch": "^3.2.6",
     "open": "^8.4.0",
     "solc": "0.8.13",
     "tslog": "^3.3.3",
