@@ -20,29 +20,28 @@ export async function processProject(
   if (command === "deploy" || command === "publish") {
     return await deployOrPublishProject(options, command);
   } else if (command === "install-ci") {
-    logger.info("Install CI");
     return await installCi();
   }
 }
 
 async function installCi() {
-  //fetch latest gh action from github
-  //copy into .github/workflows/thirdweb.yml
-  // URL of the image
   logger.info(
     "Installing Github Actions workflow at .github/workflows/thirdweb.yml",
   );
   const url =
     "https://gateway.thirdweb.dev/ipfs/QmVMCdg6Jrro4GdySCVhvopwruxKdSgXJmYWA9mH9QjP3F";
 
-  const res = await fetch(url);
-  logger.info("got url back", res);
-  const arrayBuf = await res.arrayBuffer();
-  logger.info("got arrayBuf", arrayBuf);
-  await writeFilePromise(
-    "./.github/workflows/thirdweb.yml",
-    Buffer.from(arrayBuf),
-  );
+  try {
+    const res = await fetch(url);
+    const arrayBuf = await res.arrayBuffer();
+    await writeFilePromise(
+      "./.github/workflows/thirdweb.yml",
+      Buffer.from(arrayBuf),
+    );
+    logger.info("Successfully install github action");
+  } catch (err) {
+    logger.error("failed to install ci");
+  }
 }
 
 async function deployOrPublishProject(
