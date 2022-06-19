@@ -33,7 +33,7 @@ async function installCi() {
     "Installing Github Actions workflow at .github/workflows/thirdweb.yml",
   );
   const url =
-    "https://gateway.thirdweb.dev/ipfs/QmSA9AbCxEK2NcqBaVTueYvtDXGFAnn1quniCR8q5y27kJ";
+    "https://gateway.thirdweb.dev/ipfs/QmVMCdg6Jrro4GdySCVhvopwruxKdSgXJmYWA9mH9QjP3F";
 
   const res = await fetch(url);
   logger.info("got url back", res);
