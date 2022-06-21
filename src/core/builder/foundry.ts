@@ -50,24 +50,20 @@ export class FoundryBuilder extends BaseBuilder {
         continue;
       }
 
+      if (contractName.startsWith("std")) {
+        // skip library contracts
+        logger.debug("Skipping", contractName, "(std library contract)");
+        continue;
+      }
+
       const bytecode = contractInfo.bytecode.object;
       const deployedBytecode = contractInfo.deployedBytecode.object;
+      const parsedMetadata = contractInfo.metadata;
+      const metadata =
+        contractInfo.rawMetadata ||
+        this.sanitizeParsedMetadata(parsedMetadata, contractInfo.abi);
 
-      // Grab the raw metadata
-      const rawMeta = contractInfo.metadata;
-      rawMeta.output.abi = contractInfo.abi;
-      // need to re-add libraries if not present since forge stripts it out
-      if (!rawMeta.settings.libraries) {
-        rawMeta.settings.libraries = {};
-      }
-      // delete `outputSelection` from the metadata which has nothing to do here, bug in forge
-      delete rawMeta.settings.outputSelection;
-      // sort the metadata ALPHABETICALLY, since forge shuffles the keys in their parsing
-      const meta: any = this.sort(rawMeta);
-      // finally, here's the actual solc output that we expect
-      const metadata = JSON.stringify(meta);
-
-      const sources = Object.keys(meta.sources)
+      const sources = Object.keys(parsedMetadata.sources)
         .map((path) => {
           if (path.startsWith("/") && existsSync(path)) {
             return path;
@@ -117,5 +113,26 @@ export class FoundryBuilder extends BaseBuilder {
       newObject[keys[i]] = this.sort(object[keys[i]]);
     }
     return newObject;
+  }
+
+  private sanitizeParsedMetadata(
+    parsedMetadata: Record<string, any>,
+    abi: any,
+  ) {
+    // replace the abi with the actual abi
+    parsedMetadata.output.abi = abi;
+    // need to re-add libraries if not present since forge stripts it out
+    if (!parsedMetadata.settings.libraries) {
+      parsedMetadata.settings.libraries = {};
+    }
+    // evm version can be omitted, add a default if not present
+    if (!parsedMetadata.settings.evmVersion) {
+      parsedMetadata.settings.evmVersion = "london";
+    }
+    // delete `outputSelection` from the metadata which has nothing to do here, bug in forge
+    delete parsedMetadata.settings.outputSelection;
+    // sort the metadata ALPHABETICALLY, since forge shuffles the keys in their parsing
+    const meta: any = this.sort(parsedMetadata);
+    return JSON.stringify(meta);
   }
 }
