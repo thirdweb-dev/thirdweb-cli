@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { installGithubAction } from "../common/ci-installer";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
@@ -64,6 +65,15 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       info(`Open this link to deploy your contracts:`);
       logger.info(chalk.blueBright(url));
       open(url.toString());
+    });
+
+  program
+    .command("install-ci")
+    .description(
+      "Set up continuious integration for your contracts. This adds a github action to deploy the project on pull requets and pushes to branches. Publishes on push the the main branch.",
+    )
+    .action(async (options) => {
+      await installGithubAction(options);
     });
 
   await program.parseAsync();

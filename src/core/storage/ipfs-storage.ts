@@ -125,6 +125,11 @@ export class IpfsStorage implements IStorage {
     return replaceHashWithGatewayUrl(json, "ipfs://", this.gatewayUrl);
   }
 
+  public async getRaw(hash: string): Promise<string> {
+    const res = await this._get(hash);
+    return await res.text();
+  }
+
   /**
    * {@inheritDoc IStorage.uploadMetadata}
    */
