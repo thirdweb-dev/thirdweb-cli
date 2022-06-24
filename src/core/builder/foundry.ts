@@ -43,7 +43,8 @@ export class FoundryBuilder extends BaseBuilder {
       const target = contractInfo.metadata.settings.compilationTarget;
       if (
         Object.keys(target).length === 0 ||
-        Object.keys(target)[0].includes("@")
+        Object.keys(target)[0].includes("@") ||
+        this.isTestOrScript(Object.keys(target)[0])
       ) {
         // skip library contracts
         logger.debug("Skipping", contractName, "(not a source target)");
@@ -100,6 +101,10 @@ export class FoundryBuilder extends BaseBuilder {
       }
     }
     return { contracts };
+  }
+
+  private isTestOrScript(target: string) {
+    return target.endsWith(".s.sol") || target.endsWith(".t.sol");
   }
 
   private sort(object: any) {
