@@ -31,10 +31,19 @@ export class HardhatBuilder extends BaseBuilder {
       stringifiedConfig.split("__tw__")[1],
     ) as HardhatConfig;
 
-    logger.debug(
-      "successfully extracted hardhat config",
-      actualHardhatConfig.paths,
-    );
+    logger.debug("successfully extracted hardhat config", actualHardhatConfig);
+
+    const solcConfigs = actualHardhatConfig.solidity.compilers;
+    if (solcConfigs) {
+      for (const solcConfig of solcConfigs) {
+        const byteCodeHash = solcConfig.settings?.metadata?.bytecodeHash;
+        if (byteCodeHash && byteCodeHash !== "ipfs") {
+          throw new Error(
+            `Deploying requires "bytecodeHash: 'ipfs'" in your hardhat.config.js file, but it's currently set as "bytecodeHash: '${byteCodeHash}'". Please change it to 'ipfs' and try again.`,
+          );
+        }
+      }
+    }
 
     const artifactsPath = actualHardhatConfig.paths.artifacts;
     const sourcesDir = actualHardhatConfig.paths.sources.replace(
