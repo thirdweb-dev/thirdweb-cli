@@ -2,8 +2,9 @@
 import { installGithubAction } from "../common/ci-installer";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
-import { info, logger } from "../core/helpers/logger";
+import { error, info, logger } from "../core/helpers/logger";
 import chalk from "chalk";
+import { execFileSync, execSync } from "child_process";
 import { Command } from "commander";
 import open from "open";
 import updateNotifier from "update-notifier";

@@ -4,6 +4,7 @@ import detect from "../core/detection/detect";
 import { error, info, logger, spinner, warn } from "../core/helpers/logger";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
+import { checkNodeVersion } from "./version-checks";
 import chalk from "chalk";
 import { execSync } from "child_process";
 import { readFileSync } from "fs";
@@ -21,6 +22,8 @@ export async function processProject(
   logger.setSettings({
     minLevel: options.debug ? "debug" : "info",
   });
+
+  checkNodeVersion();
 
   let projectPath = process.cwd();
   if (options.path) {
