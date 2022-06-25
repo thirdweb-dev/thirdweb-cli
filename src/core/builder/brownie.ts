@@ -21,7 +21,7 @@ export class BrownieBuilder extends BaseBuilder {
     );
 
     existsSync(buildPath) && rmSync(buildPath, { recursive: true });
-    await execute("brownie compile");
+    await execute("brownie compile", options.projectPath);
 
     const contractsPath = join(buildPath, "contracts/");
 

@@ -2,7 +2,8 @@ import { exec } from "child_process";
 
 export async function execute(
   command: string,
-  options = { log: false, cwd: process.cwd() },
+  projectPath: string,
+  options = { log: false, cwd: projectPath },
 ): Promise<{ stdout: string; stderr: string }> {
   return new Promise((done, failed) => {
     exec(command, { ...options }, (err, stdout, stderr) => {

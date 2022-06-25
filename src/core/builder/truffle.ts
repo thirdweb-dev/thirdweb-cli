@@ -22,7 +22,7 @@ export class TruffleBuilder extends BaseBuilder {
     );
 
     existsSync(buildPath) && rmSync(buildPath, { recursive: true });
-    await execute("npx --yes truffle compile");
+    await execute("npx --yes truffle compile", options.projectPath);
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];

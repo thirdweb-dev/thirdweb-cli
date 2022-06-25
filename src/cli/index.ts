@@ -57,7 +57,6 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--dry-run", "dry run (skip actually publishing)")
-    .option("-c, --clean", "clean artifacts before compiling")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
@@ -70,7 +69,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .command("install-ci")
     .description(
-      "Set up continuious integration for your contracts. This adds a github action to deploy the project on pull requets and pushes to branches. Publishes on push the the main branch.",
+      "(alpha) Set up continuious integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.",
     )
     .action(async (options) => {
       await installGithubAction(options);

@@ -1,6 +1,7 @@
 import { THIRDWEB_URL, cliVersion } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
+import { execute } from "../core/helpers/exec";
 import { error, info, logger, spinner, warn } from "../core/helpers/logger";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "../core/storage/ipfs-storage";

@@ -10,11 +10,13 @@ export class FoundryBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
-    await execute("forge clean");
-    await execute("forge build --extra-output metadata");
+    await execute("forge clean", options.projectPath);
+    await execute("forge build --extra-output metadata", options.projectPath);
 
     // get the current config first
-    const foundryConfig = (await execute("forge config --json")).stdout;
+    const foundryConfig = (
+      await execute("forge config --json", options.projectPath)
+    ).stdout;
 
     const actualFoundryConfig = JSON.parse(foundryConfig);
 
