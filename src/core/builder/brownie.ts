@@ -1,3 +1,4 @@
+import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
 import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
@@ -27,7 +28,7 @@ export class BrownieBuilder extends BaseBuilder {
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(contractsPath, /^.*(?<!dbg)\.json$/, files);
+    findFiles(contractsPath, /^.*(?<!dbg)\.json$/, files);
 
     // TODO find a way to extract compiler metadata from brownie artifacts
     for (const file of files) {
@@ -50,6 +51,7 @@ export class BrownieBuilder extends BaseBuilder {
           contracts.push({
             metadata: {},
             bytecode,
+            sources: [], // TODO
             name: contractName,
           });
           break;

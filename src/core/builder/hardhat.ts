@@ -1,3 +1,4 @@
+import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
 import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
@@ -57,11 +58,11 @@ export class HardhatBuilder extends BaseBuilder {
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(contractsPath, /^.*(?<!dbg)\.json$/, files);
+    findFiles(contractsPath, /^.*(?<!dbg)\.json$/, files);
 
     const buildOutputPath = join(artifactsPath, "build-info");
     const buildFiles: string[] = [];
-    this.findFiles(buildOutputPath, /^.*(?<!dbg)\.json$/, buildFiles);
+    findFiles(buildOutputPath, /^.*(?<!dbg)\.json$/, buildFiles);
 
     for (const buildFile of buildFiles) {
       const buildJsonFile = readFileSync(buildFile, "utf-8");

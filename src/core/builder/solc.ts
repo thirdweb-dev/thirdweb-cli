@@ -1,3 +1,4 @@
+import { findFiles } from "../../common/file-helper";
 import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
@@ -12,7 +13,7 @@ export class SolcBuilder extends BaseBuilder {
   }> {
     // find solidity files...
     const inputPaths: string[] = [];
-    this.findFiles(options.projectPath, /^.*\.sol$/, inputPaths);
+    findFiles(options.projectPath, /^.*\.sol$/, inputPaths);
 
     const sources = inputPaths.reduce((acc, curr) => {
       const source = readFileSync(curr, "utf-8");
@@ -97,7 +98,7 @@ export class SolcBuilder extends BaseBuilder {
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(artifactsDir, /^.*(?<!dbg)\.json$/, files);
+    findFiles(artifactsDir, /^.*(?<!dbg)\.json$/, files);
 
     for (const file of files) {
       logger.debug("Processing:", file.replace(artifactsDir, ""));

@@ -1,3 +1,4 @@
+import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
 import { logger, spinner } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
@@ -26,7 +27,7 @@ export class TruffleBuilder extends BaseBuilder {
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(buildPath, /^.*(?<!dbg)\.json$/, files);
+    findFiles(buildPath, /^.*(?<!dbg)\.json$/, files);
 
     for (const file of files) {
       logger.debug("Processing:", file.replace(buildPath, ""));

@@ -1,3 +1,4 @@
+import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
 import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
@@ -24,7 +25,7 @@ export class FoundryBuilder extends BaseBuilder {
 
     const contracts: ContractPayload[] = [];
     const files: string[] = [];
-    this.findFiles(outPath, /^.*(?<!metadata)\.json$/, files);
+    findFiles(outPath, /^.*(?<!metadata)\.json$/, files);
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
