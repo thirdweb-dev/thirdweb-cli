@@ -45,12 +45,12 @@ export async function processProject(
     try {
       switch (projectType) {
         case "foundry": {
-          execSync(`cd ${projectPath} && npm install`);
-          execSync(`forge install`);
+          await execute(`npm install`, projectPath);
+          await execute(`forge install`, projectPath);
           break;
         }
         default: {
-          execSync(`cd ${projectPath} && npm install`);
+          await execute(`npm install`, projectPath);
           break;
         }
       }
