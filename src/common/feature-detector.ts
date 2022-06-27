@@ -1,14 +1,19 @@
+import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
 import { logger, spinner, warn, info } from "../core/helpers/logger";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
+import { ContractFeatures, Feature } from "../core/interfaces/ContractFeatures";
+import { ALWAYS_SUGGESTED } from "../constants/features";
+import { detectFeatures } from "@thirdweb-dev/sdk";
 import detect from "../core/detection/detect";
 import build from "../core/builder/build";
 import chalk from "chalk";
 import path from "path";
-import { ContractFeatures } from "../core/interfaces/ContractFeatures";
+import ora from "ora";
+import { createContractsPrompt } from "../core/helpers/selector";
 
 const { MultiSelect } = require('enquirer');
 
-export async function detectFeatures(options: any) {
+export async function detectExtensions(options: any) {
   logger.setSettings({
     minLevel: options.debug ? "debug" : "info",
   });
@@ -54,45 +59,80 @@ export async function detectFeatures(options: any) {
       name: c.name,
       value: c,
     }));
-    const prompt = createContractsPrompt(choices);
+    const prompt = createContractsPrompt(choices, "Choose which contracts to run detection on");
     const selection: Record<string, ContractPayload> = await prompt.run();
     selectedContracts = Object.keys(selection).map((key) => selection[key]);
   }
 
-  let contractsWithFeatures: ContractFeatures[] = [];
+  let contractsWithFeatures: ContractFeatures[] = selectedContracts.map((contract) => {
+    const abi: Parameters<typeof detectFeatures>[0] = JSON.parse(contract.metadata)["output"]["abi"];
+    const features = extractFeatures(detectFeatures(abi));
 
-  // TODO: Process contract features
+    const enabledFeatures: Feature[] = features.enabledFeatures.map((feature) => ({
+      name: feature.name,
+      reference: `https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`,
+    }))
+    const suggestedFeatures: Feature[] = features.suggestedFeatures.map((feature) => ({
+      name: feature.name,
+      reference: `https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`,
+    }))
 
-  // TODO: Log contracts with detected features and suggested features
+    return {
+      name: contract.name,
+      enabledFeatures,
+      suggestedFeatures,
+    }
+  });
+
+  contractsWithFeatures.map((contractWithFeatures) => {
+    logger.info(``);
+    ora(`Detected the following features on contract ${chalk.blueBright(contractWithFeatures.name)}`).stopAndPersist({ symbol: '🔎' });
+    contractWithFeatures.enabledFeatures.map((feature) => {
+      info(`${chalk.green(feature.name)} - ${chalk.dim(chalk.gray(feature.reference))}`);
+    });
+    ora(`You may be interested in implementing the following additional features:`).info();
+    contractWithFeatures.suggestedFeatures.map((feature) => {
+      logger.info(`${chalk.dim(chalk.gray(`-`))} ${chalk.gray(feature.name)} - ${chalk.dim(chalk.gray(feature.reference))}`);
+    });
+  })
 }
 
-function createContractsPrompt(
-  choices: { name: string; value: ContractPayload }[],
+function extractFeatures(
+  input: ReturnType<typeof detectFeatures>,
+  enabledFeatures: FeatureWithEnabled[] = [],
+  suggestedFeatures: FeatureWithEnabled[] = [],
+  parent = "__ROOT__",
 ) {
-  return new MultiSelect({
-    name: "value",
-    message: "Choose which contracts to run detection on",
-    hint: "Use <return> to submit",
-    choices,
-    result(names: string) {
-      return this.map(names);
-    },
-    onSubmit() {
-      if (this.selected.length === 0) {
-        this.enable(this.focused);
-      }
-    },
-    indicator(state: any, choice: any) {
-      if (choice.enabled) {
-        return this.styles.primary(this.symbols.hexagon.on);
-      }
-      return this.symbols.hexagon.off;
-    },
-    styles: {
-      primary: chalk.blueBright,
-      get em() {
-        return this.primary;
-      },
-    },
-  });
+  if (!input) {
+    return {
+      enabledFeatures,
+      suggestedFeatures,
+    };
+  }
+  for (const featureKey in input) {
+    const feature = input[featureKey];
+    // if feature is enabled, then add it to enabledFeatures
+    if (feature.enabled) {
+      enabledFeatures.push(feature);
+    }
+    // otherwise if it is disabled, but it's parent is enabled or suggested, then add it to suggestedFeatures
+    else if (
+      enabledFeatures.findIndex((f) => f.name === parent) > -1 ||
+      ALWAYS_SUGGESTED.includes(feature.name)
+    ) {
+      suggestedFeatures.push(feature);
+    }
+    // recurse
+    extractFeatures(
+      feature.features,
+      enabledFeatures,
+      suggestedFeatures,
+      feature.name,
+    );
+  }
+
+  return {
+    enabledFeatures,
+    suggestedFeatures,
+  };
 }

@@ -7,7 +7,7 @@ import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
 import updateNotifier from "update-notifier";
-import { detectFeatures } from "../common/feature-detector";
+import { detectExtensions } from "../common/feature-detector";
 
 const main = async () => {
   const program = new Command();
@@ -41,7 +41,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
     .action(async (options) => {
-      await detectFeatures(options);
+      await detectExtensions(options);
     })
 
   program

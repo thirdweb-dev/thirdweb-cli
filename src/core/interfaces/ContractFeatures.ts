@@ -1,3 +1,16 @@
+
+export interface Feature {
+  /**
+   * The name of the contract (with the .sol extension)
+   */
+  name: string;
+
+  /**
+   * The documentation for the contract extension
+   */
+  reference: string;
+}
+
 /**
  * Represents data about detected features on a contract
  */
@@ -7,13 +20,14 @@ export interface ContractFeatures {
    */
   name: string;
 
-  /**
-   * The raw ABI of the contract
-   */
-  abi: string;
 
   /**
    * The features detected on the contract
    */
-  features: string[];
+  enabledFeatures: Feature[];
+
+  /**
+   * The features suggested to implement on the contract
+   */
+  suggestedFeatures: Feature[];
 }
