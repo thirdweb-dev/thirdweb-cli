@@ -7,6 +7,7 @@ import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
 import updateNotifier from "update-notifier";
+import { detectFeatures } from "../common/feature-detector";
 
 const main = async () => {
   const program = new Command();
@@ -33,6 +34,15 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .name("thirdweb-cli")
     .description("Official thirdweb command line interface")
     .version(cliVersion, "-v, --version", "output the current version");
+
+  program
+    .name("detect")
+    .description("Compile contracts and detect implemented thirdweb contract extensions")
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs")
+    .action(async (options) => {
+      await detectFeatures(options);
+    })
 
   program
     .command("publish")
