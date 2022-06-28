@@ -85,7 +85,7 @@ export async function detectExtensions(options: any) {
   });
 
   contractsWithFeatures.map((contractWithFeatures) => {
-    logger.info(``);
+    logger.info(`\n`);
     if (contractWithFeatures.enabledFeatures.length === 0) {
       ora(`No features detected for contract ${chalk.blueBright(contractWithFeatures.name)}`).stopAndPersist({ symbol: '🔎' });
     } else {
@@ -94,6 +94,7 @@ export async function detectExtensions(options: any) {
         info(`${chalk.green(feature.name)} - ${chalk.dim(chalk.gray(feature.reference))}`);
       });
     }
+    logger.info(``);
     ora(`You may be interested in implementing the following additional features:`).info();
     contractWithFeatures.suggestedFeatures.map((feature) => {
       logger.info(`${chalk.dim(chalk.gray(`-`))} ${chalk.gray(feature.name)} - ${chalk.dim(chalk.gray(feature.reference))}`);
