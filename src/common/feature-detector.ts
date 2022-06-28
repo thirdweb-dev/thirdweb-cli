@@ -49,11 +49,6 @@ export async function detectExtensions(options: any) {
   let selectedContracts: ContractPayload[] = [];
   if (compiledResult.contracts.length == 1) {
     selectedContracts = [compiledResult.contracts[0]];
-    info(
-      `Processing contract: ${chalk.blueBright(
-        selectedContracts.map((c) => `"${c.name}"`).join(", "),
-      )}`,
-    );
   } else {
     const choices = compiledResult.contracts.map((c) => ({
       name: c.name,
@@ -87,15 +82,15 @@ export async function detectExtensions(options: any) {
   contractsWithFeatures.map((contractWithFeatures) => {
     logger.info(`\n`);
     if (contractWithFeatures.enabledFeatures.length === 0) {
-      ora(`No features detected for contract ${chalk.blueBright(contractWithFeatures.name)}`).stopAndPersist({ symbol: '🔎' });
+      ora(`No extensions detected on ${chalk.blueBright(contractWithFeatures.name)}`).stopAndPersist({ symbol: '🔎' });
     } else {
-      ora(`Detected the following features on contract ${chalk.blueBright(contractWithFeatures.name)}`).stopAndPersist({ symbol: '🔎' });
+      ora(`Detected extension on ${chalk.blueBright(contractWithFeatures.name)}`).stopAndPersist({ symbol: '🔎' });
       contractWithFeatures.enabledFeatures.map((feature) => {
         info(`${chalk.green(feature.name)}`);
       });
     }
     logger.info(``);
-    ora(`You may be interested in implementing the following additional features:`).info();
+    ora(`Suggested extensions`).info();
     contractWithFeatures.suggestedFeatures.map((feature) => {
       logger.info(`${chalk.dim(chalk.gray(`-`))} ${chalk.gray(feature.name)} - ${chalk.dim(chalk.gray(feature.reference))}`);
     });
