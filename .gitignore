@@ -8,3 +8,6 @@ thirdweb-package.json
 
 # bug reproductions
 reproduction-cases/
+
+# IDE files
+.idea

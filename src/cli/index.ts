@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 import { installGithubAction } from "../common/ci-installer";
 import { processProject } from "../common/processor";
+// import { twCreate, twCreateExample } from "../common/twCreate";
+import { twCreateExample } from "../common/twCreate";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
 import updateNotifier from "update-notifier";
+import {create} from "domain";
+
 
 const main = async () => {
   const program = new Command();
@@ -65,6 +69,76 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       logger.info(chalk.blueBright(url));
       open(url.toString());
     });
+
+  program
+      .command("create")
+      .description(
+          "Compile & deploy contracts through your thirdweb dashboard, without dealing with private keys.",
+      ).option("--ts, --typescript",
+      `
+
+        Initialize as a TypeScript project.
+        `,
+    )
+      .option(
+          "--js, --javascript",
+          `
+
+  Initialize as a JavaScript project.
+`,
+      )
+      .option(
+          "--cra",
+          `
+
+  Initialize as a Create React App project.
+`,
+      )
+      .option(
+          "--next",
+          `
+
+  Initialize as a Next.js project.
+`,
+      )
+      .option(
+          "--vite",
+          `
+
+  Initialize as a Vite project.
+`,
+      )
+      .option(
+          "--use-npm",
+          `
+
+  Explicitly tell the CLI to bootstrap the app using npm
+`,
+      )
+      .option(
+          "--use-pnpm",
+          `
+
+  Explicitly tell the CLI to bootstrap the app using pnpm
+`,
+      )
+      .option(
+          "--framework [name]",
+          `
+
+  The preferred framework.
+`,
+      )
+      .option(
+          "-e, --example [name]|[github-url]",
+          `
+
+      An example to bootstrap the app with. You can use an example name
+      from the official thirdweb-example org.
+     `,
+      ).action(async (options) => {
+          const createApp = await twCreateExample(options)
+  })
 
   program
     .command("install-ci")
