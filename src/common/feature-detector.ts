@@ -91,7 +91,7 @@ export async function detectExtensions(options: any) {
     } else {
       ora(`Detected the following features on contract ${chalk.blueBright(contractWithFeatures.name)}`).stopAndPersist({ symbol: '🔎' });
       contractWithFeatures.enabledFeatures.map((feature) => {
-        info(`${chalk.green(feature.name)} - ${chalk.dim(chalk.gray(feature.reference))}`);
+        info(`${chalk.green(feature.name)}`);
       });
     }
     logger.info(``);
