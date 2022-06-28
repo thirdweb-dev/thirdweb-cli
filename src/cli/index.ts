@@ -143,7 +143,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .command("install-ci")
     .description(
-      "(alpha) Set up continuious integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.",
+      "(alpha) Set up continuous integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.",
     )
     .action(async (options) => {
       await installGithubAction(options);

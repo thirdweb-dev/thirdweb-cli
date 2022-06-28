@@ -791,7 +791,7 @@
 
 "@types/prompts@^2.0.14":
   version "2.0.14"
-  resolved "https://registry.npmjs.org/@types/prompts/-/prompts-2.0.14.tgz"
+  resolved "https://registry.yarnpkg.com/@types/prompts/-/prompts-2.0.14.tgz#10cb8899844bb0771cabe57c1becaaaca9a3b521"
   integrity sha512-HZBd99fKxRWpYCErtm2/yxUZv6/PBI9J7N4TNFffl5JbrYMHBwF25DjQGTW3b3jmXq+9P6/8fCIb2ee57BFfYA==
   dependencies:
     "@types/node" "*"
@@ -820,7 +820,7 @@
 
 "@types/validate-npm-package-name@^4.0.0":
   version "4.0.0"
-  resolved "https://registry.npmjs.org/@types/validate-npm-package-name/-/validate-npm-package-name-4.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/@types/validate-npm-package-name/-/validate-npm-package-name-4.0.0.tgz#3b53194dd3888fbb01f794fa368fb3472381d1fe"
   integrity sha512-RpO62vB2lkjEkyLbwTheA2+uwYmtVMWTr/kWRI++UAgVdZqNqdAuIQl/SxBCGeMKfdjWaXPbyhZbiCc4PAj+KA==
 
 "@ungap/promise-all-settled@1.1.2":
@@ -3119,7 +3119,7 @@ minimatch@^3.0.4, minimatch@^3.1.1:
 
 minimist@^1.2.0:
   version "1.2.6"
-  resolved "https://registry.npmjs.org/minimist/-/minimist-1.2.6.tgz"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
   integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
 
 mnemonist@^0.38.0:
@@ -4436,7 +4436,7 @@ y18n@^5.0.5:
 
 yallist@^3.0.2:
   version "3.1.1"
-  resolved "https://registry.npmjs.org/yallist/-/yallist-3.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.1.1.tgz#dbb7daf9bfd8bac9ab45ebf602b8cbad0d5d08fd"
   integrity sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==
 
 yallist@^4.0.0:
