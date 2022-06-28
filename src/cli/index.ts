@@ -40,6 +40,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .description("Compile contracts and detect implemented thirdweb contract extensions")
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
+    .option("-a, --all", "run detection on all contracts")
     .action(async (options) => {
       await detectExtensions(options);
     })

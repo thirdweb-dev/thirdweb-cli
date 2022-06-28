@@ -50,13 +50,17 @@ export async function detectExtensions(options: any) {
   if (compiledResult.contracts.length == 1) {
     selectedContracts = [compiledResult.contracts[0]];
   } else {
-    const choices = compiledResult.contracts.map((c) => ({
-      name: c.name,
-      value: c,
-    }));
-    const prompt = createContractsPrompt(choices, "Choose which contracts to run detection on");
-    const selection: Record<string, ContractPayload> = await prompt.run();
-    selectedContracts = Object.keys(selection).map((key) => selection[key]);
+    if (options.all) {
+      selectedContracts = compiledResult.contracts;
+    } else {
+      const choices = compiledResult.contracts.map((c) => ({
+        name: c.name,
+        value: c,
+      }));
+      const prompt = createContractsPrompt(choices, "Choose which contracts to run detection on");
+      const selection: Record<string, ContractPayload> = await prompt.run();
+      selectedContracts = Object.keys(selection).map((key) => selection[key]);
+    }
   }
 
   let contractsWithFeatures: ContractFeatures[] = selectedContracts.map((contract) => {
