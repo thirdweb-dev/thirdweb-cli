@@ -43,7 +43,7 @@ From the thirdweb dashboard, you can review and deploy your contracts.
 
 ## Detecting contract extensions
 
-As you're developing your contracts, you may want to implement [Contract Extensions](https://portal.thirdweb.com/thirdweb-deploy/contract-extensions) to add standard functionality to your contracts like NFT minting, querying, and more. During your development, you can run the `thirdweb detect` command to detect any extensions on your contracts for confirmation and to suggest additionaly related extensions.
+As you're developing your contracts, you may want to implement [Contract Extensions](https://portal.thirdweb.com/thirdweb-deploy/contract-extensions) to add standard functionality to your contracts like NFT minting, querying, and more. During your development, you can run the `thirdweb detect` command to detect any extensions on your contracts for confirmation and to suggest additional related extensions.
 
 Again, you can run the command either by running the following:
 
