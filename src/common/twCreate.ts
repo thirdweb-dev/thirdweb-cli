@@ -4,7 +4,7 @@ import prompts from "prompts";
 import path from "path";
 import chalk from "chalk";
 import { validateNpmName } from "../create/helpers/validate-pkg";
-import { createApp, DownloadError } from "./create-app";
+import { createApp, DownloadError } from "../create/helpers/create-app";
 import { getPkgManager } from "../create/helpers/get-pkg-manager";
 
 let projectPath: string = "";
@@ -158,6 +158,8 @@ export async function twCreate(options: any) {
     await createApp({
       appPath: resolvedProjectPath,
       packageManager,
+      framework,
+      language,
       example,
     });
   } catch (reason) {
