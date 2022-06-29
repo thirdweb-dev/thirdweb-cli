@@ -34,9 +34,6 @@ export async function processProject(
   logger.debug("Processing project at path " + projectPath);
 
   const projectType = await detect(projectPath, options);
-  if (projectType === "unknown") {
-    warn("Unable to detect project type, falling back to solc compilation");
-  }
 
   if (options.ci) {
     logger.info("Installing dependencies...");
