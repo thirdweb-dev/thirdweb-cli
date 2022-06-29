@@ -23,7 +23,7 @@ This brings all the capabilities of thirdweb to your own custom contracts.
 Once your contract code is setup like above, you can now publish it by running:
 
 ```shell
-npx thirdweb deploy
+npx thirdweb@latest deploy
 ```
 
 Alternatively, you install the CLI as a global command on your machine:
@@ -46,8 +46,10 @@ From the thirdweb dashboard, you can review and deploy your contracts.
 
 ## Commands
 
-- `thirdweb deploy` - Compile & deploy contracts through your dashboard
-- `thirdweb publish` - Compile & publish contracts, makes them available for easy deployment later directly from your dashboard.
+- `npx thirdweb@latest deploy` - Compile & deploy contracts through your dashboard
+- `npx thirdweb@latest publish` - Compile & publish contracts, makes them available for easy deployment later directly from your dashboard.
+- `npx thirdweb@latest install-ci` - (alpha) Set up continuous integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.
+- `npx thirdweb@latest create` - Compile & deploy contracts through your thirdweb dashboard, without dealing with private keys. [Read more about thirdweb create](./create-readme.md)
 
 ---
 

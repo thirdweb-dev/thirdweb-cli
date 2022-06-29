@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 /* eslint-disable import/no-extraneous-dependencies */
-import { validateNpmName } from "../helpers/validate-pkg";
 import prompts from "prompts";
 import path from "path";
 import chalk from "chalk";
-import { createApp, DownloadError } from "./create-app";
-import { getPkgManager } from "../helpers/get-pkg-manager";
+import { validateNpmName } from "../create/helpers/validate-pkg";
+import { createApp, DownloadError } from "../create/helpers/create-app";
+import { getPkgManager } from "../create/helpers/get-pkg-manager";
 
 let projectPath: string = "";
 let framework: string = "";
 let language: string = "";
 let createType: string = "app";
 
-export async function twCreate(options: any) {
+export async function create(options: any) {
   if (options.app) {
     createType = "app";
   }
@@ -108,17 +108,17 @@ export async function twCreate(options: any) {
           { title: "TypeScript", value: "typescript" },
         ],
       });
-  
+
       if (typeof res.language === "string") {
         language = res.language.trim();
       }
     }
-  
+
     if (!framework) {
       console.log("Please specify a framework");
       process.exit(1);
     }
-  
+
     if (!language) {
       console.log("Please specify a language");
       process.exit(1);

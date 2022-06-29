@@ -2,15 +2,15 @@
 import retry from "async-retry";
 import chalk from "chalk";
 import path from "path";
-import { downloadAndExtractRepo, hasExample } from "../helpers/examples";
-import { makeDir } from "../helpers/make-dir";
-import { tryGitInit } from "../helpers/git";
-import { install } from "../helpers/install";
-import { isFolderEmpty } from "../helpers/is-folder-empty";
-import { getOnline } from "../helpers/is-online";
-import type { PackageManager } from "../helpers/get-pkg-manager";
-import { isWriteable } from "../helpers/is-writeable";
-import { getStartOrDev } from "../helpers/get-start-or-dev";
+import { downloadAndExtractRepo, hasExample } from "./examples";
+import { makeDir } from "./make-dir";
+import { tryGitInit } from "./git";
+import { install } from "./install";
+import { isFolderEmpty } from "./is-folder-empty";
+import { getOnline } from "./is-online";
+import type { PackageManager } from "./get-pkg-manager";
+import { isWriteable } from "./is-writeable";
+import { getStartOrDev } from "./get-start-or-dev";
 
 export class DownloadError extends Error { }
 
