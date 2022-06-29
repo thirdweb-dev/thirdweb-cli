@@ -72,6 +72,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .command("create")
     .description(
       "Compile & deploy contracts through your thirdweb dashboard, without dealing with private keys.",
+    ).option("--app",
+      `
+
+        Create a thirdweb app.
+        `,
     ).option("--ts, --typescript",
       `
 
