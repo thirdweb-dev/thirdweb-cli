@@ -12,7 +12,7 @@ let framework: string = "";
 let language: string = "";
 let createType: string = "app";
 
-export async function create(options: any) {
+export async function twCreate(options: any) {
   if (options.app) {
     createType = "app";
   }

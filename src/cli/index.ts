@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { installGithubAction } from "../common/ci-installer";
 import { processProject } from "../common/processor";
-import { create } from "../common/create";
+import { twCreate } from "../common/twCreate";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import chalk from "chalk";
@@ -140,7 +140,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       from the official thirdweb-example org.
      `,
     ).action(async (options) => {
-      await create(options);
+      await twCreate(options);
     });
 
   program
