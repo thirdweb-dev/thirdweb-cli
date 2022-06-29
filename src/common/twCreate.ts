@@ -68,14 +68,14 @@ export async function twCreate(options: any) {
   if (!projectPath) {
     console.log(
       "\nPlease specify the project directory:\n" +
-      `  ${chalk.cyan(options.name())} ${chalk.green(
+      `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
         "<project-directory>",
       )}\n` +
       "For example:\n" +
-      `  ${chalk.cyan(options.name())} ${chalk.green(
+      `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
         "my-thirdweb-app",
       )}\n\n` +
-      `Run ${chalk.cyan(`${options.name()} --help`)} to see all options.`,
+      `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
     );
     process.exit(1);
   }
