@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { installGithubAction } from "../common/ci-installer";
 import { processProject } from "../common/processor";
-// import { twCreate, twCreateExample } from "../common/twCreate";
 import { twCreate } from "../common/twCreate";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
@@ -9,8 +8,6 @@ import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
 import updateNotifier from "update-notifier";
-import {create} from "domain";
-// import { notifyUpdate } from "../helpers/notifyUpdate";
 
 
 const main = async () => {
@@ -72,92 +69,74 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     });
 
   program
-      .command("create")
-      .description(
-          "Compile & deploy contracts through your thirdweb dashboard, without dealing with private keys.",
-      ).option("--ts, --typescript",
+    .command("create")
+    .description(
+      "Compile & deploy contracts through your thirdweb dashboard, without dealing with private keys.",
+    ).option("--ts, --typescript",
       `
 
         Initialize as a TypeScript project.
         `,
     )
-      .option(
-          "--js, --javascript",
-          `
+    .option(
+      "--js, --javascript",
+      `
 
   Initialize as a JavaScript project.
 `,
-      )
-      .option(
-          "--cra",
-          `
+    )
+    .option(
+      "--cra",
+      `
 
   Initialize as a Create React App project.
 `,
-      )
-      .option(
-          "--next",
-          `
+    )
+    .option(
+      "--next",
+      `
 
   Initialize as a Next.js project.
 `,
-      )
-      .option(
-          "--vite",
-          `
+    )
+    .option(
+      "--vite",
+      `
 
   Initialize as a Vite project.
 `,
-      )
-      .option(
-          "--use-npm",
-          `
+    )
+    .option(
+      "--use-npm",
+      `
 
   Explicitly tell the CLI to bootstrap the app using npm
 `,
-      )
-      .option(
-          "--use-pnpm",
-          `
+    )
+    .option(
+      "--use-pnpm",
+      `
 
   Explicitly tell the CLI to bootstrap the app using pnpm
 `,
-      )
-      .option(
-          "--framework [name]",
-          `
+    )
+    .option(
+      "--framework [name]",
+      `
 
   The preferred framework.
 `,
-      )
-      .option(
-          "-e, --example [name]|[github-url]",
-          `
+    )
+    .option(
+      "-e, --example [name]",
+      `
 
       An example to bootstrap the app with. You can use an example name
       from the official thirdweb-example org.
      `,
-      ).action(async (options) => {
-          await twCreate(options)
-              // .then(notifyUpdate);
-  // .catch(async (reason) => {
-  //         console.log();
-  //         console.log("Aborting installation.");
-  //         if (reason.command) {
-  //             console.log(`  ${chalk.cyan(reason.command)} has failed.`);
-  //         } else {
-  //             console.log(
-  //                 chalk.red("Unexpected error. Please report it as a bug:") + "\n",
-  //                 reason,
-  //             );
-  //         }
-  //         console.log();
-  //
-  //         await notifyUpdate();
-  //
-  //         process.exit(1);
-  //     });
-  })
+    ).action(async (options) => {
+      await twCreate(options);
+    });
 
   program
     .command("install-ci")
