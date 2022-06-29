@@ -4,13 +4,15 @@ import { validateNpmName } from "../helpers/validate-pkg";
 import prompts from "prompts";
 import path from "path";
 import chalk from "chalk";
+import {createApp, DownloadError} from "./create-app";
+import {getPkgManager} from "../helpers/get-pkg-manager";
 
 
 let projectPath: string = "";
 let framework: string = "";
 let language: string = "";
 
-export async function twCreateExample(options:any){
+export async function twCreate(options:any){
 
     if (typeof projectPath === "string") {
         projectPath = projectPath.trim();
@@ -143,26 +145,26 @@ export async function twCreateExample(options:any){
         process.exit(1);
     }
 
-    // const packageManager = !!options.useNpm
-    //     ? "npm"
-    //     : !!options.usePnpm
-    //         ? "pnpm"
-    //         : getPkgManager();
-    //
-    // const example = typeof options.example === "string" && options.example.trim();
-    // try {
-    //     await createApp({
-    //         appPath: resolvedProjectPath,
-    //         packageManager,
-    //         framework,
-    //         language,
-    //         example: example && example !== "default" ? example : undefined,
-    //     });
-    // } catch (reason) {
-    //     if (!(reason instanceof DownloadError)) {
-    //         throw reason;
-    //     }
-    // }
+    const packageManager = !!options.useNpm
+        ? "npm"
+        : !!options.usePnpm
+            ? "pnpm"
+            : getPkgManager();
+
+    const example = typeof options.example === "string" && options.example.trim();
+    try {
+        await createApp({
+            appPath: resolvedProjectPath,
+            packageManager,
+            framework,
+            language,
+            example: example && example !== "default" ? example : undefined,
+        });
+    } catch (reason) {
+        if (!(reason instanceof DownloadError)) {
+            throw reason;
+        }
+    }
 
     console.log(`projectPath: ${projectPath}`);
     console.log(`framework: ${framework}`);

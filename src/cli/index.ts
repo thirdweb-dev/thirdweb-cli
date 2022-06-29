@@ -2,7 +2,7 @@
 import { installGithubAction } from "../common/ci-installer";
 import { processProject } from "../common/processor";
 // import { twCreate, twCreateExample } from "../common/twCreate";
-import { twCreateExample } from "../common/twCreate";
+import { twCreate } from "../common/twCreate";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import chalk from "chalk";
@@ -10,6 +10,7 @@ import { Command } from "commander";
 import open from "open";
 import updateNotifier from "update-notifier";
 import {create} from "domain";
+// import { notifyUpdate } from "../helpers/notifyUpdate";
 
 
 const main = async () => {
@@ -137,7 +138,25 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       from the official thirdweb-example org.
      `,
       ).action(async (options) => {
-          const createApp = await twCreateExample(options)
+          await twCreate(options)
+              // .then(notifyUpdate);
+  // .catch(async (reason) => {
+  //         console.log();
+  //         console.log("Aborting installation.");
+  //         if (reason.command) {
+  //             console.log(`  ${chalk.cyan(reason.command)} has failed.`);
+  //         } else {
+  //             console.log(
+  //                 chalk.red("Unexpected error. Please report it as a bug:") + "\n",
+  //                 reason,
+  //             );
+  //         }
+  //         console.log();
+  //
+  //         await notifyUpdate();
+  //
+  //         process.exit(1);
+  //     });
   })
 
   program
