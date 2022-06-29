@@ -49,7 +49,7 @@ From the thirdweb dashboard, you can review and deploy your contracts.
 - `npx thirdweb@latest deploy` - Compile & deploy contracts through your dashboard
 - `npx thirdweb@latest publish` - Compile & publish contracts, makes them available for easy deployment later directly from your dashboard.
 - `npx thirdweb@latest install-ci` - (alpha) Set up continuous integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.
-- `npx thirdweb@latest create` - Compile & deploy contracts through your thirdweb dashboard, without dealing with private keys. [Read more about thirdweb create](./create-readme.md)
+- `npx thirdweb@latest create` - Create a thirdweb app from any of our official templates. [Read more about thirdweb create](./create-readme.md)
 
 ---
 

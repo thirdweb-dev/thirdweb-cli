@@ -3,9 +3,9 @@
 import prompts from "prompts";
 import path from "path";
 import chalk from "chalk";
-import { validateNpmName } from "../create/helpers/validate-pkg";
-import { createApp, DownloadError } from "../create/helpers/create-app";
-import { getPkgManager } from "../create/helpers/get-pkg-manager";
+import { validateNpmName } from "./helpers/validate-pkg";
+import { createApp, DownloadError } from "./helpers/create-app";
+import { getPkgManager } from "./helpers/get-pkg-manager";
 
 let projectPath: string = "";
 let framework: string = "";
