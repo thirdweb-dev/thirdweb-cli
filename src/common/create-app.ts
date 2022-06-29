@@ -1,9 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import retry from "async-retry";
 import chalk from "chalk";
-import cpy from "cpy";
-import fs from "fs";
-import os from "os";
 import path from "path";
 import { downloadAndExtractRepo, hasExample } from "../helpers/examples";
 import { makeDir } from "../helpers/make-dir";
@@ -11,12 +8,11 @@ import { tryGitInit } from "../helpers/git";
 import { install } from "../helpers/install";
 import { isFolderEmpty } from "../helpers/is-folder-empty";
 import { getOnline } from "../helpers/is-online";
-// import { isWriteable } from "./helpers/is-writeable";
 import type { PackageManager } from "../helpers/get-pkg-manager";
-import {isWriteable} from "../helpers/is-writeable";
+import { isWriteable } from "../helpers/is-writeable";
 import { getStartOrDev } from "../helpers/get-start-or-dev";
 
-export class DownloadError extends Error {}
+export class DownloadError extends Error { }
 
 export async function createApp({
   appPath,
@@ -86,11 +82,11 @@ export async function createApp({
 
   process.chdir(root);
 
-  function isErrorLike(err: unknown): err is { message: string } {
+  function isErrorLike(err: unknown): err is { message: string; } {
     return (
-        typeof err === "object" &&
-        err !== null &&
-        typeof (err as { message?: unknown }).message === "string"
+      typeof err === "object" &&
+      err !== null &&
+      typeof (err as { message?: unknown; }).message === "string"
     );
   }
 
@@ -176,8 +172,7 @@ export async function createApp({
   console.log();
   console.log(
     chalk.cyan(
-      `  ${packageManager} ${
-        useYarn || startOrDev === "start" ? "" : "run "
+      `  ${packageManager} ${useYarn || startOrDev === "start" ? "" : "run "
       }${startOrDev}`,
     ),
   );
@@ -185,8 +180,7 @@ export async function createApp({
   console.log();
   console.log(
     chalk.cyan(
-      `  ${packageManager} ${
-        useYarn || startOrDev === "start" ? "" : "run "
+      `  ${packageManager} ${useYarn || startOrDev === "start" ? "" : "run "
       }build`,
     ),
   );
@@ -197,8 +191,7 @@ export async function createApp({
   console.log(chalk.cyan("  cd"), cdpath);
   console.log(
     `  ${chalk.cyan(
-      `${packageManager} ${
-        useYarn || startOrDev === "start" ? "" : "run "
+      `${packageManager} ${useYarn || startOrDev === "start" ? "" : "run "
       }${startOrDev}`,
     )}`,
   );

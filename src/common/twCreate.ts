@@ -92,32 +92,32 @@ export async function twCreate(options: any) {
         framework = res.framework.trim();
       }
     }
-  }
 
-  if (!language) {
-    const res = await prompts({
-      type: "select",
-      name: "language",
-      message: "What language do you want to use?",
-      choices: [
-        { title: "JavaScript", value: "javascript" },
-        { title: "TypeScript", value: "typescript" },
-      ],
-    });
-
-    if (typeof res.language === "string") {
-      language = res.language.trim();
+    if (!language) {
+      const res = await prompts({
+        type: "select",
+        name: "language",
+        message: "What language do you want to use?",
+        choices: [
+          { title: "JavaScript", value: "javascript" },
+          { title: "TypeScript", value: "typescript" },
+        ],
+      });
+  
+      if (typeof res.language === "string") {
+        language = res.language.trim();
+      }
     }
-  }
-
-  if (!framework) {
-    console.log("Please specify a framework");
-    process.exit(1);
-  }
-
-  if (!language) {
-    console.log("Please specify a language");
-    process.exit(1);
+  
+    if (!framework) {
+      console.log("Please specify a framework");
+      process.exit(1);
+    }
+  
+    if (!language) {
+      console.log("Please specify a language");
+      process.exit(1);
+    }
   }
 
   const resolvedProjectPath = path.resolve(projectPath);
@@ -153,15 +153,11 @@ export async function twCreate(options: any) {
     await createApp({
       appPath: resolvedProjectPath,
       packageManager,
-      example: example && example !== "default" ? example : undefined,
+      example,
     });
   } catch (reason) {
     if (!(reason instanceof DownloadError)) {
       throw reason;
     }
   }
-
-  console.log(`projectPath: ${projectPath}`);
-  console.log(`framework: ${framework}`);
-  console.log(`language: ${language}`);
 }
