@@ -6,11 +6,9 @@ import { error, info, logger, spinner, warn } from "../core/helpers/logger";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import chalk from "chalk";
-import { execSync } from "child_process";
 import { readFileSync } from "fs";
 import path from "path";
-
-const { MultiSelect } = require("enquirer");
+import { createContractsPrompt } from "../core/helpers/selector";
 
 export async function processProject(
   options: any,
@@ -93,7 +91,7 @@ export async function processProject(
         name: c.name,
         value: c,
       }));
-      const prompt = createContractsPrompt(choices);
+      const prompt = createContractsPrompt(choices, "Choose which contract(s) to deploy");
       const selection: Record<string, ContractPayload> = await prompt.run();
       selectedContracts = Object.keys(selection).map((key) => selection[key]);
     }
@@ -191,33 +189,3 @@ export function getUrl(
   return url;
 }
 
-function createContractsPrompt(
-  choices: { name: string; value: ContractPayload }[],
-) {
-  return new MultiSelect({
-    name: "value",
-    message: "Choose which contract(s) to deploy",
-    hint: "Use <space> to select, <return> to submit",
-    choices,
-    result(names: string) {
-      return this.map(names);
-    },
-    onSubmit() {
-      if (this.selected.length === 0) {
-        this.enable(this.focused);
-      }
-    },
-    indicator(state: any, choice: any) {
-      if (choice.enabled) {
-        return this.styles.primary(this.symbols.hexagon.on);
-      }
-      return this.symbols.hexagon.off;
-    },
-    styles: {
-      primary: chalk.blueBright,
-      get em() {
-        return this.primary;
-      },
-    },
-  });
-}
