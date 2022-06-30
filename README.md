@@ -17,7 +17,6 @@
 The thirdweb CLI is your one-stop-shop for publishing custom contracts for your team or the world to use. The CLI uploads all necessary data to decentralized storage and makes it available to deploy via the thirdweb sdk or thirdweb dashboard.
 
 This brings all the capabilities of thirdweb to your own custom contracts.
-
 ## Deploying your contract
 
 Once your contract code is setup like above, you can now publish it by running:
@@ -42,14 +41,32 @@ This command will:
 
 From the thirdweb dashboard, you can review and deploy your contracts.
 
+## Detecting contract extensions
+
+As you're developing your contracts, you may want to implement [Contract Extensions](https://portal.thirdweb.com/thirdweb-deploy/contract-extensions) to add standard functionality to your contracts like NFT minting, querying, and more. During your development, you can run the `thirdweb detect` command to detect any extensions on your contracts for confirmation and to suggest additional related extensions.
+
+Again, you can run the command either by running the following:
+
+```shell
+npx thirdweb@latest detect
+```
+
+Or by installing the CLI as a global command on your machine:
+```shell
+npm i -g @thirdweb-dev/cli
+thirdweb detect
+```
+
 ---
 
 ## Commands
+
 
 - `npx thirdweb@latest deploy` - Compile & deploy contracts through your dashboard
 - `npx thirdweb@latest publish` - Compile & publish contracts, makes them available for easy deployment later directly from your dashboard.
 - `npx thirdweb@latest install-ci` - (alpha) Set up continuous integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.
 - `npx thirdweb@latest create` - Create a thirdweb app from any of our official templates. [Read more about thirdweb create](./create-readme.md)
+
 
 ---
 

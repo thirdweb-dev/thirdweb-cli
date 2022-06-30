@@ -38,7 +38,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .version(cliVersion, "-v, --version", "output the current version");
 
   program
-    .name("detect")
+    .command("detect")
     .description("Compile contracts and detect implemented thirdweb contract extensions")
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
