@@ -16,8 +16,6 @@ This will prompt you to choose between "Next.js", "Create React App" and "Vite".
 npx thirdweb@latest create --next
 # or
 npx thirdweb@latest create --cra
-# or
-npx thirdweb@latest create --vite
 ```
 
 This will also prompt you to choose between TypeScript or JavaScript, you can also pass them as a flag:
