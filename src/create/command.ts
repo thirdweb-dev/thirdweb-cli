@@ -33,10 +33,6 @@ export async function twCreate(options: any) {
     framework = "next";
   }
 
-  if (options.vite) {
-    framework = "vite";
-  }
-
   if (options.cra) {
     framework = "cra";
   }
@@ -89,7 +85,6 @@ export async function twCreate(options: any) {
         choices: [
           { title: "Next.js", value: "next" },
           { title: "Create React App", value: "cra" },
-          { title: "Vite", value: "vite" },
         ],
       });
 
@@ -142,7 +137,7 @@ export async function twCreate(options: any) {
 
   if (options.example === true) {
     console.error(
-      "Please provide an example name, otherwise remove the example option.",
+      "Please provide an example name, otherwise remove the example option. Checkout some examples you can use here: https://github.com/thirdweb-example/",
     );
     process.exit(1);
   }
