@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { installGithubAction } from "../common/ci-installer";
 import { processProject } from "../common/processor";
+import { twCreate } from "../create/command";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import chalk from "chalk";
@@ -8,6 +9,7 @@ import { Command } from "commander";
 import open from "open";
 import updateNotifier from "update-notifier";
 import { detectExtensions } from "../common/feature-detector";
+
 
 const main = async () => {
   const program = new Command();
@@ -78,9 +80,26 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     });
 
   program
+    .command("create")
+    .description(
+      "Create a thirdweb app from any of our official templates. Checkout some examples you can use here: https://github.com/thirdweb-example/\"",
+    ).option("--app", `Create a thirdweb app.`,)
+    .option("--ts, --typescript", `Initialize as a TypeScript project.`)
+    .option("--js, --javascript", `Initialize as a JavaScript project.`)
+    .option("--cra", `Initialize as a Create React App project.`)
+    .option("--next", `Initialize as a Next.js project.`)
+    .option("--use-npm", `Explicitly tell the CLI to bootstrap the app using npm`)
+    .option("--use-pnpm",`Explicitly tell the CLI to bootstrap the app using pnpm`)
+    .option("--framework [name]", `The preferred framework.`)
+    .option("-e, --example [name]",`An example to bootstrap the app with. You can use an example repo name from the official thirdweb-example org.`)
+    .action(async (options) => {
+      await twCreate(options);
+    });
+
+  program
     .command("install-ci")
     .description(
-      "(alpha) Set up continuious integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.",
+      "(alpha) Set up continuous integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.",
     )
     .action(async (options) => {
       await installGithubAction(options);

@@ -61,9 +61,12 @@ thirdweb detect
 
 ## Commands
 
-- `thirdweb deploy` - Compile & deploy contracts through your dashboard
-- `thirdweb publish` - Compile & publish contracts, makes them available for easy deployment later directly from your dashboard.
-- `thirdweb detect` - Detect which thirdweb contract extensions are implemented in your contracts and suggest related extensions to implement
+
+- `npx thirdweb@latest deploy` - Compile & deploy contracts through your dashboard
+- `npx thirdweb@latest publish` - Compile & publish contracts, makes them available for easy deployment later directly from your dashboard.
+- `npx thirdweb@latest install-ci` - (alpha) Set up continuous integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.
+- `npx thirdweb@latest create` - Create a thirdweb app from any of our official templates. You can use an example name from the [thirdweb-example organization](https://github.com/thirdweb-example). Read more about [thirdweb create](./create-readme.md)
+
 
 ---
 
