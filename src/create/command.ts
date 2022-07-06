@@ -10,12 +10,12 @@ import { getPkgManager } from "./helpers/get-pkg-manager";
 let projectPath: string = "";
 let framework: string = "";
 let language: string = "";
-let createType: string = "app";
+/* let createType: string = "app"; */
 
 export async function twCreate(options: any) {
-  if (options.app) {
+/*   if (options.app) {
     createType = "app";
-  }
+  } */
 
   if (typeof projectPath === "string") {
     projectPath = projectPath.trim();
@@ -46,7 +46,7 @@ export async function twCreate(options: any) {
       type: "text",
       name: "path",
       message: "What is your project named?",
-      initial: (options.example && options.example) || "thirdweb-app",
+      initial: options.template || "thirdweb-app",
       validate: (name) => {
         const validation = validateNpmName(path.basename(path.resolve(name)));
         if (validation.valid) {
@@ -76,7 +76,7 @@ export async function twCreate(options: any) {
     process.exit(1);
   }
 
-  if (!options.example) {
+  if (!options.template) {
     if (!framework) {
       const res = await prompts({
         type: "select",
@@ -135,9 +135,9 @@ export async function twCreate(options: any) {
     process.exit(1);
   }
 
-  if (options.example === true) {
+  if (options.template === true) {
     console.error(
-      "Please provide an example name, otherwise remove the example option. Checkout some examples you can use here: https://github.com/thirdweb-example/",
+      "Please provide an template name, otherwise remove the template option. Checkout some templates you can use here: https://github.com/thirdweb-example/",
     );
     process.exit(1);
   }
@@ -148,14 +148,14 @@ export async function twCreate(options: any) {
       ? "pnpm"
       : getPkgManager();
 
-  const example = typeof options.example === "string" && options.example.trim();
+  const template = typeof options.template === "string" && options.template.trim();
   try {
     await createApp({
       appPath: resolvedProjectPath,
       packageManager,
       framework,
       language,
-      example,
+      template,
     });
   } catch (reason) {
     if (!(reason instanceof DownloadError)) {
