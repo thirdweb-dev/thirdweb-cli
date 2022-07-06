@@ -60,7 +60,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         "'publish' is deprecated adn will be removed in a future update. Please use 'release' instead.",
       );
       const url = await processProject(options, "release");
-      info(`Open this link to publish your contracts:`);
+      info(`Open this link to release your contracts:`);
       logger.info(chalk.blueBright(url));
       open(url.toString());
     });
@@ -76,7 +76,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
       const url = await processProject(options, "release");
-      info(`Open this link to publish your contracts:`);
+      info(`Open this link to release your contracts:`);
       logger.info(chalk.blueBright(url));
       open(url.toString());
     });
