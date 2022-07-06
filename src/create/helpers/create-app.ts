@@ -92,7 +92,7 @@ export async function createApp({
 
   if (template) {
     /**
-     * If an template repository is provided, clone it.
+     * If a template repository is provided, clone it.
      */
     try {
       console.log(
