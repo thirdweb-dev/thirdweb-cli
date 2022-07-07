@@ -100,7 +100,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .command("create")
     .description(
-      'Create a thirdweb app from any of our official templates. Checkout some examples you can use here: https://github.com/thirdweb-example/"',
+      "Create a thirdweb app from any of our official templates. Checkout some examples you can use here: https://github.com/thirdweb-example/",
     )
     .option("--app", `Create a thirdweb app.`)
     .option("--ts, --typescript", `Initialize as a TypeScript project.`)
@@ -116,7 +116,10 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       `Explicitly tell the CLI to bootstrap the app using pnpm`,
     )
     .option("--framework [name]", `The preferred framework.`)
-    .option("-t, --template [name]",`A template to start your project from. You can use an template repository name from the official thirdweb-example org.`)
+    .option(
+      "-t, --template [name]",
+      `A template to start your project from. You can use an template repository name from the official thirdweb-example org.`,
+    )
     .action(async (options) => {
       await twCreate(options);
     });
