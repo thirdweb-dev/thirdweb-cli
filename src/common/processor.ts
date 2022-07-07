@@ -3,16 +3,16 @@ import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { execute } from "../core/helpers/exec";
 import { error, info, logger, spinner, warn } from "../core/helpers/logger";
+import { createContractsPrompt } from "../core/helpers/selector";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "../core/storage/ipfs-storage";
 import chalk from "chalk";
 import { readFileSync } from "fs";
 import path from "path";
-import { createContractsPrompt } from "../core/helpers/selector";
 
 export async function processProject(
   options: any,
-  command: "deploy" | "publish",
+  command: "deploy" | "release",
 ) {
   // TODO: allow overriding the default storage
   const storage = new IpfsStorage();
@@ -88,7 +88,10 @@ export async function processProject(
         name: c.name,
         value: c,
       }));
-      const prompt = createContractsPrompt(choices, "Choose which contract(s) to deploy");
+      const prompt = createContractsPrompt(
+        choices,
+        `Choose which contract(s) to ${command}`,
+      );
       const selection: Record<string, ContractPayload> = await prompt.run();
       selectedContracts = Object.keys(selection).map((key) => selection[key]);
     }
@@ -96,7 +99,7 @@ export async function processProject(
 
   if (selectedContracts.length === 0) {
     error(
-      "No contract selected. Please select at least one contract to deploy.",
+      `No contract selected. Please select at least one contract to ${command}.`,
     );
     process.exit(1);
   }
@@ -165,10 +168,10 @@ export function getUrl(
   options: any,
 ) {
   let url;
-  if (hashes.length == 1 && command === "deploy") {
+  if (hashes.length == 1) {
     url = new URL(
       THIRDWEB_URL +
-        "/contracts/" +
+        `/contracts/${command}/` +
         encodeURIComponent(hashes[0].replace("ipfs://", "")),
     );
   } else {
@@ -185,4 +188,3 @@ export function getUrl(
   }
   return url;
 }
-
