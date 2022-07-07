@@ -16,7 +16,7 @@ export async function isUrlOk(url: string): Promise<boolean> {
   return res.statusCode === 200;
 }
 
-export function hasExample(name: string): Promise<boolean> {
+export function hasTemplate(name: string): Promise<boolean> {
   return isUrlOk(
     `https://api.github.com/repos/thirdweb-example/${encodeURIComponent(
       name,

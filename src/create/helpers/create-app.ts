@@ -2,7 +2,7 @@
 import retry from "async-retry";
 import chalk from "chalk";
 import path from "path";
-import { downloadAndExtractRepo, hasExample } from "./examples";
+import { downloadAndExtractRepo, hasTemplate } from "./templates";
 import { makeDir } from "./make-dir";
 import { tryGitInit } from "./git";
 import { install } from "./install";
@@ -19,30 +19,30 @@ export async function createApp({
   packageManager,
   framework,
   language,
-  example,
+  template,
 }: {
   appPath: string;
   packageManager: PackageManager;
   framework?: string;
   language?: string;
-  example?: string;
+  template?: string;
 }): Promise<void> {
   let frameworkPath = "";
 
-  if (example) {
-    const found = await hasExample(example);
+  if (template) {
+    const found = await hasTemplate(template);
 
     if (!found) {
       console.error(
         `Could not locate the repository for ${chalk.red(
-          `"${example}"`,
+          `"${template}"`,
         )}. Please check that the repository exists and try again.`,
       );
       process.exit(1);
     }
   } else if (framework) {
     frameworkPath = `${framework}-${language || "javascript"}-starter`;
-    const found = await hasExample(frameworkPath);
+    const found = await hasTemplate(frameworkPath);
 
     if (!found) {
       console.error(
@@ -90,19 +90,19 @@ export async function createApp({
     );
   }
 
-  if (example) {
+  if (template) {
     /**
-     * If an example repository is provided, clone it.
+     * If a template repository is provided, clone it.
      */
     try {
       console.log(
         `Downloading files from repo ${chalk.cyan(
-          example,
+          template,
         )}. This might take a moment.`,
       );
       console.log();
       await retry(
-        () => downloadAndExtractRepo(root, { name: example, filePath: "" }),
+        () => downloadAndExtractRepo(root, { name: template, filePath: "" }),
         {
           retries: 3,
         },
@@ -163,8 +163,8 @@ export async function createApp({
   let startOrDev = "start";
   if (framework && (framework === "next")) {
     startOrDev = "dev";
-  } else if (example) {
-    startOrDev = await getStartOrDev(example);
+  } else if (template) {
+    startOrDev = await getStartOrDev(template);
   }
 
   console.log(`${chalk.green("Success!")} Created ${appName} at ${appPath}`);

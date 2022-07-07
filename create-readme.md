@@ -34,14 +34,14 @@ An example of using both flags at the same time:
 npx thirdweb@latest create --next --ts`
 ```
 
-One example of using the `--example` flag:
+One example of using the `--template` flag:
 
 ```bash
-npx thirdweb@latest create --example custom-minting-page
+npx thirdweb@latest create --template nft-drop
 # or
-yarn thirdweb@latest create --example custom-minting-page
+yarn thirdweb@latest create --template nft-drop
 # or
-pnpm thirdweb@latest create --example custom-minting-page
+pnpm thirdweb@latest create --template nft-drop
 ```
 
 ## Options
@@ -49,7 +49,7 @@ pnpm thirdweb@latest create --example custom-minting-page
 `thirdweb create` comes with the following options:
 
 - **--ts, --typescript** - Initialize as a TypeScript project.
-- **-e, --example [name]** - An example to bootstrap the app with. You can use an example name from the [thirdweb-example organization](https://github.com/thirdweb-example).
+- **-t, --template [name]** - An example to bootstrap the app with. You can use an example name from the [thirdweb-example organization](https://github.com/thirdweb-example).
 - **--use-npm** - Explicitly tell the CLI to bootstrap the app using npm. To bootstrap using yarn we recommend to run `yarn thirdweb@latest create`
 - **--use-pnpm** - Explicitly tell the CLI to bootstrap the app using pnpm. To bootstrap using pnpm we recommend running `yarn thirdweb@latest create`
 
@@ -59,4 +59,4 @@ pnpm thirdweb@latest create --example custom-minting-page
 
 - **Interactive Experience**: Running `npx thirdweb create` (with no arguments) launches an interactive experience that guides you through setting up a project.
 - **Zero Dependencies**: Initializing a project is as quick as one second, thirdweb create has zero dependencies.
-- **Support for Examples**: thirdweb create can bootstrap your application using an example from the thirdweb examples collection (e.g. `npx thirdweb create --example contract-hub`).
+- **Support for Examples**: thirdweb create can bootstrap your application using an example from the thirdweb examples collection (e.g. `npx thirdweb create --template contract-hub`).
