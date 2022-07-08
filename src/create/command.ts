@@ -37,6 +37,10 @@ export async function twCreate(options: any) {
     framework = "cra";
   }
 
+  if (options.vite) {
+    framework = "vite";
+  }
+
   if (options.framework) {
     framework = options.framework;
   }
