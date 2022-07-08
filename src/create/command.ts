@@ -85,6 +85,7 @@ export async function twCreate(options: any) {
         choices: [
           { title: "Next.js", value: "next" },
           { title: "Create React App", value: "cra" },
+          { title: "Vite", value: "vite" },
         ],
       });
 
