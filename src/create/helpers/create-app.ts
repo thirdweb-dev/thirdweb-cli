@@ -161,7 +161,7 @@ export async function createApp({
   }
 
   let startOrDev = "start";
-  if (framework && (framework === "next")) {
+  if (framework && (framework === "next" || framework === "vite")) {
     startOrDev = "dev";
   } else if (template) {
     startOrDev = await getStartOrDev(template);

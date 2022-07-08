@@ -107,14 +107,9 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--js, --javascript", `Initialize as a JavaScript project.`)
     .option("--cra", `Initialize as a Create React App project.`)
     .option("--next", `Initialize as a Next.js project.`)
-    .option(
-      "--use-npm",
-      `Explicitly tell the CLI to bootstrap the app using npm`,
-    )
-    .option(
-      "--use-pnpm",
-      `Explicitly tell the CLI to bootstrap the app using pnpm`,
-    )
+    .option("--vite", `Initialize as a Vite project.`)
+    .option("--use-npm", `Explicitly tell the CLI to bootstrap the app using npm`)
+    .option("--use-pnpm",`Explicitly tell the CLI to bootstrap the app using pnpm`)
     .option("--framework [name]", `The preferred framework.`)
     .option(
       "-t, --template [name]",

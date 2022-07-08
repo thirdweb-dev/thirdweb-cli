@@ -37,6 +37,10 @@ export async function twCreate(options: any) {
     framework = "cra";
   }
 
+  if (options.vite) {
+    framework = "vite";
+  }
+
   if (options.framework) {
     framework = options.framework;
   }
@@ -85,6 +89,7 @@ export async function twCreate(options: any) {
         choices: [
           { title: "Next.js", value: "next" },
           { title: "Create React App", value: "cra" },
+          { title: "Vite", value: "vite" },
         ],
       });
 
