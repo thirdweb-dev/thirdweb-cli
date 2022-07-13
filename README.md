@@ -17,19 +17,11 @@
 The thirdweb CLI is your one-stop-shop for publishing custom contracts for your team or the world to use. The CLI uploads all necessary data to decentralized storage and makes it available to deploy via the thirdweb sdk or thirdweb dashboard.
 
 This brings all the capabilities of thirdweb to your own custom contracts.
-## Deploying your contract
 
-Once your contract code is setup like above, you can now publish it by running:
+## Deploying your contract
 
 ```shell
 npx thirdweb@latest deploy
-```
-
-Alternatively, you install the CLI as a global command on your machine:
-
-```shell
-npm i -g @thirdweb-dev/cli
-thirdweb deploy
 ```
 
 This command will:
@@ -39,34 +31,48 @@ This command will:
 - Upload ABIs to IPFS
 - Open the deploy flow in your thirdweb dashboard in a browser
 
-From the thirdweb dashboard, you can review and deploy your contracts.
+From the thirdweb dashboard, you can review and deploy your contracts on any supported EVM chain.
+
+Deploying contracts this way gives you access to:
+
+- auto generated SDKs for react, node, python, go
+- dashboards to manage, monitor and interact with your contracts
+
+## Releasing your contract
+
+```shell
+npx thirdweb@latest release
+```
+
+Creates an official release of your contract, along with:
+
+- author attribution
+- contract information
+- instructions on how to use and what it's for
+- versioning
+- release notes
+
+Creating releases this way gives you shareable URL to let others to deploy your contracts in one click. It lets you manage released versions and get attribution for deployed contracts. Contract releases are registered on-chain (Polygon) and IPFS, for free (gasless).
+
+Deploying released contracts give deployers access to automatic SDKs to integrate into their app and dashboards to manage and monitor the deployed contracts.
 
 ## Detecting contract extensions
-
-As you're developing your contracts, you may want to implement [Contract Extensions](https://portal.thirdweb.com/thirdweb-deploy/contract-extensions) to add standard functionality to your contracts like NFT minting, querying, and more. During your development, you can run the `thirdweb detect` command to detect any extensions on your contracts for confirmation and to suggest additional related extensions.
-
-Again, you can run the command either by running the following:
 
 ```shell
 npx thirdweb@latest detect
 ```
 
-Or by installing the CLI as a global command on your machine:
-```shell
-npm i -g @thirdweb-dev/cli
-thirdweb detect
-```
+As you're developing your contracts, you may want to implement [Contract Extensions](https://portal.thirdweb.com/thirdweb-deploy/contract-extensions) to unlock functionality on the SDKs (ie. nft minting with automatic upload to IPFS) and the dashboard (ie. generated UI to manage permissions). This command will show what extensions were detected on your contract, unlocking the corresponding functionality on the SDKs and dashboard.
 
 ---
 
-## Commands
+## Global installation
 
+We recommend using npx to always get the latest version. Alternatively, you can install the CLI as a global command on your machine:
 
-- `npx thirdweb@latest deploy` - Compile & deploy contracts through your dashboard
-- `npx thirdweb@latest publish` - Compile & publish contracts, makes them available for easy deployment later directly from your dashboard.
-- `npx thirdweb@latest install-ci` - (alpha) Set up continuous integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.
-- `npx thirdweb@latest create` - Create a thirdweb app from any of our official templates. You can use an example name from the [thirdweb-example organization](https://github.com/thirdweb-example). Read more about [thirdweb create](./create-readme.md)
-
+```shell
+npm i -g @thirdweb-dev/cli
+```
 
 ---
 
@@ -78,10 +84,7 @@ with. The projects we support so far:
 - hardhat
 - forge
 - truffle
-- brownie
 - solc
-
-<!-- Coming soon: -->
 
 ---
 
@@ -91,7 +94,7 @@ Clone the repo and run this command after installing the CLI tool:
 
 ```bash
 $ cd examples/hardhat
-$ thirdweb publish
+$ npx thirdweb@latest release
 ```
 
 ## Local Development
