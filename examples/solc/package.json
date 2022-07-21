@@ -2,7 +2,7 @@
   "name": "foundry-project",
   "private": true,
   "dependencies": {
-    "@openzeppelin/contracts": "^4.5.0",
+    "@openzeppelin/contracts": "^4.7.1",
     "@thirdweb-dev/contracts": "^2.3.8"
   },
   "scripts": {}
