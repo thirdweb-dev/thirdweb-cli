@@ -173,7 +173,7 @@ export function getUrl(
   command: string,
   projectType: string,
   options: any,
-  usesSolditySDK?: boolean
+  usesSoliditySDK?: boolean
 ) {
   let url;
   if (hashes.length == 1) {
@@ -194,7 +194,7 @@ export function getUrl(
   if (options.ci) {
     url.searchParams.append("utm_content", "ci");
   }
-  if(usesSolditySDK){
+  if(usesSoliditySDK){
     url.searchParams.append("utm_term", "solidity-sdk");    
   }
   return url;
