@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import got from "got";
-import tar from "tar";
 import { Stream } from "stream";
+import tar from "tar";
 import { promisify } from "util";
 
 const pipeline = promisify(Stream.pipeline);
@@ -18,9 +18,7 @@ export async function isUrlOk(url: string): Promise<boolean> {
 
 export function hasTemplate(name: string): Promise<boolean> {
   return isUrlOk(
-    `https://api.github.com/repos/thirdweb-example/${encodeURIComponent(
-      name,
-    )}/contents/package.json`,
+    `https://api.github.com/repos/thirdweb-example/${encodeURIComponent(name)}`,
   );
 }
 
