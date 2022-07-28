@@ -1,18 +1,18 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import retry from "async-retry";
-import chalk from "chalk";
-import path from "path";
-import { downloadAndExtractRepo, hasTemplate } from "./templates";
-import { makeDir } from "./make-dir";
+import type { PackageManager } from "./get-pkg-manager";
+import { getStartOrDev } from "./get-start-or-dev";
 import { tryGitInit } from "./git";
 import { install } from "./install";
 import { isFolderEmpty } from "./is-folder-empty";
 import { getOnline } from "./is-online";
-import type { PackageManager } from "./get-pkg-manager";
 import { isWriteable } from "./is-writeable";
-import { getStartOrDev } from "./get-start-or-dev";
+import { makeDir } from "./make-dir";
+import { downloadAndExtractRepo, hasTemplate } from "./templates";
+import retry from "async-retry";
+import chalk from "chalk";
+import path from "path";
 
-export class DownloadError extends Error { }
+export class DownloadError extends Error {}
 
 export async function createApp({
   appPath,
@@ -82,11 +82,11 @@ export async function createApp({
 
   process.chdir(root);
 
-  function isErrorLike(err: unknown): err is { message: string; } {
+  function isErrorLike(err: unknown): err is { message: string } {
     return (
       typeof err === "object" &&
       err !== null &&
-      typeof (err as { message?: unknown; }).message === "string"
+      typeof (err as { message?: unknown }).message === "string"
     );
   }
 
@@ -160,7 +160,7 @@ export async function createApp({
     cdpath = appPath;
   }
 
-  let startOrDev = "start";
+  let startOrDev: string | undefined;
   if (framework && (framework === "next" || framework === "vite")) {
     startOrDev = "dev";
   } else if (template) {
@@ -170,30 +170,40 @@ export async function createApp({
   console.log(`${chalk.green("Success!")} Created ${appName} at ${appPath}`);
   console.log("Inside that directory, you can run several commands:");
   console.log();
-  console.log(
-    chalk.cyan(
-      `  ${packageManager} ${useYarn || startOrDev === "start" ? "" : "run "
-      }${startOrDev}`,
-    ),
-  );
-  console.log("    Starts the development server.");
-  console.log();
-  console.log(
-    chalk.cyan(
-      `  ${packageManager} ${useYarn || startOrDev === "start" ? "" : "run "
-      }build`,
-    ),
-  );
-  console.log("    Builds the app for production.");
-  console.log();
+
+  if (startOrDev) {
+    console.log(
+      chalk.cyan(
+        `  ${packageManager} ${
+          useYarn || startOrDev === "start" ? "" : "run "
+        }${startOrDev}`,
+      ),
+    );
+    console.log("    Starts the development server.");
+    console.log();
+    console.log(
+      chalk.cyan(
+        `  ${packageManager} ${
+          useYarn || startOrDev === "start" ? "" : "run "
+        }build`,
+      ),
+    );
+    console.log("    Builds the app for production.");
+    console.log();
+  }
+
   console.log("We suggest that you begin by typing:");
   console.log();
   console.log(chalk.cyan("  cd"), cdpath);
-  console.log(
-    `  ${chalk.cyan(
-      `${packageManager} ${useYarn || startOrDev === "start" ? "" : "run "
-      }${startOrDev}`,
-    )}`,
-  );
+
+  if (startOrDev) {
+    console.log(
+      `  ${chalk.cyan(
+        `${packageManager} ${
+          useYarn || startOrDev === "start" ? "" : "run "
+        }${startOrDev}`,
+      )}`,
+    );
+  }
   console.log();
 }
