@@ -103,6 +103,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "Create a thirdweb app from any of our official templates. Checkout some examples you can use here: https://github.com/thirdweb-example/",
     )
     .option("--app", `Create a thirdweb app.`)
+    .option("--contract", `Create a thirdweb contracts project.`)
     .option("--ts, --typescript", `Initialize as a TypeScript project.`)
     .option("--js, --javascript", `Initialize as a JavaScript project.`)
     .option("--cra", `Initialize as a Create React App project.`)
