@@ -110,6 +110,10 @@ export async function processProject(
   }
 
   const loader = spinner("Uploading contract data...");
+
+  const soliditySDKPackage = "@thirdweb-dev/contracts";
+  let usesSoliditySDK = false;
+
   try {
     for (let i = 0; i < selectedContracts.length; i++) {
       const contract = selectedContracts[i];
@@ -122,6 +126,9 @@ export async function processProject(
           await Promise.all(
             batch.map(async (c) => {
               const file = readFileSync(c, "utf-8");
+              if(file.includes(soliditySDKPackage)) {
+                usesSoliditySDK = true;
+              }
               return await storage.uploadSingle(file);
             }),
           );
@@ -154,7 +161,7 @@ export async function processProject(
     );
     loader.succeed("Upload successful");
 
-    return getUrl(combinedURIs, command, projectType, options);
+    return getUrl(combinedURIs, command, projectType, options, usesSoliditySDK);
   } catch (e) {
     loader.fail("Error uploading metadata");
     throw e;
@@ -166,6 +173,7 @@ export function getUrl(
   command: string,
   projectType: string,
   options: any,
+  usesSoliditySDK?: boolean
 ) {
   let url;
   if (hashes.length == 1) {
@@ -185,6 +193,9 @@ export function getUrl(
   url.searchParams.append("utm_medium", projectType);
   if (options.ci) {
     url.searchParams.append("utm_content", "ci");
+  }
+  if(usesSoliditySDK){
+    url.searchParams.append("utm_term", "solidity-sdk");    
   }
   return url;
 }
