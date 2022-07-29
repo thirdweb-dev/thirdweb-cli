@@ -98,7 +98,7 @@ export async function createContract({
   } else {
     try {
       console.log(
-        `Downloading files with. This might take a moment.`,
+        `Downloading files. This might take a moment.`,
       );
 
       const starter = `hardhat-${language}-starter`;
@@ -126,7 +126,6 @@ export async function createContract({
     console.log("Initialized a git repository.");
     console.log();
   }
-
 
   let cdpath: string;
   if (path.join(originalDirectory, projectName) === contractPath) {
