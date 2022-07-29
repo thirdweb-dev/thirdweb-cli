@@ -6,19 +6,25 @@ import chalk from "chalk";
 import { validateNpmName } from "./helpers/validate-pkg";
 import { createApp, DownloadError } from "./helpers/create-app";
 import { getPkgManager } from "./helpers/get-pkg-manager";
+import { createContract } from "./helpers/create-contract";
 
+let projectType: string = "";
 let projectPath: string = "";
 let framework: string = "";
 let language: string = "";
 /* let createType: string = "app"; */
 
 export async function twCreate(options: any) {
-/*   if (options.app) {
-    createType = "app";
-  } */
-
   if (typeof projectPath === "string") {
     projectPath = projectPath.trim();
+  }
+
+  if (options.app) {
+    projectType = "app";
+  }
+
+  if (options.contracts) {
+    projectType = "contract";
   }
 
   if (options.typescript) {
@@ -45,12 +51,33 @@ export async function twCreate(options: any) {
     framework = options.framework;
   }
 
+  if (!projectType && !options.template) {
+    const res = await prompts({
+      type: "select",
+      name: "projectType",
+      message: "What type of project do you want to create?",
+      choices: [
+        { title: "App", value: "app" },
+        { title: "Contract", value: "contract" },
+      ]
+    })
+
+    if (typeof res.projectType === "string") {
+      projectType = res.projectType.trim();
+    }
+  } else if (!projectType && options.template) {
+    // If no project type is specified, but a template is, we assume the user wants to create an app.
+    // We do this so old users can still use the --template flag to create an app.
+    projectType = "app";
+  }
+
   if (!projectPath) {
+    const defaultName = projectType === "contract" ? "thirdweb-contracts" : "thirdweb-app";
     const res = await prompts({
       type: "text",
       name: "path",
       message: "What is your project named?",
-      initial: options.template || "thirdweb-app",
+      initial: options.template || defaultName,
       validate: (name) => {
         const validation = validateNpmName(path.basename(path.resolve(name)));
         if (validation.valid) {
@@ -81,7 +108,7 @@ export async function twCreate(options: any) {
   }
 
   if (!options.template) {
-    if (!framework) {
+    if (projectType === "app" && !framework) {
       const res = await prompts({
         type: "select",
         name: "framework",
@@ -114,7 +141,7 @@ export async function twCreate(options: any) {
       }
     }
 
-    if (!framework) {
+    if (projectType === "app" && !framework) {
       console.log("Please specify a framework");
       process.exit(1);
     }
@@ -155,13 +182,22 @@ export async function twCreate(options: any) {
 
   const template = typeof options.template === "string" && options.template.trim();
   try {
-    await createApp({
-      appPath: resolvedProjectPath,
-      packageManager,
-      framework,
-      language,
-      template,
-    });
+    if (projectType === "app") {
+      await createApp({
+        appPath: resolvedProjectPath,
+        packageManager,
+        framework,
+        language,
+        template,
+      });
+    } else {
+      await createContract({
+        contractPath: resolvedProjectPath,
+        packageManager,
+        language,
+        template,
+      });
+    }
   } catch (reason) {
     if (!(reason instanceof DownloadError)) {
       throw reason;
