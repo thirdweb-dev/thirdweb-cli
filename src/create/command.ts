@@ -1,17 +1,19 @@
 #!/usr/bin/env node
+
 /* eslint-disable import/no-extraneous-dependencies */
-import prompts from "prompts";
-import path from "path";
-import chalk from "chalk";
-import { validateNpmName } from "./helpers/validate-pkg";
-import { createApp, DownloadError } from "./helpers/create-app";
-import { getPkgManager } from "./helpers/get-pkg-manager";
+import { DownloadError, createApp } from "./helpers/create-app";
 import { createContract } from "./helpers/create-contract";
+import { getPkgManager } from "./helpers/get-pkg-manager";
+import { validateNpmName } from "./helpers/validate-pkg";
+import chalk from "chalk";
+import path from "path";
+import prompts from "prompts";
 
 let projectType: string = "";
 let projectPath: string = "";
 let framework: string = "";
 let language: string = "";
+let baseContract: string = "";
 /* let createType: string = "app"; */
 
 export async function twCreate(options: any) {
@@ -59,8 +61,8 @@ export async function twCreate(options: any) {
       choices: [
         { title: "App", value: "app" },
         { title: "Contract", value: "contract" },
-      ]
-    })
+      ],
+    });
 
     if (typeof res.projectType === "string") {
       projectType = res.projectType.trim();
@@ -72,7 +74,8 @@ export async function twCreate(options: any) {
   }
 
   if (!projectPath) {
-    const defaultName = projectType === "contract" ? "thirdweb-contracts" : "thirdweb-app";
+    const defaultName =
+      projectType === "contract" ? "thirdweb-contracts" : "thirdweb-app";
     const res = await prompts({
       type: "text",
       name: "path",
@@ -95,14 +98,14 @@ export async function twCreate(options: any) {
   if (!projectPath) {
     console.log(
       "\nPlease specify the project directory:\n" +
-      `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
-        "<project-directory>",
-      )}\n` +
-      "For example:\n" +
-      `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
-        "my-thirdweb-app",
-      )}\n\n` +
-      `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
+        `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
+          "<project-directory>",
+        )}\n` +
+        "For example:\n" +
+        `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
+          "my-thirdweb-app",
+        )}\n\n` +
+        `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
     );
     process.exit(1);
   }
@@ -138,6 +141,29 @@ export async function twCreate(options: any) {
 
       if (typeof res.language === "string") {
         language = res.language.trim();
+      }
+    }
+
+    console.log(projectType);
+    console.log(baseContract);
+    // Select base contract
+    if (projectType === "contract" && !baseContract) {
+      const res = await prompts({
+        type: "select",
+        name: "baseContract",
+        message: "What base contract do you want to use?",
+        choices: [
+          { title: "Empty Contract", value: "" },
+          { title: "ERC-721 Base", value: "ERC721Base" },
+          { title: "ERC-721 + Signature Mint", value: "ERC721DelayedReveal" },
+          { title: "ERC-721 + Lazy Mint", value: "ERC721DelayedReveal" },
+          { title: "ERC-721 + Delayed Reveal", value: "ERC721DelayedReveal" },
+          { title: "ERC-721 + Drop", value: "ERC721Drop" },
+        ],
+      });
+
+      if (typeof res.baseContract === "string") {
+        baseContract = res.baseContract.trim();
       }
     }
 
@@ -177,10 +203,11 @@ export async function twCreate(options: any) {
   const packageManager = !!options.useNpm
     ? "npm"
     : !!options.usePnpm
-      ? "pnpm"
-      : getPkgManager();
+    ? "pnpm"
+    : getPkgManager();
 
-  const template = typeof options.template === "string" && options.template.trim();
+  const template =
+    typeof options.template === "string" && options.template.trim();
   try {
     if (projectType === "app") {
       await createApp({
@@ -195,7 +222,7 @@ export async function twCreate(options: any) {
         contractPath: resolvedProjectPath,
         packageManager,
         language,
-        template,
+        baseContract,
       });
     }
   } catch (reason) {

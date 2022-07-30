@@ -1,37 +1,39 @@
+import { hasBaseContract, readBaseContract } from "./base-contracts";
+import { DownloadError } from "./create-app";
 import { PackageManager } from "./get-pkg-manager";
-import { downloadAndExtractRepo, hasTemplate } from "./templates";
-import chalk from "chalk";
-import path from "path";
-import { isWriteable } from "./is-writeable";
-import { makeDir } from "./make-dir";
+import { tryGitInit } from "./git";
+import { install } from "./install";
 import { isFolderEmpty } from "./is-folder-empty";
 import { getOnline } from "./is-online";
-import { install } from "./install";
-import { DownloadError } from "./create-app";
+import { isWriteable } from "./is-writeable";
+import { makeDir } from "./make-dir";
+import { downloadAndExtractRepo, hasTemplate } from "./templates";
 import retry from "async-retry";
-import { tryGitInit } from "./git";
+import chalk from "chalk";
+import { writeFile } from "fs/promises";
+import path from "path";
 
 interface ICreateContract {
   contractPath: string;
   packageManager: PackageManager;
   language?: string;
-  template?: string;
+  baseContract?: string;
 }
 
 export async function createContract({
   contractPath,
   packageManager,
   language,
-  template,
+  baseContract,
 }: ICreateContract) {
-  if (template) {
-    const found = await hasTemplate(template);
+  if (baseContract) {
+    const found = hasBaseContract(baseContract);
 
     if (!found) {
       console.error(
-        `Could not locate the repository for ${chalk.red(
-          `"${template}"`,
-        )}. Please check that the repository exists and try again.`,
+        `Could not locate the base contract for ${chalk.red(
+          `"${baseContract}"`,
+        )}. Please check that the base contract exists and try again.`,
       );
       process.exit(1);
     }
@@ -60,60 +62,44 @@ export async function createContract({
   const isOnline = !useYarn || (await getOnline());
   const originalDirectory = process.cwd();
 
-  console.log(`Creating a new thirdweb contracts project in ${chalk.green(root)}.`);
+  console.log(
+    `Creating a new thirdweb contracts project in ${chalk.green(root)}.`,
+  );
   console.log();
 
   process.chdir(root);
 
-  function isErrorLike(err: unknown): err is { message: string; } {
+  function isErrorLike(err: unknown): err is { message: string } {
     return (
       typeof err === "object" &&
       err !== null &&
-      typeof (err as { message?: unknown; }).message === "string"
+      typeof (err as { message?: unknown }).message === "string"
     );
   }
 
-  if (template) {
-    /**
-     * If a template repository is provided, clone it.
-     */
-    try {
-      console.log(
-        `Downloading files from repo ${chalk.cyan(
-          template,
-        )}. This might take a moment.`,
-      );
-      console.log();
-      await retry(
-        () => downloadAndExtractRepo(root, { name: template, filePath: "" }),
-        {
-          retries: 3,
-        },
-      );
-    } catch (reason) {
-      throw new DownloadError(
-        isErrorLike(reason) ? reason.message : reason + "",
-      );
-    }
-  } else {
-    try {
-      console.log(
-        `Downloading files. This might take a moment.`,
-      );
+  try {
+    console.log(`Downloading files. This might take a moment.`);
 
-      const starter = `hardhat-${language}-starter`;
-      await retry(
-        () =>
-          downloadAndExtractRepo(root, { name: starter, filePath: "" }),
-        {
-          retries: 3,
-        },
-      );
-    } catch (reason) {
-      throw new DownloadError(
-        isErrorLike(reason) ? reason.message : reason + "",
-      );
+    const starter = `hardhat-${language}-starter`;
+    await retry(
+      () => downloadAndExtractRepo(root, { name: starter, filePath: "" }),
+      {
+        retries: 3,
+      },
+    );
+
+    // Modify the /contracts/MyContract.sol contents to match the base contract
+    if (baseContract && baseContract.length > 0) {
+      const baseContractText = readBaseContract(baseContract);
+
+      // Set the contents of the MyContract.sol file to the base contract
+      const contractFile = path.join(root, "contracts", "MyContract.sol");
+
+      // Write the base contract to the MyContract.sol file
+      await writeFile(contractFile, baseContractText);
     }
+  } catch (reason) {
+    throw new DownloadError(isErrorLike(reason) ? reason.message : reason + "");
   }
 
   console.log("Installing packages. This might take a couple of minutes.");
@@ -134,21 +120,16 @@ export async function createContract({
     cdpath = contractPath;
   }
 
-
-  console.log(`${chalk.green("Success!")} Created ${projectName} at ${contractPath}`);
+  console.log(
+    `${chalk.green("Success!")} Created ${projectName} at ${contractPath}`,
+  );
   console.log("Inside that directory, you can run several commands:");
   console.log();
-  console.log(
-    chalk.cyan(
-      `  ${packageManager} ${useYarn ? "" : "run"} deploy`,
-    ),
-  );
+  console.log(chalk.cyan(`  ${packageManager} ${useYarn ? "" : "run"} deploy`));
   console.log("    Deploys your contracts with the thirdweb deploy flow.");
   console.log();
   console.log(
-    chalk.cyan(
-      `  ${packageManager} ${useYarn ? "" : "run"} release`,
-    ),
+    chalk.cyan(`  ${packageManager} ${useYarn ? "" : "run"} release`),
   );
   console.log("    Releases your contracts with the thirdweb release flow..");
   console.log();
