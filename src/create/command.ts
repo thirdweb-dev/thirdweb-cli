@@ -23,7 +23,7 @@ export async function twCreate(options: any) {
     projectType = "app";
   }
 
-  if (options.contracts) {
+  if (options.contract) {
     projectType = "contract";
   }
 
