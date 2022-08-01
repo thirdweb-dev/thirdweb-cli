@@ -155,8 +155,8 @@ export async function twCreate(options: any) {
         choices: [
           { title: "Empty Contract", value: "" },
           { title: "ERC-721 Base", value: "ERC721Base" },
-          { title: "ERC-721 + Signature Mint", value: "ERC721DelayedReveal" },
-          { title: "ERC-721 + Lazy Mint", value: "ERC721DelayedReveal" },
+          { title: "ERC-721 + Signature Mint", value: "ERC721SignatureMint" },
+          { title: "ERC-721 + Lazy Mint", value: "ERC721LazyMint" },
           { title: "ERC-721 + Delayed Reveal", value: "ERC721DelayedReveal" },
           { title: "ERC-721 + Drop", value: "ERC721Drop" },
         ],
