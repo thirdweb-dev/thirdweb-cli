@@ -49,6 +49,14 @@ export async function twCreate(options: any) {
     framework = "vite";
   }
 
+  if (options.forge) {
+    framework = "forge";
+  }
+
+  if (options.hardhat) {
+    framework = "hardhat";
+  }
+
   if (options.framework) {
     framework = options.framework;
   }
@@ -144,6 +152,22 @@ export async function twCreate(options: any) {
       }
     }
 
+    if (projectType === "contract" && framework !== "forge" && framework !== "hardhat") {
+      const res = await prompts({
+        type: "select",
+        name: "framework",
+        message: "What framework do you want to use?",
+        choices: [
+          { title: "Hardhat", value: "hardhat" },
+          { title: "Forge", value: "forge" },
+        ],
+      });
+
+      if (typeof res.framework === "string") {
+        framework = res.framework.trim();
+      }
+    }
+
     // Select base contract
     if (projectType === "contract" && !baseContract) {
       const res = await prompts({
@@ -165,7 +189,7 @@ export async function twCreate(options: any) {
       }
     }
 
-    if (projectType === "app" && !framework) {
+    if (!framework) {
       console.log("Please specify a framework");
       process.exit(1);
     }
@@ -219,7 +243,7 @@ export async function twCreate(options: any) {
       await createContract({
         contractPath: resolvedProjectPath,
         packageManager,
-        language,
+        framework,
         baseContract,
       });
     }

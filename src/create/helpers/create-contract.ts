@@ -16,14 +16,14 @@ import path from "path";
 interface ICreateContract {
   contractPath: string;
   packageManager: PackageManager;
-  language?: string;
+  framework?: string;
   baseContract?: string;
 }
 
 export async function createContract({
   contractPath,
   packageManager,
-  language,
+  framework,
   baseContract,
 }: ICreateContract) {
   if (baseContract) {
@@ -80,7 +80,16 @@ export async function createContract({
   try {
     console.log(`Downloading files. This might take a moment.`);
 
-    const starter = `hardhat-${language}-starter`;
+    let starter = "";
+    if (framework === "hardhat") {
+      starter = "hardhat-javascript-starter";
+    } else if (framework === "forge") {
+      starter = "forge-starter";
+    } else {
+      console.error("Please provide a valid contracts framework.");
+      process.exit(1)
+    }
+
     await retry(
       () => downloadAndExtractRepo(root, { name: starter, filePath: "" }),
       {
@@ -93,7 +102,13 @@ export async function createContract({
       const baseContractText = readBaseContract(baseContract);
 
       // Set the contents of the MyContract.sol file to the base contract
-      const contractFile = path.join(root, "contracts", "MyContract.sol");
+      let contractFile = "";
+      if (framework === "hardhat") {
+        contractFile = path.join(root, "contracts", "MyContract.sol");
+      }
+      if (framework === "forge") {
+        contractFile = path.join(root, "src", "Contract.sol");
+      }
 
       // Write the base contract to the MyContract.sol file
       await writeFile(contractFile, baseContractText);
