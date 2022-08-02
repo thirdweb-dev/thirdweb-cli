@@ -128,7 +128,7 @@ export async function twCreate(options: any) {
       }
     }
 
-    if (!language) {
+    if (projectType === "app" && !language) {
       const res = await prompts({
         type: "select",
         name: "language",
@@ -144,14 +144,12 @@ export async function twCreate(options: any) {
       }
     }
 
-    console.log(projectType);
-    console.log(baseContract);
     // Select base contract
     if (projectType === "contract" && !baseContract) {
       const res = await prompts({
         type: "select",
         name: "baseContract",
-        message: "What base contract do you want to use?",
+        message: "What contract do you want to start from?",
         choices: [
           { title: "Empty Contract", value: "" },
           { title: "ERC-721 Base", value: "ERC721Base" },
@@ -173,8 +171,8 @@ export async function twCreate(options: any) {
     }
 
     if (!language) {
-      console.log("Please specify a language");
-      process.exit(1);
+      // Default = JavaScript
+      language = "javascript";
     }
   }
 

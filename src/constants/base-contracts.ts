@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721Base.sol";
 
-contract MyNFT is ERC721Base {
+contract MyContract is ERC721Base {
 
       constructor(
         string memory _name,
@@ -26,7 +26,7 @@ pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721SignatureMint.sol";
 
-contract MyNFT is ERC721SignatureMint {
+contract MyContract is ERC721SignatureMint {
     constructor(
         string memory _name,
         string memory _symbol,
@@ -48,7 +48,7 @@ pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721LazyMint.sol";
 
-contract MyNFT is ERC721LazyMint {
+contract MyContract is ERC721LazyMint {
     constructor(
         string memory _name,
         string memory _symbol,
@@ -61,7 +61,7 @@ pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721DelayedReveal.sol";
 
-contract MyNFT is ERC721DelayedReveal {
+contract MyContract is ERC721DelayedReveal {
     constructor(
         string memory _name,
         string memory _symbol,
@@ -74,7 +74,7 @@ pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721Drop.sol";
 
-contract MyNFT is ERC721Drop {
+contract MyContract is ERC721Drop {
     constructor(
         string memory _name,
         string memory _symbol,
