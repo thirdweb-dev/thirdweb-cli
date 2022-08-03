@@ -106,6 +106,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--contract", `Create a thirdweb contracts project.`)
     .option("--ts, --typescript", `Initialize as a TypeScript project.`)
     .option("--js, --javascript", `Initialize as a JavaScript project.`)
+    .option("--forge", `Initialize as a Forge project.`)
+    .option("--hardhat", `Initialize as a Hardhat project.`)
     .option("--cra", `Initialize as a Create React App project.`)
     .option("--next", `Initialize as a Next.js project.`)
     .option("--vite", `Initialize as a Vite project.`)
