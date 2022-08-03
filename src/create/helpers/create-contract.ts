@@ -12,6 +12,7 @@ import retry from "async-retry";
 import chalk from "chalk";
 import { writeFile } from "fs/promises";
 import path from "path";
+import { submodules } from "./submodules";
 
 interface ICreateContract {
   contractPath: string;
@@ -101,10 +102,10 @@ export async function createContract({
     if (baseContract && baseContract.length > 0) {
       const baseContractText = readBaseContract(baseContract);
 
-      // Set the contents of the MyContract.sol file to the base contract
+      // Set the contents of the Contract.sol file to the base contract
       let contractFile = "";
       if (framework === "hardhat") {
-        contractFile = path.join(root, "contracts", "MyContract.sol");
+        contractFile = path.join(root, "contracts", "Contract.sol");
       }
       if (framework === "forge") {
         contractFile = path.join(root, "src", "Contract.sol");
@@ -126,6 +127,10 @@ export async function createContract({
   if (tryGitInit(root)) {
     console.log("Initialized a git repository.");
     console.log();
+  }
+
+  if (framework === "forge") {
+    await submodules();
   }
 
   let cdpath: string;
