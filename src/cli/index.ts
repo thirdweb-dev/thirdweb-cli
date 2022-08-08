@@ -5,6 +5,7 @@ import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
+import generateDashboardUrl from "../helpers/generate-dashboard-url";
 import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
@@ -90,8 +91,37 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option(
+      "-n, --name [name]",
+      "Name of the pre-built or released contract (such as nft-drop)",
+    )
+    .option(
+      "--cv, --contract-version [version]",
+      "Version of the released contract",
+    )
     .action(async (options) => {
-      const url = await processProject(options, "deploy");
+      let url;
+
+      if (options.name) {
+        url = generateDashboardUrl(options.name, options.contractVersion);
+
+        if (!url) {
+          logger.error(
+            chalk.red(
+              `Could not find a contract named ${options.name} ${
+                options.contractVersion || ""
+              }`,
+            ),
+          );
+          return;
+        }
+
+        info(`Open this link to deploy your contract:`);
+        logger.info(chalk.blueBright(url));
+        return;
+      }
+
+      url = await processProject(options, "deploy");
       info(`Open this link to deploy your contracts:`);
       logger.info(chalk.blueBright(url));
       open(url.toString());
@@ -111,8 +141,14 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--cra", `Initialize as a Create React App project.`)
     .option("--next", `Initialize as a Next.js project.`)
     .option("--vite", `Initialize as a Vite project.`)
-    .option("--use-npm", `Explicitly tell the CLI to bootstrap the app using npm`)
-    .option("--use-pnpm",`Explicitly tell the CLI to bootstrap the app using pnpm`)
+    .option(
+      "--use-npm",
+      `Explicitly tell the CLI to bootstrap the app using npm`,
+    )
+    .option(
+      "--use-pnpm",
+      `Explicitly tell the CLI to bootstrap the app using pnpm`,
+    )
     .option("--framework [name]", `The preferred framework.`)
     .option(
       "-t, --template [name]",
