@@ -5,8 +5,8 @@ export default function generateDashboardUrl(
   const splitName = name.split("/");
   // Released contract
   if (splitName.length > 1) {
-    return `https://thirdweb.com/dashboard/${splitName[0]}/${splitName[1]}/${
-      version || ""
+    return `https://thirdweb.com/dashboard/${splitName[0]}/${splitName[1]}${
+      version ? `/${version}` : ""
     }`;
   }
 

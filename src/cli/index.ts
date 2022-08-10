@@ -100,10 +100,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "Version of the released contract",
     )
     .action(async (options) => {
-      let url;
-
       if (options.name) {
-        url = generateDashboardUrl(options.name, options.contractVersion);
+        const url = generateDashboardUrl(options.name, options.contractVersion);
 
         if (!url) {
           logger.error(
@@ -118,10 +116,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
         info(`Open this link to deploy your contract:`);
         logger.info(chalk.blueBright(url));
+        open(url.toString());
         return;
       }
 
-      url = await processProject(options, "deploy");
+      const url = await processProject(options, "deploy");
       info(`Open this link to deploy your contracts:`);
       logger.info(chalk.blueBright(url));
       open(url.toString());
