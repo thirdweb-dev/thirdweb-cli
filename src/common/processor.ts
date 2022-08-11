@@ -126,7 +126,7 @@ export async function processProject(
           await Promise.all(
             batch.map(async (c) => {
               const file = readFileSync(c, "utf-8");
-              if(file.includes(soliditySDKPackage)) {
+              if (file.includes(soliditySDKPackage)) {
                 usesSoliditySDK = true;
               }
               return await storage.uploadSingle(file);
@@ -150,10 +150,20 @@ export async function processProject(
     const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
 
     const combinedContents = selectedContracts.map((c, i) => {
+      // attach analytics blob to metadata
+      const analytics = {
+        command,
+        contract_name: c.name,
+        cli_version: cliVersion,
+        project_type: projectType,
+        from_ci: options.ci || false,
+        uses_contract_extensions: usesSoliditySDK,
+      };
       return {
         name: c.name,
         metadataUri: metadataURIs[i],
         bytecodeUri: bytecodeURIs[i],
+        analytics,
       };
     });
     const { metadataUris: combinedURIs } = await storage.uploadMetadataBatch(
@@ -173,7 +183,7 @@ export function getUrl(
   command: string,
   projectType: string,
   options: any,
-  usesSoliditySDK?: boolean
+  usesSoliditySDK?: boolean,
 ) {
   let url;
   if (hashes.length == 1) {
@@ -194,8 +204,8 @@ export function getUrl(
   if (options.ci) {
     url.searchParams.append("utm_content", "ci");
   }
-  if(usesSoliditySDK){
-    url.searchParams.append("utm_term", "solidity-sdk");    
+  if (usesSoliditySDK) {
+    url.searchParams.append("utm_term", "solidity-sdk");
   }
   return url;
 }
