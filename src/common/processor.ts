@@ -126,7 +126,7 @@ export async function processProject(
           await Promise.all(
             batch.map(async (c) => {
               const file = readFileSync(c, "utf-8");
-              if(file.includes(soliditySDKPackage)) {
+              if (file.includes(soliditySDKPackage)) {
                 usesSoliditySDK = true;
               }
               return await storage.uploadSingle(file);
@@ -150,31 +150,47 @@ export async function processProject(
     const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
 
     const combinedContents = selectedContracts.map((c, i) => {
+      // attach analytics blob to metadata
+      const analytics = {
+        command,
+        contract_name: c.name,
+        cli_version: cliVersion,
+        project_type: projectType,
+        from_ci: options.ci || false,
+        uses_contract_extensions: usesSoliditySDK,
+      };
       return {
         name: c.name,
         metadataUri: metadataURIs[i],
         bytecodeUri: bytecodeURIs[i],
+        analytics,
       };
     });
-    const { metadataUris: combinedURIs } = await storage.uploadMetadataBatch(
-      combinedContents,
-    );
+    let combinedURIs: string[] = [];
+    if (combinedContents.length == 1) {
+      // use upload single if only one contract to get a clean IPFS hash
+      const metadataUri = await storage.uploadSingle(
+        JSON.stringify(combinedContents[0]),
+      );
+      combinedURIs.push(metadataUri);
+    } else {
+      // otherwise upload batch
+      const { metadataUris } = await storage.uploadMetadataBatch(
+        combinedContents,
+      );
+      combinedURIs = metadataUris;
+    }
+
     loader.succeed("Upload successful");
 
-    return getUrl(combinedURIs, command, projectType, options, usesSoliditySDK);
+    return getUrl(combinedURIs, command);
   } catch (e) {
     loader.fail("Error uploading metadata");
     throw e;
   }
 }
 
-export function getUrl(
-  hashes: string[],
-  command: string,
-  projectType: string,
-  options: any,
-  usesSoliditySDK?: boolean
-) {
+export function getUrl(hashes: string[], command: string) {
   let url;
   if (hashes.length == 1) {
     url = new URL(
@@ -187,15 +203,6 @@ export function getUrl(
     for (let hash of hashes) {
       url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
     }
-  }
-  url.searchParams.append("utm_source", "thirdweb-cli");
-  url.searchParams.append("utm_campaign", cliVersion);
-  url.searchParams.append("utm_medium", projectType);
-  if (options.ci) {
-    url.searchParams.append("utm_content", "ci");
-  }
-  if(usesSoliditySDK){
-    url.searchParams.append("utm_term", "solidity-sdk");    
   }
   return url;
 }
