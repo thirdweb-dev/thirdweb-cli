@@ -166,9 +166,21 @@ export async function processProject(
         analytics,
       };
     });
-    const { metadataUris: combinedURIs } = await storage.uploadMetadataBatch(
-      combinedContents,
-    );
+    let combinedURIs: string[] = [];
+    if (combinedContents.length == 1) {
+      // use upload single if only one contract to get a clean IPFS hash
+      const metadataUri = await storage.uploadSingle(
+        JSON.stringify(combinedContents[0]),
+      );
+      combinedURIs.push(metadataUri);
+    } else {
+      // otherwise upload batch
+      const { metadataUris } = await storage.uploadMetadataBatch(
+        combinedContents,
+      );
+      combinedURIs = metadataUris;
+    }
+
     loader.succeed("Upload successful");
 
     return getUrl(combinedURIs, command);
