@@ -171,20 +171,14 @@ export async function processProject(
     );
     loader.succeed("Upload successful");
 
-    return getUrl(combinedURIs, command, projectType, options, usesSoliditySDK);
+    return getUrl(combinedURIs, command);
   } catch (e) {
     loader.fail("Error uploading metadata");
     throw e;
   }
 }
 
-export function getUrl(
-  hashes: string[],
-  command: string,
-  projectType: string,
-  options: any,
-  usesSoliditySDK?: boolean,
-) {
+export function getUrl(hashes: string[], command: string) {
   let url;
   if (hashes.length == 1) {
     url = new URL(
@@ -197,15 +191,6 @@ export function getUrl(
     for (let hash of hashes) {
       url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
     }
-  }
-  url.searchParams.append("utm_source", "thirdweb-cli");
-  url.searchParams.append("utm_campaign", cliVersion);
-  url.searchParams.append("utm_medium", projectType);
-  if (options.ci) {
-    url.searchParams.append("utm_content", "ci");
-  }
-  if (usesSoliditySDK) {
-    url.searchParams.append("utm_term", "solidity-sdk");
   }
   return url;
 }
