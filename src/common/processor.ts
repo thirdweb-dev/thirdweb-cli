@@ -5,7 +5,7 @@ import { execute } from "../core/helpers/exec";
 import { error, info, logger, spinner, warn } from "../core/helpers/logger";
 import { createContractsPrompt } from "../core/helpers/selector";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
-import { IpfsStorage } from "../core/storage/ipfs-storage";
+import { IpfsStorage } from "@thirdweb-dev/sdk";
 import chalk from "chalk";
 import { readFileSync } from "fs";
 import path from "path";
@@ -147,7 +147,7 @@ export async function processProject(
 
     // Upload batch all bytecodes
     const bytecodes = selectedContracts.map((c) => c.bytecode);
-    const { metadataUris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
+    const { uris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
 
     const combinedContents = selectedContracts.map((c, i) => {
       // attach analytics blob to metadata
@@ -175,10 +175,8 @@ export async function processProject(
       combinedURIs.push(metadataUri);
     } else {
       // otherwise upload batch
-      const { metadataUris } = await storage.uploadMetadataBatch(
-        combinedContents,
-      );
-      combinedURIs = metadataUris;
+      const { uris } = await storage.uploadMetadataBatch(combinedContents);
+      combinedURIs = uris;
     }
 
     loader.succeed("Upload successful");
