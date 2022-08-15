@@ -152,7 +152,11 @@ export async function twCreate(options: any) {
       }
     }
 
-    if (projectType === "contract" && framework !== "forge" && framework !== "hardhat") {
+    if (
+      projectType === "contract" &&
+      framework !== "forge" &&
+      framework !== "hardhat"
+    ) {
       const res = await prompts({
         type: "select",
         name: "framework",
@@ -253,3 +257,5 @@ export async function twCreate(options: any) {
     }
   }
 }
+
+export async function twDeploy(options: any) {}

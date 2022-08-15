@@ -4,7 +4,7 @@ import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
-import { twCreate } from "../create/command";
+import { twCreate, twDeploy } from "../create/command";
 import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
@@ -90,11 +90,17 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option("--app", "Deploy a Web App")
+    .option("--contract", "Deploy a smart contract")
     .action(async (options) => {
-      const url = await processProject(options, "deploy");
-      info(`Open this link to deploy your contracts:`);
-      logger.info(chalk.blueBright(url));
-      open(url.toString());
+      if (options.app) {
+        await twDeploy(options);
+      } else {
+        const url = await processProject(options, "deploy");
+        info(`Open this link to deploy your contracts:`);
+        logger.info(chalk.blueBright(url));
+        open(url.toString());
+      }
     });
 
   program
@@ -111,8 +117,14 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--cra", `Initialize as a Create React App project.`)
     .option("--next", `Initialize as a Next.js project.`)
     .option("--vite", `Initialize as a Vite project.`)
-    .option("--use-npm", `Explicitly tell the CLI to bootstrap the app using npm`)
-    .option("--use-pnpm",`Explicitly tell the CLI to bootstrap the app using pnpm`)
+    .option(
+      "--use-npm",
+      `Explicitly tell the CLI to bootstrap the app using npm`,
+    )
+    .option(
+      "--use-pnpm",
+      `Explicitly tell the CLI to bootstrap the app using pnpm`,
+    )
     .option("--framework [name]", `The preferred framework.`)
     .option(
       "-t, --template [name]",
