@@ -5,6 +5,7 @@ import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import { twCreate, twDeploy } from "../create/command";
+import generateDashboardUrl from "../helpers/generate-dashboard-url";
 import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
@@ -92,15 +93,42 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--ci", "Continuous Integration mode")
     .option("--app", "Deploy a Web App")
     .option("--contract", "Deploy a smart contract")
+    .option(
+      "-n, --name [name]",
+      "Name of the pre-built or released contract (such as nft-drop)",
+    )
+    .option(
+      "--cv, --contract-version [version]",
+      "Version of the released contract",
+    )
+
     .action(async (options) => {
       if (options.app) {
         await twDeploy(options);
-      } else {
-        const url = await processProject(options, "deploy");
-        info(`Open this link to deploy your contracts:`);
+      } else if (options.name) {
+        const url = generateDashboardUrl(options.name, options.contractVersion);
+
+        if (!url) {
+          logger.error(
+            chalk.red(
+              `Could not find a contract named ${options.name} ${
+                options.contractVersion || ""
+              }`,
+            ),
+          );
+          return;
+        }
+
+        info(`Open this link to deploy your contract:`);
         logger.info(chalk.blueBright(url));
         open(url.toString());
+        return;
       }
+
+      const url = await processProject(options, "deploy");
+      info(`Open this link to deploy your contracts:`);
+      logger.info(chalk.blueBright(url));
+      open(url.toString());
     });
 
   program
