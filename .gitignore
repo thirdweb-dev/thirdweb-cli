@@ -11,3 +11,6 @@ reproduction-cases/
 
 # IDE files
 .idea
+
+.yalc
+yalc.lock

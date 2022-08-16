@@ -258,4 +258,9 @@ export async function twCreate(options: any) {
   }
 }
 
-export async function twDeploy(options: any) {}
+export async function twDeploy(options: any) {
+  //detect projectType
+  //run build
+  // upload ./dist to IPFS
+  // open website with the uI ipfs hash
+}
