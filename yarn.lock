@@ -860,17 +860,17 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@thirdweb-dev/contracts@^3.0.0":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.0.3.tgz#ba83b7e28ab01a88358de479cf98cddbf835ff56"
-  integrity sha512-TQRrML5SwbTb0VA1nu7VLxqIXrqMfvaXOBFT//yA9Jdd7GNsG4zSQHlHpkU4KWG1r766poG/AuXwz8KQ1A9IBg==
+"@thirdweb-dev/contracts@3.1.0-2":
+  version "3.1.0-2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.0-2.tgz#3f8327eb5771b8cd6aa812843c2d768f8d3d5849"
+  integrity sha512-EOqa9HqTNPE7Ibvl4aj4bRSqxPsT5W5RYsy8XCcsMfoWdMrc9+ZbMJHsaLCHzFLEWdjrSPdum3dazVPud5RvSg==
 
-"@thirdweb-dev/sdk@^2":
-  version "2.3.35"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.3.35.tgz#3a212aed78eec6e1ec2a00cdcb587ad075d8f165"
-  integrity sha512-jeoNjWe2AyPCmkMl6d7FJhk4Dpbb+T5OtItl8WCPkrqJh3/+Z3CfycLe0Pxm7urlfolgUL/O0LzPpQ2aVKiYFA==
+"@thirdweb-dev/sdk@2.3.37-1":
+  version "2.3.37-1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.3.37-1.tgz#d48d2714c7a6707c26e5a1e270524a4fdc146264"
+  integrity sha512-OTYCnvShz+aTGiy/mNbteLSflGjRMHn+uOJz/Xj7+fc9Oy39QHiFl3z/uU92av65FnK1TCHuzr/UH2MJYPqBMA==
   dependencies:
-    "@thirdweb-dev/contracts" "^3.0.0"
+    "@thirdweb-dev/contracts" "3.1.0-2"
     "@web-std/file" "^3.0.0"
     cbor "^8.1.0"
     cross-fetch "^3.1.5"
