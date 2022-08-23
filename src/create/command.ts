@@ -152,7 +152,11 @@ export async function twCreate(options: any) {
       }
     }
 
-    if (projectType === "contract" && framework !== "forge" && framework !== "hardhat") {
+    if (
+      projectType === "contract" &&
+      framework !== "forge" &&
+      framework !== "hardhat"
+    ) {
       const res = await prompts({
         type: "select",
         name: "framework",
@@ -176,11 +180,16 @@ export async function twCreate(options: any) {
         message: "What contract do you want to start from?",
         choices: [
           { title: "Empty Contract", value: "" },
-          { title: "ERC-721 Base", value: "ERC721Base" },
-          { title: "ERC-721 + Signature Mint", value: "ERC721Signature" },
-          { title: "ERC-721 + Lazy Mint", value: "ERC721LazyMint" },
-          { title: "ERC-721 + Delayed Reveal", value: "ERC721DelayedReveal" },
-          { title: "ERC-721 + Drop", value: "ERC721Drop" },
+          { title: "ERC721 Base", value: "ERC721Base" },
+          { title: "ERC721 + Signature Mint", value: "ERC721Signature" },
+          { title: "ERC721 + Lazy Mint", value: "ERC721LazyMint" },
+          { title: "ERC721 + Delayed Reveal", value: "ERC721DelayedReveal" },
+          { title: "ERC721 + Drop", value: "ERC721Drop" },
+          { title: "ERC1155 Base", value: "ERC1155Base" },
+          { title: "ERC1155 + Signature Mint", value: "ERC1155Signature" },
+          { title: "ERC1155 + Lazy Mint", value: "ERC1155LazyMint" },
+          { title: "ERC1155 + Delayed Reveal", value: "ERC1155DelayedReveal" },
+          { title: "ERC1155 + Drop", value: "ERC1155Drop" },
         ],
       });
 
