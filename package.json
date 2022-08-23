@@ -7,7 +7,7 @@
   "author": "sdk@thirdweb.com",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0 <17"
+    "node": ">=14.0.0 <19"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
