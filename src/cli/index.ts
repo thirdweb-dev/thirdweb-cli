@@ -96,7 +96,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "Name of the pre-built or released contract (such as nft-drop)",
     )
     .option(
-      "--cv, --contract-version [version]",
+      "-cv, --contract-version [version]",
       "Version of the released contract",
     )
     .action(async (options) => {
