@@ -2,7 +2,7 @@
   "name": "@thirdweb-dev/cli",
   "main": "dist/cli/index.js",
   "types": "dist/cli/index.d.ts",
-  "version": "0.6.12",
+  "version": "0.6.13",
   "repository": "git@github.com:thirdweb-dev/thirdweb-cli.git",
   "author": "sdk@thirdweb.com",
   "license": "MIT",
