@@ -5,7 +5,7 @@ import { execute } from "../core/helpers/exec";
 import { error, info, logger, spinner, warn } from "../core/helpers/logger";
 import { createContractsPrompt } from "../core/helpers/selector";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
-import { IpfsStorage } from "@thirdweb-dev/sdk";
+import { IpfsStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { readFileSync } from "fs";
 import path from "path";
