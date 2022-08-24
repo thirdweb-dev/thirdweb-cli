@@ -190,6 +190,15 @@ export async function twCreate(options: any) {
           { title: "ERC1155 + Lazy Mint", value: "ERC1155LazyMint" },
           { title: "ERC1155 + Delayed Reveal", value: "ERC1155DelayedReveal" },
           { title: "ERC1155 + Drop", value: "ERC1155Drop" },
+          { title: "ERC20 Base", value: "ERC20Base" },
+          { title: "ERC20 + Vote", value: "ERC20Vote" },
+          { title: "ERC20 + Signature Mint", value: "ERC20SignatureMint" },
+          {
+            title: "ERC20 + Vote + Signature Mint",
+            value: "ERC20SignatureMintVote",
+          },
+          { title: "ERC20 + Drop", value: "ERC20Drop" },
+          { title: "ERC20 + Vote + Drop", value: "ERC20DropVote" },
         ],
       });
 
