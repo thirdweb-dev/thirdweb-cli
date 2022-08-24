@@ -1,5 +1,5 @@
 import { spinner } from "../core/helpers/logger";
-import { IpfsStorage } from "@thirdweb-dev/sdk";
+import { IpfsStorage } from "@thirdweb-dev/storage";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import path, { join } from "path";
 
