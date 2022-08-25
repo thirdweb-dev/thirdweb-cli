@@ -191,13 +191,11 @@ import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 contract Contract is ERC20Base {
       constructor(
         string memory _name,
-        string memory _symbol,
-        string memory _contractURI
+        string memory _symbol
     )
         ERC20Base(
             _name,
-            _symbol,
-            _contractURI
+            _symbol
         )
     {}
 }`,
@@ -209,13 +207,11 @@ import "@thirdweb-dev/contracts/base/ERC20Vote.sol";
 contract Contract is ERC20Vote {
       constructor(
         string memory _name,
-        string memory _symbol,
-        string memory _contractURI
+        string memory _symbol
     )
         ERC20Vote(
             _name,
-            _symbol,
-            _contractURI
+            _symbol
         )
     {}
 }`,
@@ -228,13 +224,11 @@ contract Contract is ERC20SignatureMint {
       constructor(
         string memory _name,
         string memory _symbol,
-        string memory _contractURI,
         address _primarySaleRecipient
     )
         ERC20SignatureMint(
             _name,
             _symbol,
-            _contractURI,
             _primarySaleRecipient
         )
     {}
@@ -249,13 +243,11 @@ contract Contract is ERC20SignatureMintVote {
       constructor(
         string memory _name,
         string memory _symbol,
-        string memory _contractURI,
         address _primarySaleRecipient
     )
         ERC20SignatureMintVote(
             _name,
             _symbol,
-            _contractURI,
             _primarySaleRecipient
         )
     {}
@@ -270,13 +262,11 @@ contract Contract is ERC20Drop {
       constructor(
         string memory _name,
         string memory _symbol,
-        string memory _contractURI,
         address _primarySaleRecipient
     )
         ERC20Drop(
             _name,
             _symbol,
-            _contractURI,
             _primarySaleRecipient
         )
     {}
@@ -290,13 +280,11 @@ contract Contract is ERC20DropVote {
       constructor(
         string memory _name,
         string memory _symbol,
-        string memory _contractURI,
         address _primarySaleRecipient
     )
         ERC20DropVote(
             _name,
             _symbol,
-            _contractURI,
             _primarySaleRecipient
         )
     {}
